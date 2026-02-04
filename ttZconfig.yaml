@@ -1,0 +1,145 @@
+general:
+  debug_level: INFO
+  input_filelist_path: "../metadata/filelist_mc23a.txt"
+  input_sumweights_path: "../metadata/sum_of_weights_mc23a.txt"
+  output_path_histograms: "../output_histograms/"
+  output_path_ntuples: "../output_ntuples/"
+  default_sumweights: "NOSYS"
+  default_event_weights: "weight_mc_NOSYS * weight_pileup_NOSYS * weight_leptonSF_tight_NOSYS * weight_jvt_effSF_NOSYS"
+  default_reco_tree_name: "reco"
+  xsection_files:
+    - files: ["/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/PMGxsecDB_mc23.txt"]
+      campaigns: ["mc23a", "mc23e", "mc23d"]
+  luminosity:
+    mc23a: 29300.0
+  #  mc23e: 109400.0
+  #  mc23d: 26700.0
+  automatic_systematics: False
+  nominal_only: True
+  config_define_after_custom_class : True
+  create_tlorentz_vectors_for: ["jet", "el", "mu"]
+  use_rvec: True
+  number_of_cpus: 10
+  use_region_subfolders: True
+  custom_frame_name: "MyCustomFrame"
+
+
+regions:
+  - name: "sec_region"
+    selection: "selection_cuts_NOSYS == 1"
+    variables:
+      - name: "chi_lpb"
+        definition: chi_lpb_NOSYS
+        title: "Chi2 l+ b"
+        binning: &lpb_jet_binning
+          min: -0.5
+          max: 2.5
+          number_of_bins: 3
+
+      - name: "chi_lmbb"
+        definition: chi_lmbb_NOSYS
+        title: "Chi2 l- bbar"
+        binning: *lpb_jet_binning
+
+ntuples:
+  regions:
+    - sec_region
+  # If you want a selection here, use the same as the region:
+  # selection: "section_6_1_NOSYS == 1 && section_6_2_NOSYS == 1 && section_6_3_NOSYS == 1"
+  branches:
+      # Truth-level masses (for fitting!)
+      - chi_lpb_NOSYS
+      - chi_lmbb_NOSYS # 1 if l- ↔ bbar correct, 0 otherwise
+
+
+cutflows:
+  - name: Section_Cutflow
+    selections:
+      - selection: "section_6_1_NOSYS == 1 && cutA10_mu_clean_NOSYS == 1 && cutA9_el_clean_NOSYS == 1 && cutA8_jet_clean_NOSYS == 1"
+        title: "Candidate"
+
+      - selection: "section_6_1_NOSYS == 1 && section_6_2_NOSYS == 1 && cutA10_mu_clean_NOSYS == 1 && cutA9_el_clean_NOSYS == 1 && cutA8_jet_clean_NOSYS == 1"
+        title: "Event"
+
+      - selection: "section_6_1_NOSYS == 1 && section_6_2_NOSYS == 1 && section_6_3_NOSYS == 1 && cutA10_mu_clean_NOSYS == 1 && cutA9_el_clean_NOSYS == 1 && cutA8_jet_clean_NOSYS == 1"
+        title: "Classification"
+
+
+  - name: Section_6_1_Cutflow
+    selections:
+      - selection: "cutA1_el_pt_NOSYS == 1"
+        title: "E_{T,e}#geq28 GeV"
+      
+      - selection: "cutA2_el_eta_NOSYS == 1"
+        title: "|#eta_{e}|<2.47"
+
+      - selection: "cutA3_el_crack_NOSYS == 1"
+        title: "1.37#geq|#eta_{e}|>1.52"
+      
+      - selection: "cutA4_el_tight_NOSYS == 1"
+        title: "e tight"
+
+      - selection: "cutA5_mu_pt_NOSYS == 1"
+        title: "p_{T,#mu}#geq28 GeV"
+
+      - selection: "cutA6_mu_eta_NOSYS == 1"
+        title: "|#eta_{#mu}|<2.5"
+
+      - selection: "cutA7_mu_tight_NOSYS == 1"
+        title: "#mu tight"
+
+      - selection: "cutA10_mu_clean_NOSYS == 1"
+        title: "#mu clean"
+
+      - selection: "cutA9_el_clean_NOSYS == 1"
+        title: "e clean"
+      
+      - selection: "cutA8_jet_clean_NOSYS == 1"
+        title: "jet clean"
+
+  - name: Section_6_2_Cutflow
+    selections:
+      - selection: "section_6_1_NOSYS == 1 && cutA10_mu_clean_NOSYS == 1 && cutA9_el_clean_NOSYS == 1 && cutA8_jet_clean_NOSYS == 1"
+        title: "Sec-6.1"
+
+      - selection: "cutC21_exactly2leptons_NOSYS == 1"
+        title: "N_{lep} = 2"
+
+      - selection: "cutC22_opposite_charge_NOSYS == 1"
+        title: "q_{e}q_{#mu}=-1"
+      
+      - selection: "cutC23_one_el_one_mu_NOSYS == 1"
+        title: "1e, 1#mu"
+
+      - selection: "cutC24_meemu_gt50_NOSYS == 1"
+        title: "m_{e,#mu}#geq50 GeV"
+
+      - selection: "cutC25_exactly2jets_NOSYS == 1"
+        title: "N_{jets} = 2"
+
+
+  - name: Section_6_3_Cutflow
+    selections:
+      - selection: "section_6_1_NOSYS == 1 && section_6_2_NOSYS == 1 && cutA10_mu_clean_NOSYS == 1 && cutA9_el_clean_NOSYS == 1 && cutA8_jet_clean_NOSYS == 1"
+        title: "Sec-6.1+6.2"
+
+      - selection: "pairing_valid_NOSYS == 1"
+        title: "Valid pairing"
+
+      - selection: "pairing_mj1_NOSYS == 1"
+        title: "m_{j1,l}#geq20 GeV"
+
+      - selection: "pairing_mj2_NOSYS == 1"
+        title: "m_{j2,l}#geq20 GeV"
+
+
+samples:
+  - name: "data"
+    dsids: [0]
+    campaigns: ["2022"]
+    simulation_type: "data"
+
+  - name: "ttll"
+    dsids: [601230]
+    campaigns: ["mc23a"]
+    simulation_type: "fullsim"

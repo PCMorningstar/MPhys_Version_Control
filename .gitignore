@@ -1,0 +1,13 @@
+# Ignore generated files
+build*/*
+metadata/*
+install*/*
+.asetup.save
+.vscode/*
+
+# Ignore output files
+output*/*
+
+# Ignore plots and TRex files
+Plots/*
+my_trex.config

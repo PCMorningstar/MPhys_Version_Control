@@ -1,0 +1,55 @@
+{
+    "title": "FastFrames",
+    "doi": "10.5281/zenodo.14773275",
+    "publication_date": "2024-04-17",
+    "description": "<p>FastFrames is a package aimed at processing ROOT files (ntuples) storing collision data with the ATLAS experiment Run 3 ( and Run 2 re-processing ) format, into histograms or ntuples. FastFrames relies on ROOT's <a href=\"https://root.cern/doc/master/classROOT_1_1RDataFrame.html\" target=\"_blank\" rel=\"nofollow noreferrer noopener\">RDataFrame</a> to do the event loop processing. The code allows users to define their own columns in a minimal way while using all the functionality of the processing.</p>",
+    "access_right": "open",
+    "creators": [
+        {
+            "name": "Dado, Tomas",
+            "affiliation": "European Organization for Nuclear Research",
+            "orcid": "0000-0002-7050-2669"
+        },
+        {
+            "name": "Dubovsky, Michal",
+            "affiliation": "Comenius University Bratislava",
+            "orcid": "0000-0002-3847-0775"
+        },
+        {
+            "name": "Baron Moreno, Diego",
+            "affiliation": "University of Manchester",
+            "orcid": "0000-0001-9864-7985"
+        }
+    ],
+    "language": "eng",
+    "custom": {
+        "code:codeRepository": "https://gitlab.cern.ch/atlas-amglab/fastframes",
+        "code:programmingLanguage": [
+            {
+                "id": "c++",
+                "title": {
+                    "en": "C++"
+                }
+            },
+            {
+                "id": "python",
+                "title": {
+                    "en": "Python"
+                }
+            }
+        ],
+        "code:developmentStatus": {
+            "id": "active",
+            "title": {
+                "en": "Active"
+            }
+        }
+    },
+    "license": "cc-by-4.0",
+    "imprint_publisher": "Zenodo",
+    "upload_type": "software",
+    "prereserve_doi": {
+        "doi": "10.5281/zenodo.14773275",
+        "recid": 14773275
+    }
+}
