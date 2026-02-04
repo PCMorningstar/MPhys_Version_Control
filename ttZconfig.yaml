@@ -19,7 +19,7 @@ general:
   config_define_after_custom_class : True
   create_tlorentz_vectors_for: ["jet", "el", "mu"]
   use_rvec: True
-  number_of_cpus: 10
+  number_of_cpus: 9
   use_region_subfolders: True
   custom_frame_name: "MyCustomFrame"
 
