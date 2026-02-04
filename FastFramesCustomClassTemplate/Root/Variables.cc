@@ -30,7 +30,7 @@ namespace ttZ{ //GPT aid
   // -----------------------------------------------------------------------------
   bool cutC25_exactly2jets(const RVec<float>& j_pt)
   {
-      return (j_pt.size() == 7); // CHANGED ACCORDING TO THE NEW REQUIREMENT
+      return (j_pt.size() <= 13); // CHANGED ACCORDING TO THE NEW REQUIREMENT
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

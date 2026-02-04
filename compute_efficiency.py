@@ -4,25 +4,16 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 import ROOT
-
-# l+ b
-# Open your ROOT file and chain the ntuple
-f = ROOT.TFile.Open("output_ntuples/ttll_601230_mc23a_fullsim.root")
-tree = f.Get("tree")  # replace "tree" with your TTree name
-
-
-
-
 # --------------------------------------------------
 # Numerator and denominator
 # --------------------------------------------------
                  # total valid events
-N_fail = 2541.37
-N_pass = 1459.21
+N_fail = 8.04468
+N_pass = 2.74022
 N_tot  = N_fail + N_pass
 
-err_fail = 12.20
-err_success = 9.250
+err_fail = 0.6599
+err_success = 0.3904
 
 eff = N_pass / N_tot
 
@@ -48,7 +39,7 @@ sigma_eff = ratio*sqrt
 # Output
 # --------------------------------------------------
 print("Chi-squared Pairing Outcome (ΔR truth):")
-print(f"  Efficiency = {eff:.4f} ± {sigma_eff:.4f}")
+print(f"  Efficiency = {eff:.4f}, {sigma_eff:.4f}")
 
 
 labels = ["Correct", "Incorrect"]
