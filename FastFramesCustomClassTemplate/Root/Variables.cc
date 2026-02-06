@@ -30,7 +30,40 @@ namespace ttZ{ //GPT aid
   // -----------------------------------------------------------------------------
   bool cutC25_exactly2jets(const RVec<float>& j_pt)
   {
-      return (j_pt.size() <= 13); // CHANGED ACCORDING TO THE NEW REQUIREMENT
+      return (j_pt.size() >= 0); // CHANGED ACCORDING TO THE NEW REQUIREMENT
+  }
+
+  int jet_size(const RVec<float>& j_pt)
+  {
+    return (j_pt.size());
+  }
+
+  // creating multiply dRs for efficiency v. dR
+  float dr_one()
+  {
+    return (4.2f);
+  }
+  float dr_two()
+  {
+    return (4.4f);
+  }
+  float dr_three()
+  {
+    return (4.6f);
+  }
+  float dr_four()
+  {
+    return (4.8f);
+  }
+  float dr_five()
+  {
+    return (5.0f);
+  }
+
+
+  float dr_truth()
+  {
+    return (0.4f);
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -448,7 +481,8 @@ namespace ttZ{ //GPT aid
     const ROOT::VecOps::RVec<float>& mu_eta,
     const ROOT::VecOps::RVec<float>& mu_phi,
     const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const ROOT::VecOps::RVec<float>& mu_charge,
+    const float& dR_cut
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f / 1000.f;
@@ -480,8 +514,8 @@ namespace ttZ{ //GPT aid
       float drb  = dR(jets[i], b);
       float drbb = dR(jets[i], bbar);
 
-      if (drb < 0.4f && drb < minDRb)   { minDRb  = drb;  ib    = i; }
-      if (drbb< 0.4f && drbb< minDRbb)  { minDRbb = drbb; ibbar = i; }
+      if (drb < dR_cut && drb < minDRb)   { minDRb  = drb;  ib    = i; }
+      if (drbb< dR_cut && drbb< minDRbb)  { minDRbb = drbb; ibbar = i; }
     }
 
     if (ib < 0 || ibbar < 0 || ib == ibbar) return out;
@@ -511,7 +545,8 @@ namespace ttZ{ //GPT aid
     const ROOT::VecOps::RVec<float>& jet_pt,
     const ROOT::VecOps::RVec<float>& jet_eta,
     const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const float& dR_cut
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
@@ -535,8 +570,8 @@ namespace ttZ{ //GPT aid
       float drb  = dR(jets[i], b);
       float drbb = dR(jets[i], bbar);
 
-      if (drb < 0.4f && drb < minDRb)   { minDRb  = drb;  ib    = i; }
-      if (drbb< 0.4f && drbb< minDRbb)  { minDRbb = drbb; ibbar = i; }
+      if (drb < dR_cut && drb < minDRb)   { minDRb  = drb;  ib    = i; }
+      if (drbb< dR_cut && drbb< minDRbb)  { minDRbb = drbb; ibbar = i; }
     }
 
     if (ib>=0 && ibbar>=0 && ib!=ibbar){
@@ -586,6 +621,310 @@ namespace ttZ{ //GPT aid
 
     constexpr float mu_lpb=97.82f, mu_lmbb=97.93f;
     constexpr float s2_lp=29.95f*29.95f, s2_lm=29.98f*29.98f;
+
+    auto chi2=[&](float a,float b){
+      return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
+    };
+
+    float min_chi2 = 1e12f;
+    int best_i=-1, best_j=-1;
+
+    // Loop over all unique jet pairs
+    for (size_t i=0; i<jets.size(); ++i){
+        for (size_t j=i+1; j<jets.size(); ++j){
+            float chiA = chi2( (lplus + jets[i]).M(), (lminus + jets[j]).M() );
+            float chiB = chi2( (lplus + jets[j]).M(), (lminus + jets[i]).M() );
+
+            if (chiA < min_chi2) { min_chi2 = chiA; best_i = i; best_j = j; }
+            if (chiB < min_chi2) { min_chi2 = chiB; best_i = j; best_j = i; }
+        }
+    }
+
+    if (best_i >= 0 && best_j >= 0) { idx[0] = best_i; idx[1] = best_j; }
+    return idx;
+  }
+  // ============================================================
+  // Enum comparison for each dR condition: truth (l+,l-) vs chi2 (l+,l-)
+  // returns 0=invalid, 1=wrong, 2=correct
+  // ============================================================
+  // dR ONE
+  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge1(
+    const ROOT::VecOps::RVec<float>& jet_pt,
+    const ROOT::VecOps::RVec<float>& jet_eta,
+    const ROOT::VecOps::RVec<float>& jet_phi,
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const ROOT::VecOps::RVec<float>& el_pt,
+    const ROOT::VecOps::RVec<float>& el_eta,
+    const ROOT::VecOps::RVec<float>& el_phi,
+    const ROOT::VecOps::RVec<float>& el_e,
+    const ROOT::VecOps::RVec<float>& el_charge,
+    const ROOT::VecOps::RVec<float>& mu_pt,
+    const ROOT::VecOps::RVec<float>& mu_eta,
+    const ROOT::VecOps::RVec<float>& mu_phi,
+    const ROOT::VecOps::RVec<float>& mu_e,
+    const ROOT::VecOps::RVec<float>& mu_charge
+  ){
+    using V4 = ROOT::Math::PtEtaPhiEVector;
+    constexpr float GeV = 1.f/1000.f;
+    ROOT::VecOps::RVec<int> idx(2,-1);
+
+    if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
+    if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
+
+    const V4 lplus  = (el_charge[0]>0.f)
+      ? V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV)
+      : V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+
+    const V4 lminus = (el_charge[0]>0.f)
+      ? V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV)
+      : V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
+
+    std::vector<V4> jets;
+    for (size_t i=0;i<jet_pt.size();++i)
+      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+
+    constexpr float mu_lpb=96.034f, mu_lmbb=95.992f;
+    constexpr float s2_lp=32.107f*32.107f, s2_lm=33.068f*33.068f;
+
+    auto chi2=[&](float a,float b){
+      return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
+    };
+
+    float min_chi2 = 1e12f;
+    int best_i=-1, best_j=-1;
+
+    // Loop over all unique jet pairs
+    for (size_t i=0; i<jets.size(); ++i){
+        for (size_t j=i+1; j<jets.size(); ++j){
+            float chiA = chi2( (lplus + jets[i]).M(), (lminus + jets[j]).M() );
+            float chiB = chi2( (lplus + jets[j]).M(), (lminus + jets[i]).M() );
+
+            if (chiA < min_chi2) { min_chi2 = chiA; best_i = i; best_j = j; }
+            if (chiB < min_chi2) { min_chi2 = chiB; best_i = j; best_j = i; }
+        }
+    }
+
+    if (best_i >= 0 && best_j >= 0) { idx[0] = best_i; idx[1] = best_j; }
+    return idx;
+  }
+  // dR TWO
+  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge2(
+    const ROOT::VecOps::RVec<float>& jet_pt,
+    const ROOT::VecOps::RVec<float>& jet_eta,
+    const ROOT::VecOps::RVec<float>& jet_phi,
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const ROOT::VecOps::RVec<float>& el_pt,
+    const ROOT::VecOps::RVec<float>& el_eta,
+    const ROOT::VecOps::RVec<float>& el_phi,
+    const ROOT::VecOps::RVec<float>& el_e,
+    const ROOT::VecOps::RVec<float>& el_charge,
+    const ROOT::VecOps::RVec<float>& mu_pt,
+    const ROOT::VecOps::RVec<float>& mu_eta,
+    const ROOT::VecOps::RVec<float>& mu_phi,
+    const ROOT::VecOps::RVec<float>& mu_e,
+    const ROOT::VecOps::RVec<float>& mu_charge
+  ){
+    using V4 = ROOT::Math::PtEtaPhiEVector;
+    constexpr float GeV = 1.f/1000.f;
+    ROOT::VecOps::RVec<int> idx(2,-1);
+
+    if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
+    if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
+
+    const V4 lplus  = (el_charge[0]>0.f)
+      ? V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV)
+      : V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+
+    const V4 lminus = (el_charge[0]>0.f)
+      ? V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV)
+      : V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
+
+    std::vector<V4> jets;
+    for (size_t i=0;i<jet_pt.size();++i)
+      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+
+    constexpr float mu_lpb=96.034f, mu_lmbb=95.989f;
+    constexpr float s2_lp=32.114f*32.114f, s2_lm=33.072f*33.072f;
+
+    auto chi2=[&](float a,float b){
+      return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
+    };
+
+    float min_chi2 = 1e12f;
+    int best_i=-1, best_j=-1;
+
+    // Loop over all unique jet pairs
+    for (size_t i=0; i<jets.size(); ++i){
+        for (size_t j=i+1; j<jets.size(); ++j){
+            float chiA = chi2( (lplus + jets[i]).M(), (lminus + jets[j]).M() );
+            float chiB = chi2( (lplus + jets[j]).M(), (lminus + jets[i]).M() );
+
+            if (chiA < min_chi2) { min_chi2 = chiA; best_i = i; best_j = j; }
+            if (chiB < min_chi2) { min_chi2 = chiB; best_i = j; best_j = i; }
+        }
+    }
+
+    if (best_i >= 0 && best_j >= 0) { idx[0] = best_i; idx[1] = best_j; }
+    return idx;
+  }
+  // dR THREE
+  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge3(
+    const ROOT::VecOps::RVec<float>& jet_pt,
+    const ROOT::VecOps::RVec<float>& jet_eta,
+    const ROOT::VecOps::RVec<float>& jet_phi,
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const ROOT::VecOps::RVec<float>& el_pt,
+    const ROOT::VecOps::RVec<float>& el_eta,
+    const ROOT::VecOps::RVec<float>& el_phi,
+    const ROOT::VecOps::RVec<float>& el_e,
+    const ROOT::VecOps::RVec<float>& el_charge,
+    const ROOT::VecOps::RVec<float>& mu_pt,
+    const ROOT::VecOps::RVec<float>& mu_eta,
+    const ROOT::VecOps::RVec<float>& mu_phi,
+    const ROOT::VecOps::RVec<float>& mu_e,
+    const ROOT::VecOps::RVec<float>& mu_charge
+  ){
+    using V4 = ROOT::Math::PtEtaPhiEVector;
+    constexpr float GeV = 1.f/1000.f;
+    ROOT::VecOps::RVec<int> idx(2,-1);
+
+    if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
+    if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
+
+    const V4 lplus  = (el_charge[0]>0.f)
+      ? V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV)
+      : V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+
+    const V4 lminus = (el_charge[0]>0.f)
+      ? V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV)
+      : V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
+
+    std::vector<V4> jets;
+    for (size_t i=0;i<jet_pt.size();++i)
+      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+
+    constexpr float mu_lpb=96.034f, mu_lmbb=95.988f;
+    constexpr float s2_lp=32.119f*32.119f, s2_lm=33.077f*33.077f;
+
+    auto chi2=[&](float a,float b){
+      return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
+    };
+
+    float min_chi2 = 1e12f;
+    int best_i=-1, best_j=-1;
+
+    // Loop over all unique jet pairs
+    for (size_t i=0; i<jets.size(); ++i){
+        for (size_t j=i+1; j<jets.size(); ++j){
+            float chiA = chi2( (lplus + jets[i]).M(), (lminus + jets[j]).M() );
+            float chiB = chi2( (lplus + jets[j]).M(), (lminus + jets[i]).M() );
+
+            if (chiA < min_chi2) { min_chi2 = chiA; best_i = i; best_j = j; }
+            if (chiB < min_chi2) { min_chi2 = chiB; best_i = j; best_j = i; }
+        }
+    }
+
+    if (best_i >= 0 && best_j >= 0) { idx[0] = best_i; idx[1] = best_j; }
+    return idx;
+  }
+  // dR FOUR
+  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge4(
+    const ROOT::VecOps::RVec<float>& jet_pt,
+    const ROOT::VecOps::RVec<float>& jet_eta,
+    const ROOT::VecOps::RVec<float>& jet_phi,
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const ROOT::VecOps::RVec<float>& el_pt,
+    const ROOT::VecOps::RVec<float>& el_eta,
+    const ROOT::VecOps::RVec<float>& el_phi,
+    const ROOT::VecOps::RVec<float>& el_e,
+    const ROOT::VecOps::RVec<float>& el_charge,
+    const ROOT::VecOps::RVec<float>& mu_pt,
+    const ROOT::VecOps::RVec<float>& mu_eta,
+    const ROOT::VecOps::RVec<float>& mu_phi,
+    const ROOT::VecOps::RVec<float>& mu_e,
+    const ROOT::VecOps::RVec<float>& mu_charge
+  ){
+    using V4 = ROOT::Math::PtEtaPhiEVector;
+    constexpr float GeV = 1.f/1000.f;
+    ROOT::VecOps::RVec<int> idx(2,-1);
+
+    if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
+    if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
+
+    const V4 lplus  = (el_charge[0]>0.f)
+      ? V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV)
+      : V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+
+    const V4 lminus = (el_charge[0]>0.f)
+      ? V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV)
+      : V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
+
+    std::vector<V4> jets;
+    for (size_t i=0;i<jet_pt.size();++i)
+      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+
+    constexpr float mu_lpb=96.034f, mu_lmbb=95.988f;
+    constexpr float s2_lp=32.123f*32.123f, s2_lm=33.080f*33.080f;
+
+    auto chi2=[&](float a,float b){
+      return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
+    };
+
+    float min_chi2 = 1e12f;
+    int best_i=-1, best_j=-1;
+
+    // Loop over all unique jet pairs
+    for (size_t i=0; i<jets.size(); ++i){
+        for (size_t j=i+1; j<jets.size(); ++j){
+            float chiA = chi2( (lplus + jets[i]).M(), (lminus + jets[j]).M() );
+            float chiB = chi2( (lplus + jets[j]).M(), (lminus + jets[i]).M() );
+
+            if (chiA < min_chi2) { min_chi2 = chiA; best_i = i; best_j = j; }
+            if (chiB < min_chi2) { min_chi2 = chiB; best_i = j; best_j = i; }
+        }
+    }
+
+    if (best_i >= 0 && best_j >= 0) { idx[0] = best_i; idx[1] = best_j; }
+    return idx;
+  }
+  // dR FIVE
+  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge5(
+    const ROOT::VecOps::RVec<float>& jet_pt,
+    const ROOT::VecOps::RVec<float>& jet_eta,
+    const ROOT::VecOps::RVec<float>& jet_phi,
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const ROOT::VecOps::RVec<float>& el_pt,
+    const ROOT::VecOps::RVec<float>& el_eta,
+    const ROOT::VecOps::RVec<float>& el_phi,
+    const ROOT::VecOps::RVec<float>& el_e,
+    const ROOT::VecOps::RVec<float>& el_charge,
+    const ROOT::VecOps::RVec<float>& mu_pt,
+    const ROOT::VecOps::RVec<float>& mu_eta,
+    const ROOT::VecOps::RVec<float>& mu_phi,
+    const ROOT::VecOps::RVec<float>& mu_e,
+    const ROOT::VecOps::RVec<float>& mu_charge
+  ){
+    using V4 = ROOT::Math::PtEtaPhiEVector;
+    constexpr float GeV = 1.f/1000.f;
+    ROOT::VecOps::RVec<int> idx(2,-1);
+
+    if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
+    if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
+
+    const V4 lplus  = (el_charge[0]>0.f)
+      ? V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV)
+      : V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+
+    const V4 lminus = (el_charge[0]>0.f)
+      ? V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV)
+      : V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
+
+    std::vector<V4> jets;
+    for (size_t i=0;i<jet_pt.size();++i)
+      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+
+    constexpr float mu_lpb=96.034f, mu_lmbb=95.989f;
+    constexpr float s2_lp=32.125f*32.125f, s2_lm=33.082f*33.082f;
 
     auto chi2=[&](float a,float b){
       return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;

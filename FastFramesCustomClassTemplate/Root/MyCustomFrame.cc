@@ -665,6 +665,15 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
   // Matching Algorithms (Section – Truth & Reconstruction Pairing Diagnostic Tools)
   //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  // dR_truth_pairing_idx_lp_lm
+  LOG(INFO) << "Adding variable: dr_truth_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dr_truth_NOSYS",
+      ttZ::dr_truth,
+      {}
+  );
+
   // dR matching (calibration)
   LOG(INFO) << "Adding variable: dR_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
@@ -687,7 +696,8 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
        // Reco jets
        "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS",
         "el_pt_NOSYS", "el_eta", "el_phi", "el_e_NOSYS", "el_charge",
-        "mu_pt_NOSYS", "mu_eta", "mu_phi", "mu_e_NOSYS", "mu_charge"
+        "mu_pt_NOSYS", "mu_eta", "mu_phi", "mu_e_NOSYS", "mu_charge",
+        "dr_truth_NOSYS"
     }
   );
 
@@ -707,11 +717,9 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       "truth_m_lmbb_NOSYS",
       ttZ::truth_m_lmbb,
     {
-        "dR_NOSYS"
+    "dR_NOSYS"
     }
   );
-
-  // dR_truth_pairing_idx_lp_lm
 
   LOG(INFO) << "Adding variable: dR_truth_pairing_idx_lp_lm_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
@@ -732,7 +740,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
         "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
       
         // Reco jets
-        "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS"
+        "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS", "dr_truth_NOSYS"
       }
   );
 
@@ -748,6 +756,573 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
         "mu_pt_NOSYS","mu_eta","mu_phi","mu_e_NOSYS","mu_charge"
       }
   );
+
+    // chi2 v dR enum per branch
+  // l+ ↔ b
+  LOG(INFO) << "Adding variable: chi_lpb_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lpb_NOSYS",
+      ttZ::chi2_vs_dR_enum_lpb,
+      {
+        "dR_truth_pairing_idx_lp_lm_NOSYS",
+        "chi_indexed_NOSYS"
+      }
+  );
+
+  // l- ↔ bbar
+  LOG(INFO) << "Adding variable: chi_lmbb_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lmbb_NOSYS",
+      ttZ::chi2_vs_dR_enum_lmbb,
+      {
+        "dR_truth_pairing_idx_lp_lm_NOSYS",
+        "chi_indexed_NOSYS"
+      }
+  );
+
+  // Jet number condition (efficiency v. jet multiplicity)
+  LOG(INFO) << "Adding variable: jet_size_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_size_NOSYS",
+      ttZ::jet_size,
+      {
+        "jet_pt_NOSYS"
+      }
+  );
+
+  //////////// Efficiency v. dR /////////////////////////////
+  /// preparing the dR inputs ///////////////////////////////
+  LOG(INFO) << "Adding variable: dr_one_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dr_one_NOSYS",
+      ttZ::dr_one,
+      {}
+  );
+  LOG(INFO) << "Adding variable: dr_two_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dr_two_NOSYS",
+      ttZ::dr_two,
+      {}
+  );
+  LOG(INFO) << "Adding variable: dr_three_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dr_three_NOSYS",
+      ttZ::dr_three,
+      {}
+  );
+  LOG(INFO) << "Adding variable: dr_four_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dr_four_NOSYS",
+      ttZ::dr_four,
+      {}
+  );
+  LOG(INFO) << "Adding variable: dr_five_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dr_five_NOSYS",
+      ttZ::dr_five,
+      {}
+  );
+
+  /// preparing dR idx for each dR ////////////////////////////
+  LOG(INFO) << "Adding variable: dR_truth_pairing_idx_one_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dR_truth_pairing_idx_one_NOSYS",
+      ttZ::dR_truth_pairing_idx_lp_lm,
+      {
+        // Truth b
+        "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+        "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+        "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+        "Ttbar_History_MC_b_beforeFSR_from_t_m",
+      
+        // Truth bbar
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
+      
+        // Reco jets
+        "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS", "dr_one_NOSYS"
+      }
+  );
+  LOG(INFO) << "Adding variable: dR_truth_pairing_idx_two_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dR_truth_pairing_idx_two_NOSYS",
+      ttZ::dR_truth_pairing_idx_lp_lm,
+      {
+        // Truth b
+        "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+        "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+        "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+        "Ttbar_History_MC_b_beforeFSR_from_t_m",
+      
+        // Truth bbar
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
+      
+        // Reco jets
+        "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS", "dr_two_NOSYS"
+      }
+  );
+  LOG(INFO) << "Adding variable: dR_truth_pairing_idx_three_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dR_truth_pairing_idx_three_NOSYS",
+      ttZ::dR_truth_pairing_idx_lp_lm,
+      {
+        // Truth b
+        "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+        "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+        "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+        "Ttbar_History_MC_b_beforeFSR_from_t_m",
+      
+        // Truth bbar
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
+      
+        // Reco jets
+        "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS", "dr_three_NOSYS"
+      }
+  );
+  LOG(INFO) << "Adding variable: dR_truth_pairing_idx_four_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dR_truth_pairing_idx_four_NOSYS",
+      ttZ::dR_truth_pairing_idx_lp_lm,
+      {
+        // Truth b
+        "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+        "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+        "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+        "Ttbar_History_MC_b_beforeFSR_from_t_m",
+      
+        // Truth bbar
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
+      
+        // Reco jets
+        "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS", "dr_four_NOSYS"
+      }
+  );
+  LOG(INFO) << "Adding variable: dR_truth_pairing_idx_five_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dR_truth_pairing_idx_five_NOSYS",
+      ttZ::dR_truth_pairing_idx_lp_lm,
+      {
+        // Truth b
+        "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+        "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+        "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+        "Ttbar_History_MC_b_beforeFSR_from_t_m",
+      
+        // Truth bbar
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+        "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
+      
+        // Reco jets
+        "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS", "dr_five_NOSYS"
+      }
+  );
+
+  // dR invariant mass extraction for new means and standard deviations per dR /////////
+  // dR ONE
+  LOG(INFO) << "Adding variable: dR1_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dR1_NOSYS",
+      ttZ::dR_matched,
+    { 
+       // Truth b
+       "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+       "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+       "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+       "Ttbar_History_MC_b_beforeFSR_from_t_m",
+
+       // Truth bbar
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
+
+       // Reco jets
+       "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS",
+        "el_pt_NOSYS", "el_eta", "el_phi", "el_e_NOSYS", "el_charge",
+        "mu_pt_NOSYS", "mu_eta", "mu_phi", "mu_e_NOSYS", "mu_charge",
+        "dr_one_NOSYS"
+    }
+  );
+  LOG(INFO) << "Adding variable: truth_m_lpb1_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_m_lpb1_NOSYS",
+      ttZ::truth_m_lpb,
+    {"dR1_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: truth_m_lmbb1_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_m_lmbb1_NOSYS",
+      ttZ::truth_m_lmbb,
+    {"dR1_NOSYS"}
+  );
+
+  // dR TWO
+  LOG(INFO) << "Adding variable: dR2_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dR2_NOSYS",
+      ttZ::dR_matched,
+    { 
+       // Truth b
+       "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+       "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+       "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+       "Ttbar_History_MC_b_beforeFSR_from_t_m",
+
+       // Truth bbar
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
+
+       // Reco jets
+       "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS",
+        "el_pt_NOSYS", "el_eta", "el_phi", "el_e_NOSYS", "el_charge",
+        "mu_pt_NOSYS", "mu_eta", "mu_phi", "mu_e_NOSYS", "mu_charge",
+        "dr_two_NOSYS"
+    }
+  );
+  LOG(INFO) << "Adding variable: truth_m_lpb2_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_m_lpb2_NOSYS",
+      ttZ::truth_m_lpb,
+    {"dR2_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: truth_m_lmbb2_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_m_lmbb2_NOSYS",
+      ttZ::truth_m_lmbb,
+    {"dR2_NOSYS"}
+  );
+
+  // dR THREE
+  LOG(INFO) << "Adding variable: dR3_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dR3_NOSYS",
+      ttZ::dR_matched,
+    { 
+       // Truth b
+       "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+       "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+       "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+       "Ttbar_History_MC_b_beforeFSR_from_t_m",
+
+       // Truth bbar
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
+
+       // Reco jets
+       "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS",
+        "el_pt_NOSYS", "el_eta", "el_phi", "el_e_NOSYS", "el_charge",
+        "mu_pt_NOSYS", "mu_eta", "mu_phi", "mu_e_NOSYS", "mu_charge",
+        "dr_three_NOSYS"
+    }
+  );
+  LOG(INFO) << "Adding variable: truth_m_lpb3_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_m_lpb3_NOSYS",
+      ttZ::truth_m_lpb,
+    {"dR3_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: truth_m_lmbb3_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_m_lmbb3_NOSYS",
+      ttZ::truth_m_lmbb,
+    {"dR3_NOSYS"}
+  );
+
+  // dR FOUR
+  LOG(INFO) << "Adding variable: dR4_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dR4_NOSYS",
+      ttZ::dR_matched,
+    { 
+       // Truth b
+       "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+       "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+       "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+       "Ttbar_History_MC_b_beforeFSR_from_t_m",
+
+       // Truth bbar
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
+
+       // Reco jets
+       "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS",
+        "el_pt_NOSYS", "el_eta", "el_phi", "el_e_NOSYS", "el_charge",
+        "mu_pt_NOSYS", "mu_eta", "mu_phi", "mu_e_NOSYS", "mu_charge",
+        "dr_four_NOSYS"
+    }
+  );
+  LOG(INFO) << "Adding variable: truth_m_lpb4_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_m_lpb4_NOSYS",
+      ttZ::truth_m_lpb,
+    {"dR4_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: truth_m_lmbb4_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_m_lmbb4_NOSYS",
+      ttZ::truth_m_lmbb,
+    {"dR4_NOSYS"}
+  );
+
+  // dR FIVE
+  LOG(INFO) << "Adding variable: dR5_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "dR5_NOSYS",
+      ttZ::dR_matched,
+    { 
+       // Truth b
+       "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+       "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+       "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+       "Ttbar_History_MC_b_beforeFSR_from_t_m",
+
+       // Truth bbar
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
+
+       // Reco jets
+       "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS",
+        "el_pt_NOSYS", "el_eta", "el_phi", "el_e_NOSYS", "el_charge",
+        "mu_pt_NOSYS", "mu_eta", "mu_phi", "mu_e_NOSYS", "mu_charge",
+        "dr_five_NOSYS"
+    }
+  );
+  LOG(INFO) << "Adding variable: truth_m_lpb5_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_m_lpb5_NOSYS",
+      ttZ::truth_m_lpb,
+    {"dR5_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: truth_m_lmbb5_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_m_lmbb5_NOSYS",
+      ttZ::truth_m_lmbb,
+    {"dR5_NOSYS"}
+  );
+
+  /// chi2 for each dR ONE ////////////////////////////
+  // l+ ↔ b
+    //chi2 Indexed
+  LOG(INFO) << "Adding variable: chi_indexed1_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_indexed1_NOSYS",
+      ttZ::chi2_pairing_min_mlb_by_charge1,
+      {
+        "jet_pt_NOSYS","jet_eta","jet_phi","jet_e_NOSYS",
+        "el_pt_NOSYS","el_eta","el_phi","el_e_NOSYS","el_charge",
+        "mu_pt_NOSYS","mu_eta","mu_phi","mu_e_NOSYS","mu_charge"
+      }
+  );
+  LOG(INFO) << "Adding variable: chi_lpb_one_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lpb_one_NOSYS",
+      ttZ::chi2_vs_dR_enum_lpb,
+      {
+        "dR_truth_pairing_idx_one_NOSYS",
+        "chi_indexed1_NOSYS"
+      }
+  );
+  // l- ↔ bbar
+  LOG(INFO) << "Adding variable: chi_lmbb_one_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lmbb_one_NOSYS",
+      ttZ::chi2_vs_dR_enum_lmbb,
+      {
+        "dR_truth_pairing_idx_one_NOSYS",
+        "chi_indexed1_NOSYS"
+      }
+  );
+  /// chi2 for each dR TWO ////////////////////////////
+  // l+ ↔ b
+  LOG(INFO) << "Adding variable: chi_indexed2_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_indexed2_NOSYS",
+      ttZ::chi2_pairing_min_mlb_by_charge2,
+      {
+        "jet_pt_NOSYS","jet_eta","jet_phi","jet_e_NOSYS",
+        "el_pt_NOSYS","el_eta","el_phi","el_e_NOSYS","el_charge",
+        "mu_pt_NOSYS","mu_eta","mu_phi","mu_e_NOSYS","mu_charge"
+      }
+  );
+  LOG(INFO) << "Adding variable: chi_lpb_two_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lpb_two_NOSYS",
+      ttZ::chi2_vs_dR_enum_lpb,
+      {
+        "dR_truth_pairing_idx_two_NOSYS",
+        "chi_indexed2_NOSYS"
+      }
+  );
+  // l- ↔ bbar
+  LOG(INFO) << "Adding variable: chi_lmbb_two_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lmbb_two_NOSYS",
+      ttZ::chi2_vs_dR_enum_lmbb,
+      {
+        "dR_truth_pairing_idx_two_NOSYS",
+        "chi_indexed2_NOSYS"
+      }
+  );
+  /// chi2 for each dR THREE ////////////////////////////
+  // l+ ↔ b
+  LOG(INFO) << "Adding variable: chi_indexed3_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_indexed3_NOSYS",
+      ttZ::chi2_pairing_min_mlb_by_charge3,
+      {
+        "jet_pt_NOSYS","jet_eta","jet_phi","jet_e_NOSYS",
+        "el_pt_NOSYS","el_eta","el_phi","el_e_NOSYS","el_charge",
+        "mu_pt_NOSYS","mu_eta","mu_phi","mu_e_NOSYS","mu_charge"
+      }
+  );
+  LOG(INFO) << "Adding variable: chi_lpb_three_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lpb_three_NOSYS",
+      ttZ::chi2_vs_dR_enum_lpb,
+      {
+        "dR_truth_pairing_idx_three_NOSYS",
+        "chi_indexed3_NOSYS"
+      }
+  );
+  // l- ↔ bbar
+  LOG(INFO) << "Adding variable: chi_lmbb_three_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lmbb_three_NOSYS",
+      ttZ::chi2_vs_dR_enum_lmbb,
+      {
+        "dR_truth_pairing_idx_three_NOSYS",
+        "chi_indexed3_NOSYS"
+      }
+  );
+  /// chi2 for each dR FOUR ////////////////////////////
+  // l+ ↔ b
+  LOG(INFO) << "Adding variable: chi_indexed4_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_indexed4_NOSYS",
+      ttZ::chi2_pairing_min_mlb_by_charge4,
+      {
+        "jet_pt_NOSYS","jet_eta","jet_phi","jet_e_NOSYS",
+        "el_pt_NOSYS","el_eta","el_phi","el_e_NOSYS","el_charge",
+        "mu_pt_NOSYS","mu_eta","mu_phi","mu_e_NOSYS","mu_charge"
+      }
+  );
+  LOG(INFO) << "Adding variable: chi_lpb_four_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lpb_four_NOSYS",
+      ttZ::chi2_vs_dR_enum_lpb,
+      {
+        "dR_truth_pairing_idx_four_NOSYS",
+        "chi_indexed4_NOSYS"
+      }
+  );
+  // l- ↔ bbar
+  LOG(INFO) << "Adding variable: chi_lmbb_four_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lmbb_four_NOSYS",
+      ttZ::chi2_vs_dR_enum_lmbb,
+      {
+        "dR_truth_pairing_idx_four_NOSYS",
+        "chi_indexed4_NOSYS"
+      }
+  );
+  /// chi2 for each dR FIVE ////////////////////////////
+  // l+ ↔ b
+  LOG(INFO) << "Adding variable: chi_indexed4_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_indexed5_NOSYS",
+      ttZ::chi2_pairing_min_mlb_by_charge5,
+      {
+        "jet_pt_NOSYS","jet_eta","jet_phi","jet_e_NOSYS",
+        "el_pt_NOSYS","el_eta","el_phi","el_e_NOSYS","el_charge",
+        "mu_pt_NOSYS","mu_eta","mu_phi","mu_e_NOSYS","mu_charge"
+      }
+  );
+  LOG(INFO) << "Adding variable: chi_lpb_five_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lpb_five_NOSYS",
+      ttZ::chi2_vs_dR_enum_lpb,
+      {
+        "dR_truth_pairing_idx_five_NOSYS",
+        "chi_indexed5_NOSYS"
+      }
+  );
+  // l- ↔ bbar
+  LOG(INFO) << "Adding variable: chi_lmbb_five_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "chi_lmbb_five_NOSYS",
+      ttZ::chi2_vs_dR_enum_lmbb,
+      {
+        "dR_truth_pairing_idx_five_NOSYS",
+        "chi_indexed5_NOSYS"
+      }
+  );
+
+
+
 
   return mainNode;
 }

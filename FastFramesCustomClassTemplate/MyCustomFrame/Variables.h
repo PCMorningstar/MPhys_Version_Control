@@ -15,10 +15,19 @@ using ROOT::VecOps::RVec;
 
 namespace ttZ{ 
 
+    // creating multiply dRs for efficiency v. dR
+    float dr_one();
+    float dr_two();
+    float dr_three();
+    float dr_four();
+    float dr_five();
+    float dr_truth();
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// Section 6.1 /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  int jet_size(const RVec<float>& j_pt);
   // -----------------------------------------------------------------------------
   // A1 — Electron transverse momentum requirement
   // Requirement: pT(e) ≥ 28 GeV
@@ -250,12 +259,13 @@ namespace ttZ{
     const ROOT::VecOps::RVec<float>& el_eta,
     const ROOT::VecOps::RVec<float>& el_phi,
     const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>&   el_charge,   // NEW
+    const ROOT::VecOps::RVec<float>& el_charge,
     const ROOT::VecOps::RVec<float>& mu_pt,
     const ROOT::VecOps::RVec<float>& mu_eta,
     const ROOT::VecOps::RVec<float>& mu_phi,
     const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>&   mu_charge    // NEW
+    const ROOT::VecOps::RVec<float>& mu_charge,
+    const float& dR_cut
   );
 
   // Safe scalar extractors (now for l+/l- masses)
@@ -279,7 +289,98 @@ namespace ttZ{
     const ROOT::VecOps::RVec<float>& jet_pt,
     const ROOT::VecOps::RVec<float>& jet_eta,
     const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const float& dR_cut
+  );
+
+  // ============================================================
+  // Enum comparison for each dR condition: truth (l+,l-) vs chi2 (l+,l-)
+  // returns 0=invalid, 1=wrong, 2=correct
+  // ============================================================
+  // dR ONE
+  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge1(
+    const ROOT::VecOps::RVec<float>& jet_pt,
+    const ROOT::VecOps::RVec<float>& jet_eta,
+    const ROOT::VecOps::RVec<float>& jet_phi,
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const ROOT::VecOps::RVec<float>& el_pt,
+    const ROOT::VecOps::RVec<float>& el_eta,
+    const ROOT::VecOps::RVec<float>& el_phi,
+    const ROOT::VecOps::RVec<float>& el_e,
+    const ROOT::VecOps::RVec<float>& el_charge,
+    const ROOT::VecOps::RVec<float>& mu_pt,
+    const ROOT::VecOps::RVec<float>& mu_eta,
+    const ROOT::VecOps::RVec<float>& mu_phi,
+    const ROOT::VecOps::RVec<float>& mu_e,
+    const ROOT::VecOps::RVec<float>& mu_charge
+  );
+  // dR TWO
+  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge2(
+    const ROOT::VecOps::RVec<float>& jet_pt,
+    const ROOT::VecOps::RVec<float>& jet_eta,
+    const ROOT::VecOps::RVec<float>& jet_phi,
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const ROOT::VecOps::RVec<float>& el_pt,
+    const ROOT::VecOps::RVec<float>& el_eta,
+    const ROOT::VecOps::RVec<float>& el_phi,
+    const ROOT::VecOps::RVec<float>& el_e,
+    const ROOT::VecOps::RVec<float>& el_charge,
+    const ROOT::VecOps::RVec<float>& mu_pt,
+    const ROOT::VecOps::RVec<float>& mu_eta,
+    const ROOT::VecOps::RVec<float>& mu_phi,
+    const ROOT::VecOps::RVec<float>& mu_e,
+    const ROOT::VecOps::RVec<float>& mu_charge
+  );
+  // dR THREE
+  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge3(
+    const ROOT::VecOps::RVec<float>& jet_pt,
+    const ROOT::VecOps::RVec<float>& jet_eta,
+    const ROOT::VecOps::RVec<float>& jet_phi,
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const ROOT::VecOps::RVec<float>& el_pt,
+    const ROOT::VecOps::RVec<float>& el_eta,
+    const ROOT::VecOps::RVec<float>& el_phi,
+    const ROOT::VecOps::RVec<float>& el_e,
+    const ROOT::VecOps::RVec<float>& el_charge,
+    const ROOT::VecOps::RVec<float>& mu_pt,
+    const ROOT::VecOps::RVec<float>& mu_eta,
+    const ROOT::VecOps::RVec<float>& mu_phi,
+    const ROOT::VecOps::RVec<float>& mu_e,
+    const ROOT::VecOps::RVec<float>& mu_charge
+  );
+  // dR FOUR
+  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge4(
+    const ROOT::VecOps::RVec<float>& jet_pt,
+    const ROOT::VecOps::RVec<float>& jet_eta,
+    const ROOT::VecOps::RVec<float>& jet_phi,
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const ROOT::VecOps::RVec<float>& el_pt,
+    const ROOT::VecOps::RVec<float>& el_eta,
+    const ROOT::VecOps::RVec<float>& el_phi,
+    const ROOT::VecOps::RVec<float>& el_e,
+    const ROOT::VecOps::RVec<float>& el_charge,
+    const ROOT::VecOps::RVec<float>& mu_pt,
+    const ROOT::VecOps::RVec<float>& mu_eta,
+    const ROOT::VecOps::RVec<float>& mu_phi,
+    const ROOT::VecOps::RVec<float>& mu_e,
+    const ROOT::VecOps::RVec<float>& mu_charge
+  );
+  // dR FIVE
+  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge5(
+    const ROOT::VecOps::RVec<float>& jet_pt,
+    const ROOT::VecOps::RVec<float>& jet_eta,
+    const ROOT::VecOps::RVec<float>& jet_phi,
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const ROOT::VecOps::RVec<float>& el_pt,
+    const ROOT::VecOps::RVec<float>& el_eta,
+    const ROOT::VecOps::RVec<float>& el_phi,
+    const ROOT::VecOps::RVec<float>& el_e,
+    const ROOT::VecOps::RVec<float>& el_charge,
+    const ROOT::VecOps::RVec<float>& mu_pt,
+    const ROOT::VecOps::RVec<float>& mu_eta,
+    const ROOT::VecOps::RVec<float>& mu_phi,
+    const ROOT::VecOps::RVec<float>& mu_e,
+    const ROOT::VecOps::RVec<float>& mu_charge
   );
 
   // ============================================================

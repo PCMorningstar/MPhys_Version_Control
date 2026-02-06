@@ -42,96 +42,39 @@ regions:
         binning: *lpb_jet_binning
 
 ntuples:
-  regions:
-    - sec_region
+  #regions:
+  #  - sec_region
   # If you want a selection here, use the same as the region:
-  # selection: "section_6_1_NOSYS == 1 && section_6_2_NOSYS == 1 && section_6_3_NOSYS == 1"
+  selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 2"
   branches:
-      # Truth-level masses (for fitting!)
-      - chi_lpb_NOSYS
-      - chi_lmbb_NOSYS # 1 if l- ↔ bbar correct, 0 otherwise
+    - chi_lpb_NOSYS
+    - chi_lmbb_NOSYS
+    - weight_mc_NOSYS              # MC generator weight
+    - weight_pileup_NOSYS          # pileup weight
+    - weight_leptonSF_tight_NOSYS  # lepton SF
+    - weight_jvt_effSF_NOSYS       # jet SF 
 
+    - chi_lpb_one_NOSYS 
+    - chi_lmbb_one_NOSYS
+    - chi_lpb_two_NOSYS
+    - chi_lmbb_two_NOSYS
+    - chi_lpb_three_NOSYS
+    - chi_lmbb_three_NOSYS
+    - chi_lpb_four_NOSYS
+    - chi_lmbb_four_NOSYS
+    - chi_lpb_five_NOSYS
+    - chi_lmbb_five_NOSYS
 
-cutflows:
-  - name: Section_Cutflow
-    selections:
-      - selection: "section_6_1_NOSYS == 1 && cutA10_mu_clean_NOSYS == 1 && cutA9_el_clean_NOSYS == 1 && cutA8_jet_clean_NOSYS == 1"
-        title: "Candidate"
-
-      - selection: "section_6_1_NOSYS == 1 && section_6_2_NOSYS == 1 && cutA10_mu_clean_NOSYS == 1 && cutA9_el_clean_NOSYS == 1 && cutA8_jet_clean_NOSYS == 1"
-        title: "Event"
-
-      - selection: "section_6_1_NOSYS == 1 && section_6_2_NOSYS == 1 && section_6_3_NOSYS == 1 && cutA10_mu_clean_NOSYS == 1 && cutA9_el_clean_NOSYS == 1 && cutA8_jet_clean_NOSYS == 1"
-        title: "Classification"
-
-
-  - name: Section_6_1_Cutflow
-    selections:
-      - selection: "cutA1_el_pt_NOSYS == 1"
-        title: "E_{T,e}#geq28 GeV"
-      
-      - selection: "cutA2_el_eta_NOSYS == 1"
-        title: "|#eta_{e}|<2.47"
-
-      - selection: "cutA3_el_crack_NOSYS == 1"
-        title: "1.37#geq|#eta_{e}|>1.52"
-      
-      - selection: "cutA4_el_tight_NOSYS == 1"
-        title: "e tight"
-
-      - selection: "cutA5_mu_pt_NOSYS == 1"
-        title: "p_{T,#mu}#geq28 GeV"
-
-      - selection: "cutA6_mu_eta_NOSYS == 1"
-        title: "|#eta_{#mu}|<2.5"
-
-      - selection: "cutA7_mu_tight_NOSYS == 1"
-        title: "#mu tight"
-
-      - selection: "cutA10_mu_clean_NOSYS == 1"
-        title: "#mu clean"
-
-      - selection: "cutA9_el_clean_NOSYS == 1"
-        title: "e clean"
-      
-      - selection: "cutA8_jet_clean_NOSYS == 1"
-        title: "jet clean"
-
-  - name: Section_6_2_Cutflow
-    selections:
-      - selection: "section_6_1_NOSYS == 1 && cutA10_mu_clean_NOSYS == 1 && cutA9_el_clean_NOSYS == 1 && cutA8_jet_clean_NOSYS == 1"
-        title: "Sec-6.1"
-
-      - selection: "cutC21_exactly2leptons_NOSYS == 1"
-        title: "N_{lep} = 2"
-
-      - selection: "cutC22_opposite_charge_NOSYS == 1"
-        title: "q_{e}q_{#mu}=-1"
-      
-      - selection: "cutC23_one_el_one_mu_NOSYS == 1"
-        title: "1e, 1#mu"
-
-      - selection: "cutC24_meemu_gt50_NOSYS == 1"
-        title: "m_{e,#mu}#geq50 GeV"
-
-      - selection: "cutC25_exactly2jets_NOSYS == 1"
-        title: "N_{jets} = 2"
-
-
-  - name: Section_6_3_Cutflow
-    selections:
-      - selection: "section_6_1_NOSYS == 1 && section_6_2_NOSYS == 1 && cutA10_mu_clean_NOSYS == 1 && cutA9_el_clean_NOSYS == 1 && cutA8_jet_clean_NOSYS == 1"
-        title: "Sec-6.1+6.2"
-
-      - selection: "pairing_valid_NOSYS == 1"
-        title: "Valid pairing"
-
-      - selection: "pairing_mj1_NOSYS == 1"
-        title: "m_{j1,l}#geq20 GeV"
-
-      - selection: "pairing_mj2_NOSYS == 1"
-        title: "m_{j2,l}#geq20 GeV"
-
+    - truth_m_lpb1_NOSYS
+    - truth_m_lmbb1_NOSYS
+    - truth_m_lpb2_NOSYS
+    - truth_m_lmbb2_NOSYS
+    - truth_m_lpb3_NOSYS
+    - truth_m_lmbb3_NOSYS
+    - truth_m_lpb4_NOSYS
+    - truth_m_lmbb4_NOSYS
+    - truth_m_lpb5_NOSYS
+    - truth_m_lmbb5_NOSYS
 
 samples:
   - name: "data"
