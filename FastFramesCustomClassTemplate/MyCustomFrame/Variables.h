@@ -27,9 +27,9 @@ namespace ttZ{
   ////////////////////////////////////////////////////////////// Order by pT /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  ROOT::VecOps::RVec<int> pt_order(const RVec<float>& el_pt,
-    const RVec<float>& fv_comp);
+  RVec<float> pt_order(const RVec<float>& fv_comp, const RVec<float>& pt);
 
+  RVec<char> pt_order_nonfloat(const RVec<char>& comp, const RVec<float>& pt);
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// Section 6.1 /////////////////////////////////////////////////////////////////////
@@ -161,7 +161,7 @@ namespace ttZ{
   ////////////////////////////////////////////////////////////// Section 6.1 /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  ROOT::VecOps::RVec<int> jets_clean_from_e(
+  RVec<int> jets_clean_from_e(
       const RVec<float>& jet_eta,
       const RVec<float>& jet_phi,
       const RVec<float>& el_eta,
@@ -182,7 +182,7 @@ namespace ttZ{
       const RVec<float>& jet_phi
   );
 
-  bool cutA8_jet_clean(const ROOT::VecOps::RVec<int>& jet_keep_flags);
+  bool cutA8_jet_clean(const RVec<int>& jet_keep_flags);
   bool cutA9_el_clean(const int& el_keep_flag);
   bool cutA10_mu_clean(const int& mu_keep_flag);
 
@@ -246,7 +246,7 @@ namespace ttZ{
   // dR_matched: returns truth-clean masses in the (l+, l-) basis
   // out[0] = m(l+, b)   , out[1] = m(l-, bbar)
   // ============================================================
-  ROOT::VecOps::RVec<int> dR_matched(
+  RVec<int> dR_matched(
     const RVec<float>& b_pt,
     const RVec<float>& b_eta,
     const RVec<float>& b_phi,
@@ -273,15 +273,15 @@ namespace ttZ{
   );
 
   // Safe scalar extractors (now for l+/l- masses)
-  float truth_m_lpb (const ROOT::VecOps::RVec<int>& v);
-  float truth_m_lmbb(const ROOT::VecOps::RVec<int>& v);
+  float truth_m_lpb (const RVec<int>& v);
+  float truth_m_lmbb(const RVec<int>& v);
 
   // ============================================================
   // dR truth pairing indices in the (l+, l-) basis
   // returns [jet_for_lplus, jet_for_lminus] among (0,1), else [-1,-1]
   // (Since b ↔ l+ and bbar ↔ l-, this is [jet_for_b, jet_for_bbar])
   // ============================================================
-  ROOT::VecOps::RVec<int> dR_truth_pairing_idx_lp_lm(
+  RVec<int> dR_truth_pairing_idx_lp_lm(
     const RVec<float>& b_pt,
     const RVec<float>& b_eta,
     const RVec<float>& b_phi,
@@ -302,7 +302,7 @@ namespace ttZ{
   // returns 0=invalid, 1=wrong, 2=correct
   // ============================================================
   // dR ONE
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge1(
+  RVec<int> chi2_pairing_min_mlb_by_charge1(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -319,7 +319,7 @@ namespace ttZ{
     const RVec<float>& mu_charge
   );
   // dR TWO
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge2(
+  RVec<int> chi2_pairing_min_mlb_by_charge2(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -336,7 +336,7 @@ namespace ttZ{
     const RVec<float>& mu_charge
   );
   // dR THREE
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge3(
+  RVec<int> chi2_pairing_min_mlb_by_charge3(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -353,7 +353,7 @@ namespace ttZ{
     const RVec<float>& mu_charge
   );
   // dR FOUR
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge4(
+  RVec<int> chi2_pairing_min_mlb_by_charge4(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -370,7 +370,7 @@ namespace ttZ{
     const RVec<float>& mu_charge
   );
   // dR FIVE
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge5(
+  RVec<int> chi2_pairing_min_mlb_by_charge5(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -392,7 +392,7 @@ namespace ttZ{
   // returns [jet_for_lplus, jet_for_lminus] among (0,1), else [-1,-1]
   // NOTE: el_charge and mu_charge are floats in your ntuples.
   // ============================================================
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge(
+  RVec<int> chi2_pairing_min_mlb_by_charge(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -412,18 +412,18 @@ namespace ttZ{
   );
 
   int chi2_vs_dR_enum(
-    const ROOT::VecOps::RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const ROOT::VecOps::RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
   );
 
 
   int chi2_vs_dR_enum_lpb(
-    const ROOT::VecOps::RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const ROOT::VecOps::RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
   );
 
   int chi2_vs_dR_enum_lmbb(
-    const ROOT::VecOps::RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const ROOT::VecOps::RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
   );
 }

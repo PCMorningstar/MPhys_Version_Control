@@ -107,13 +107,13 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
     LOG(INFO) << "Adding variable: el_tight_new_NOSYS" << std::endl; // Electrons
     mainNode = MainFrame::systematicDefine(mainNode,
         "el_tight_new_NOSYS",
-        ttZ::pt_order,
+        ttZ::pt_order_nonfloat,
         {"el_select_tight_NOSYS", "el_pt_NOSYS"} // {to-be-sorted, sorted idx reference}
     );
     LOG(INFO) << "Adding variable: mu_tight_new_NOSYS" << std::endl; // Muons
     mainNode = MainFrame::systematicDefine(mainNode,
         "mu_tight_new_NOSYS",
-        ttZ::pt_order,
+        ttZ::pt_order_nonfloat,
         {"mu_select_tight_NOSYS", "mu_pt_NOSYS"}
     );
 
@@ -1144,13 +1144,13 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
     LOG(INFO) << "Adding variable: el_tight_new_NOSYS" << std::endl; // Electrons
     mainNode = MainFrame::systematicDefine(mainNode,
         "el_tight_new_NOSYS",
-        ttZ::pt_order,
+        ttZ::pt_order_nonfloat,
         {"el_select_tight_NOSYS", "el_pt_NOSYS"} // {to-be-sorted, sorted idx reference}
     );
     LOG(INFO) << "Adding variable: mu_tight_new_NOSYS" << std::endl; // Muons
     mainNode = MainFrame::systematicDefine(mainNode,
         "mu_tight_new_NOSYS",
-        ttZ::pt_order,
+        ttZ::pt_order_nonfloat,
         {"mu_select_tight_NOSYS", "mu_pt_NOSYS"}
     );
 

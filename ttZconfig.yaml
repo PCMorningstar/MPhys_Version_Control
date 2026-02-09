@@ -45,8 +45,11 @@ ntuples:
   #regions:
   #  - sec_region
   # If you want a selection here, use the same as the region:
-  selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 2"
+  selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 5"
   branches:
+    - truth_m_lpb_NOSYS
+    - truth_m_lmbb_NOSYS
+
     - chi_lpb_NOSYS
     - chi_lmbb_NOSYS
     - weight_mc_NOSYS              # MC generator weight

@@ -28,11 +28,18 @@ namespace ttZ{ //GPT aid
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // object ordering, by pT for each 4 vec component
-  RVec<float> pt_order(const RVec<float>& pt,
-    const RVec<float>& fv_comp)
+  RVec<float> pt_order(const RVec<float>& fv_comp, const RVec<float>& pt)
   {
     auto obj_pt_sorted = ROOT::VecOps::Take(fv_comp,
-      ROOT::VecOps::ArgSort(pt, [](float a, float b){ return a > b;}));
+      ROOT::VecOps::Argsort(pt, [](float a, float b){ return a > b;}));
+
+    return obj_pt_sorted;
+  }
+
+  RVec<char> pt_order_nonfloat(const RVec<char>& comp, const RVec<float>& pt)
+  {
+    auto obj_pt_sorted = ROOT::VecOps::Take(comp,
+      ROOT::VecOps::Argsort(pt, [](float a, float b){ return a > b;}));
 
     return obj_pt_sorted;
   }
@@ -96,23 +103,23 @@ namespace ttZ{ //GPT aid
   }
 
   // Reject jets if ΔR(jet, electron) < 0.2
-  ROOT::VecOps::RVec<int> jets_clean_from_e(
+  RVec<int> jets_clean_from_e(
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
     const RVec<float>& el_eta,
     const RVec<float>& el_phi)
   {
     size_t nJets = jet_eta.size();
-    ROOT::VecOps::RVec<int> keep(nJets, 1);
+    RVec<int> keep(nJets, 1);
 
     if (el_eta.empty()) return keep;
 
     for (size_t m = 0; m < el_eta.size(); ++m) {
-      float el_eta = el_eta[m];
-      float el_phi = el_phi[m];
+      float eta_val = el_eta[m];
+      float phi_val = el_phi[m];
 
       for (size_t j = 0; j < nJets; ++j) {
-          float dR = deltaR(jet_eta[j], jet_phi[j], el_eta, el_phi);
+          float dR = deltaR(jet_eta[j], jet_phi[j], eta_val, phi_val);
           if (dR < 0.2) keep[j] = 0;  // reject jet
       }
     }
@@ -131,11 +138,11 @@ namespace ttZ{ //GPT aid
     if (el_eta.empty()) return 0;
 
     for (size_t m = 0; m < el_eta.size(); ++m) {
-        float el_eta = el_eta[m];
-        float el_phi = el_phi[m];
+        float eta_val = el_eta[m];
+        float phi_val = el_phi[m];
 
         for (size_t j = 0; j < jet_eta.size(); ++j) {
-            float dR_val = deltaR(el_eta, el_phi, jet_eta[j], jet_phi[j]);
+            float dR_val = deltaR(eta_val, phi_val, jet_eta[j], jet_phi[j]);
             if (dR_val < 0.4) {
                 return 0;  // reject: this muon is too close to a jet
             }
@@ -212,7 +219,7 @@ namespace ttZ{ //GPT aid
   bool cutA3_el_crack(const RVec<float>& el_eta) {
     if (el_eta.empty()) return false;  // fail if none
     for (float eta : el_eta) {
-      if(std:.abs(eta) >= 1.37 && std:.abs(eta) < 1.52) return false;
+      if(std::abs(eta) >= 1.37 && std::abs(eta) < 1.52) return false;
     }
     return true;
   }
@@ -555,7 +562,7 @@ namespace ttZ{ //GPT aid
   // dR_matched: returns truth-clean masses in the (l+, l-) basis
   // out[0] = m(l+, b)   , out[1] = m(l-, bbar)
   // ============================================================
-  ROOT::VecOps::RVec<int> dR_matched(
+  RVec<int> dR_matched(
     const RVec<float>& b_pt,
     const RVec<float>& b_eta,
     const RVec<float>& b_phi,
@@ -622,14 +629,14 @@ namespace ttZ{ //GPT aid
   }
 
   // Safe scalar extractors
-  float truth_m_lpb (const ROOT::VecOps::RVec<int>& v){ return (v.size()>0 ? v[0] : -1.f); }
-  float truth_m_lmbb(const ROOT::VecOps::RVec<int>& v){ return (v.size()>1 ? v[1] : -1.f); }
+  float truth_m_lpb (const RVec<int>& v){ return (v.size()>0 ? v[0] : -1.f); }
+  float truth_m_lmbb(const RVec<int>& v){ return (v.size()>1 ? v[1] : -1.f); }
 
   // ============================================================
   // dR truth pairing indices in the (l+, l-) basis
   // returns [jet_for_lplus, jet_for_lminus] else [-1,-1]
   // ============================================================
-  ROOT::VecOps::RVec<int> dR_truth_pairing_idx_lp_lm(
+  RVec<int> dR_truth_pairing_idx_lp_lm(
     const RVec<float>& b_pt,
     const RVec<float>& b_eta,
     const RVec<float>& b_phi,
@@ -646,7 +653,7 @@ namespace ttZ{ //GPT aid
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
-    ROOT::VecOps::RVec<int> idx(2,-1);
+    RVec<int> idx(2,-1);
 
     if (b_pt.empty() || bbar_pt.empty() || jet_pt.size()<2) return idx;
 
@@ -680,7 +687,7 @@ namespace ttZ{ //GPT aid
   // ============================================================
   // chi2 pairing in the (l+, l-) basis
   // ============================================================
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge(
+  RVec<int> chi2_pairing_min_mlb_by_charge(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -698,7 +705,7 @@ namespace ttZ{ //GPT aid
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
-    ROOT::VecOps::RVec<int> idx(2,-1);
+    RVec<int> idx(2,-1);
 
     if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
     if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
@@ -715,8 +722,8 @@ namespace ttZ{ //GPT aid
     for (size_t i=0;i<jet_pt.size();++i)
       jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
 
-    constexpr float mu_lpb=97.82f, mu_lmbb=97.93f;
-    constexpr float s2_lp=29.95f*29.95f, s2_lm=29.98f*29.98f;
+    constexpr float mu_lpb=97.79f, mu_lmbb=97.95f;
+    constexpr float s2_lp=29.95f*29.95f, s2_lm=29.99f*29.99f;
 
     auto chi2=[&](float a,float b){
       return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
@@ -744,7 +751,7 @@ namespace ttZ{ //GPT aid
   // returns 0=invalid, 1=wrong, 2=correct
   // ============================================================
   // dR ONE
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge1(
+  RVec<int> chi2_pairing_min_mlb_by_charge1(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -762,7 +769,7 @@ namespace ttZ{ //GPT aid
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
-    ROOT::VecOps::RVec<int> idx(2,-1);
+    RVec<int> idx(2,-1);
 
     if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
     if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
@@ -804,7 +811,7 @@ namespace ttZ{ //GPT aid
     return idx;
   }
   // dR TWO
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge2(
+  RVec<int> chi2_pairing_min_mlb_by_charge2(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -822,7 +829,7 @@ namespace ttZ{ //GPT aid
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
-    ROOT::VecOps::RVec<int> idx(2,-1);
+    RVec<int> idx(2,-1);
 
     if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
     if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
@@ -864,7 +871,7 @@ namespace ttZ{ //GPT aid
     return idx;
   }
   // dR THREE
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge3(
+  RVec<int> chi2_pairing_min_mlb_by_charge3(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -882,7 +889,7 @@ namespace ttZ{ //GPT aid
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
-    ROOT::VecOps::RVec<int> idx(2,-1);
+    RVec<int> idx(2,-1);
 
     if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
     if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
@@ -924,7 +931,7 @@ namespace ttZ{ //GPT aid
     return idx;
   }
   // dR FOUR
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge4(
+  RVec<int> chi2_pairing_min_mlb_by_charge4(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -942,7 +949,7 @@ namespace ttZ{ //GPT aid
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
-    ROOT::VecOps::RVec<int> idx(2,-1);
+    RVec<int> idx(2,-1);
 
     if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
     if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
@@ -984,7 +991,7 @@ namespace ttZ{ //GPT aid
     return idx;
   }
   // dR FIVE
-  ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge5(
+  RVec<int> chi2_pairing_min_mlb_by_charge5(
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -1002,7 +1009,7 @@ namespace ttZ{ //GPT aid
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
-    ROOT::VecOps::RVec<int> idx(2,-1);
+    RVec<int> idx(2,-1);
 
     if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
     if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
@@ -1049,8 +1056,8 @@ namespace ttZ{ //GPT aid
   // returns 0=invalid, 1=wrong, 2=correct
   // ============================================================
   int chi2_vs_dR_enum(
-    const ROOT::VecOps::RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const ROOT::VecOps::RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
   ){
     if (truth_lp_lm.size() != 2 || chi2_lp_lm.size() != 2) return 0;
     if (truth_lp_lm[0] < 0 || truth_lp_lm[1] < 0) return 0;
@@ -1069,8 +1076,8 @@ namespace ttZ{ //GPT aid
   // returns 0=invalid, 1=wrong, 2=correct
   // ============================================================
   int chi2_vs_dR_enum_lpb(
-    const ROOT::VecOps::RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const ROOT::VecOps::RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
   ){
     if (truth_lp_lm.size() != 2 || chi2_lp_lm.size() != 2) return 0;
     if (truth_lp_lm[0] < 0 || chi2_lp_lm[0] < 0) return 0;
@@ -1083,8 +1090,8 @@ namespace ttZ{ //GPT aid
   // returns 0=invalid, 1=wrong, 2=correct
   // ============================================================
   int chi2_vs_dR_enum_lmbb(
-    const ROOT::VecOps::RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const ROOT::VecOps::RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
   ){
     if (truth_lp_lm.size() != 2 || chi2_lp_lm.size() != 2) return 0;
     if (truth_lp_lm[1] < 0 || chi2_lp_lm[1] < 0) return 0;
