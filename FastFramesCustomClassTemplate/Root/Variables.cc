@@ -7,6 +7,9 @@
 #include <vector>
 #include "ROOT/RVec.hxx"
 #include <Math/VectorUtil.h>
+#include <numeric>   // std::iota
+#include <algorithm> // std::sort (if used nearby)
+#include <type_traits> // std::is_same
 
 #include "Math/Vector4D.h"
 #include "TLorentzVector.h"
@@ -19,6 +22,20 @@ using ROOT::Math::PtEtaPhiMVector;
 using ROOT::VecOps::RVec;
 
 namespace ttZ{ //GPT aid
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// Order by pT /////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // object ordering, by pT for each 4 vec component
+  RVec<float> pt_order(const RVec<float>& pt,
+    const RVec<float>& fv_comp)
+  {
+    auto obj_pt_sorted = ROOT::VecOps::Take(fv_comp,
+      ROOT::VecOps::ArgSort(pt, [](float a, float b){ return a > b;}));
+
+    return obj_pt_sorted;
+  }
 
   // Usefull formulae for the analysis
   // Invariant mass calculator
@@ -71,7 +88,7 @@ namespace ttZ{ //GPT aid
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Compute ΔR between two objects
-  float deltaR(float eta1, float phi1, float eta2, float phi2) {
+  float deltaR(const float& eta1, const float& phi1, const float& eta2, const float& phi2) {
     return ROOT::Math::VectorUtil::DeltaR(
         ROOT::Math::PtEtaPhiEVector(1, eta1, phi1, 1),
         ROOT::Math::PtEtaPhiEVector(1, eta2, phi2, 1)
@@ -90,12 +107,14 @@ namespace ttZ{ //GPT aid
 
     if (el_eta.empty()) return keep;
 
-    float e_eta = el_eta[0];
-    float e_phi = el_phi[0];
+    for (size_t m = 0; m < el_eta.size(); ++m) {
+      float el_eta = el_eta[m];
+      float el_phi = el_phi[m];
 
-    for (size_t j = 0; j < nJets; ++j) {
-        float dR = deltaR(jet_eta[j], jet_phi[j], e_eta, e_phi);
-        if (dR < 0.2) keep[j] = 0;  // reject jet
+      for (size_t j = 0; j < nJets; ++j) {
+          float dR = deltaR(jet_eta[j], jet_phi[j], el_eta, el_phi);
+          if (dR < 0.2) keep[j] = 0;  // reject jet
+      }
     }
 
     return keep;
@@ -108,15 +127,21 @@ namespace ttZ{ //GPT aid
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi)
   {
+    // if none, consider "fail" or "pass" depending on your convention
     if (el_eta.empty()) return 0;
-    float e_eta = el_eta[0];
-    float e_phi = el_phi[0];
 
-    for (size_t j = 0; j < jet_eta.size(); ++j) {
-        float dR = deltaR(e_eta, e_phi, jet_eta[j], jet_phi[j]);
-        if (dR < 0.4) return 0;   // remove electron
+    for (size_t m = 0; m < el_eta.size(); ++m) {
+        float el_eta = el_eta[m];
+        float el_phi = el_phi[m];
+
+        for (size_t j = 0; j < jet_eta.size(); ++j) {
+            float dR_val = deltaR(el_eta, el_phi, jet_eta[j], jet_phi[j]);
+            if (dR_val < 0.4) {
+                return 0;  // reject: this muon is too close to a jet
+            }
+        }
     }
-    return 1;  // electron survives cleaning
+    return 1;  // all muons are clean
   }
 
   // Reject muons if ΔR(μ, jet) < 0.4
@@ -126,15 +151,21 @@ namespace ttZ{ //GPT aid
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi)
   {
+    // if no muons, consider "fail" or "pass" depending on your convention
     if (mu_eta.empty()) return 0;
-    float m_eta = mu_eta[0];
-    float m_phi = mu_phi[0];
 
-    for (size_t j = 0; j < jet_eta.size(); ++j) {
-        float dR = deltaR(m_eta, m_phi, jet_eta[j], jet_phi[j]);
-        if (dR < 0.4) return 0;  // reject muon
+    for (size_t m = 0; m < mu_eta.size(); ++m) {
+        float m_eta = mu_eta[m];
+        float m_phi = mu_phi[m];
+
+        for (size_t j = 0; j < jet_eta.size(); ++j) {
+            float dR_val = deltaR(m_eta, m_phi, jet_eta[j], jet_phi[j]);
+            if (dR_val < 0.4) {
+                return 0;  // reject: this muon is too close to a jet
+            }
+        }
     }
-    return 1;  // muon survives
+    return 1;  // all muons are clean
   }
 
   bool cutA8_jet_clean(const RVec<int>& jet_keep_flags) {
@@ -156,50 +187,78 @@ namespace ttZ{ //GPT aid
   // Requirement: pT(e) ≥ 28 GeV
   // -----------------------------------------------------------------------------
   bool cutA1_el_pt(const RVec<float>& el_pt) {
-    return (!el_pt.empty() && el_pt[0] >= 28000);
+    if (el_pt.empty()) return false;  // fail if no electrons
+    for (float pt : el_pt) {
+        if (pt < 28000) return false;  // fail if any electron below threshold
+    }
+    return true;  // all electrons above threshold
   }
   // -----------------------------------------------------------------------------
   // A2 — Electron pseudorapidity acceptance
   // Requirement: |η(e)| < 2.47
   // -----------------------------------------------------------------------------
   bool cutA2_el_eta(const RVec<float>& el_eta) {
-    return (!el_eta.empty() && std::abs(el_eta[0]) < 2.47);
+
+    if (el_eta.empty()) return false;  // fail if none
+    for (float eta : el_eta) {
+      if (std::abs(eta) >= 2.47) return false;  // fail if any electron below threshold
+    }
+    return true;  // all electrons above threshold
   }
   // -----------------------------------------------------------------------------
   // A3 — Electron calorimeter crack veto
   // Requirement: Reject 1.37 ≤ |η| < 1.52
   // -----------------------------------------------------------------------------
   bool cutA3_el_crack(const RVec<float>& el_eta) {
-    float eta = std::abs(el_eta[0]);
-    return !(eta >= 1.37 && eta < 1.52);
+    if (el_eta.empty()) return false;  // fail if none
+    for (float eta : el_eta) {
+      if(std:.abs(eta) >= 1.37 && std:.abs(eta) < 1.52) return false;
+    }
+    return true;
   }
   // -----------------------------------------------------------------------------
   // A4 — Electron identification quality
   // Requirement: tight ID flag == 1
   // -----------------------------------------------------------------------------
   bool cutA4_el_tight(const RVec<char>& el_tight) {
-    return (!el_tight.empty() && el_tight[0] == 1);
+    if (el_tight.empty()) return false;  // fail if none
+    for (float id : el_tight) {
+      if(id == 0) return false;
+    }
+    return true;
   }
   // -----------------------------------------------------------------------------
   // A5 — Muon transverse momentum requirement
   // Requirement: pT(μ) ≥ 28 GeV
   // -----------------------------------------------------------------------------
   bool cutA5_mu_pt(const RVec<float>& mu_pt) {
-    return (!mu_pt.empty() && mu_pt[0] >= 28000);
+    if (mu_pt.empty()) return false;  // fail if none
+    for (float pt : mu_pt) {
+        if (pt < 28000) return false;  // fail if any below threshold
+    }
+    return true;  // all above threshold
   }
   // -----------------------------------------------------------------------------
   // A6 — Muon pseudorapidity acceptance
   // Requirement: |η(μ)| < 2.5
   // -----------------------------------------------------------------------------
   bool cutA6_mu_eta(const RVec<float>& mu_eta) {
-    return (!mu_eta.empty() && std::abs(mu_eta[0]) < 2.5);
+    if (mu_eta.empty()) return false;  // fail if none
+    for (float eta : mu_eta) {
+      if (std::abs(eta) >= 2.5) return false;
+    }
+    return true;
   }
   // -----------------------------------------------------------------------------
   // A7 — Muon identification quality
   // Requirement: tight ID flag == 1
   // -----------------------------------------------------------------------------
   bool cutA7_mu_tight(const RVec<char>& mu_tight) {
-    return (!mu_tight.empty() && mu_tight[0] == 1);
+    if (mu_tight.empty()) return false;  // fail if none
+    for (float id : mu_tight) {
+      if(id == 0) return false;
+    }
+    return true;
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -223,9 +282,15 @@ namespace ttZ{ //GPT aid
   bool cutC22_opposite_charge(const RVec<float>& el_charge,
     const RVec<float>& mu_charge)
   {
-    return (el_charge.size() == 1 &&
-    mu_charge.size() == 1 &&
-    el_charge[0] * mu_charge[0] == -1);
+    if (el_charge.empty() || mu_charge.empty()) return false;
+
+    // Loop over all electron-muon pairs
+    for (size_t i = 0; i < el_charge.size(); ++i) {
+      for (size_t j = 0; j < mu_charge.size(); ++j) {
+          if (el_charge[i] * mu_charge[j] == -1) return true;  // any opposite-charge pair
+      }
+    }
+    return false;  // no opposite-charge pair found
   }
   // -----------------------------------------------------------------------------
   // C2.3 — eμ final-state requirement
@@ -236,20 +301,7 @@ namespace ttZ{ //GPT aid
   {
     return (el_pt.size() == 1 && mu_pt.size() == 1);
   }
-
-  // Compute m(e,μ) in GeV
-  float inv_mass_elmu(const RVec<float>& el_pt, const RVec<float>& mu_pt,
-    const RVec<float>& el_eta, const RVec<float>& mu_eta,
-    const RVec<float>& el_phi, const RVec<float>& mu_phi)
-  {
-    float pt1 = el_pt[0] / 1000.f;
-    float pt2 = mu_pt[0] / 1000.f;
-    float dη = el_eta[0] - mu_eta[0];
-    float dφ = el_phi[0] - mu_phi[0];
-
-    return std::sqrt(2 * pt1 * pt2 * (std::cosh(dη) - std::cos(dφ)));
-  }
-  // -----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
   // C2.4 — Invariant mass threshold m(eμ) ≥ 50 GeV
   // Requirement: m(eμ) ≥ 50 GeV
   // -----------------------------------------------------------------------------
@@ -257,7 +309,21 @@ namespace ttZ{ //GPT aid
     const RVec<float>& el_eta, const RVec<float>& mu_eta,
     const RVec<float>& el_phi, const RVec<float>& mu_phi)
   {
-    return (inv_mass_elmu(el_pt, mu_pt, el_eta, mu_eta, el_phi, mu_phi) >= 50.0f);
+    if (el_pt.empty() || mu_pt.empty()) return false;
+
+    // Loop over all electron-muon pairs
+    for (size_t i = 0; i < el_pt.size(); ++i) {
+      for (size_t j = 0; j < mu_pt.size(); ++j) {
+        float pt1 = el_pt[i] / 1000.f;  // MeV -> GeV
+        float pt2 = mu_pt[j] / 1000.f;
+        float dEta = el_eta[i] - mu_eta[j];
+        float dPhi = el_phi[i] - mu_phi[j];
+        float mass = std::sqrt(2 * pt1 * pt2 * (std::cosh(dEta) - std::cos(dPhi)));
+
+        if (mass >= 50.0f) return true;  // passes if any pair satisfies
+      }
+    }
+    return false;  // no pair passed
   }
 
 
@@ -269,7 +335,7 @@ namespace ttZ{ //GPT aid
   // Compute Section 6.3 minimal pairing
   //
   // Purpose:
-  //   Given 1 electron, 1 muon, and 2 jets (j1 = leading, j2 = subleading),
+  //   Given all electron, all muon, and 2 jets (j1 = leading, j2 = subleading),
   //   compute the two possible top-decay hypotheses:
   //
   //      Pairing A: (e ↔ j1) and (μ ↔ j2)
@@ -291,42 +357,70 @@ namespace ttZ{ //GPT aid
     const RVec<float>& j_phi,  const RVec<float>& j_e)
   {
     PairingResult R;
-    R.valid = false;
-
-    // Need exactly 2 jets and 1 of each lepton j_pt.size() < 2 ||
-    if (el_pt.empty() || mu_pt.empty())
-        return R;
-
-    using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float g = 1.f / 1000.f; // MeV → GeV
 
-    // Build 4-vectors
-    V4 e (el_pt[0]*g, el_eta[0], el_phi[0], el_e[0]*g);
-    V4 mu(mu_pt[0]*g, mu_eta[0], mu_phi[0], mu_e[0]*g);
-    V4 j1(j_pt[0]*g, j_eta[0], j_phi[0], j_e[0]*g); // Leading jet
-    V4 j2(j_pt[1]*g, j_eta[1], j_phi[1], j_e[1]*g); // Subleading jet
+    // -------------------------------
+    // Require at least 1 electron, 1 muon, 2 jets
+    // -------------------------------
+    if (el_pt.empty() || mu_pt.empty() || j_pt.size() < 2) return R;
 
-    // Masses for Pairing A
-    float m_ej1 = (e + j1).M();
-    float m_mj2 = (mu + j2).M();
-    float sumA  = m_ej1*m_ej1 + m_mj2*m_mj2;
+    using V4 = ROOT::Math::PtEtaPhiEVector;
 
-    // Masses for Pairing B
-    float m_ej2 = (e + j2).M();
-    float m_mj1 = (mu + j1).M();
-    float sumB  = m_ej2*m_ej2 + m_mj1*m_mj1;
+    // -------------------------------
+    // Identify the two leading jets
+    // -------------------------------
+    size_t i_j1 = 0, i_j2 = 1;
+    if (j_pt[1] > j_pt[0]) std::swap(i_j1, i_j2);
 
-    // Choose minimal-sum pairing
-    if (sumA < sumB) {
-        R.mj1 = m_ej1;  // jet1–leptonA
-        R.mj2 = m_mj2;  // jet2–leptonB
+    V4 j1(j_pt[i_j1]*g, j_eta[i_j1], j_phi[i_j1], j_e[i_j1]*g);
+    V4 j2(j_pt[i_j2]*g, j_eta[i_j2], j_phi[i_j2], j_e[i_j2]*g);
+
+    float min_sum = std::numeric_limits<float>::max();
+
+    // -------------------------------
+    // Loop over all electron-muon pairs
+    // -------------------------------
+    for (size_t i_e = 0; i_e < el_pt.size(); ++i_e) {
+      V4 e(el_pt[i_e]*g, el_eta[i_e], el_phi[i_e], el_e[i_e]*g);
+
+    for (size_t i_mu = 0; i_mu < mu_pt.size(); ++i_mu) {
+      V4 mu(mu_pt[i_mu]*g, mu_eta[i_mu], mu_phi[i_mu], mu_e[i_mu]*g);
+
+      // Pairing A: e→j1, μ→j2
+      float m_ej1 = (e + j1).M();
+      float m_mj2 = (mu + j2).M();
+      float sumA  = m_ej1*m_ej1 + m_mj2*m_mj2;
+
+      // Pairing B: e→j2, μ→j1
+      float m_ej2 = (e + j2).M();
+      float m_mj1 = (mu + j1).M();
+      float sumB  = m_ej2*m_ej2 + m_mj1*m_mj1;
+
+        // -------------------------------
+        // Select the pairing with minimal sum
+        // -------------------------------
+        if (sumA < min_sum) {
+          min_sum = sumA;
+          R.mj1 = m_ej1;
+          R.mj2 = m_mj2;
+          R.valid = true;
+        }
+        if (sumB < min_sum) {
+          min_sum = sumB;
+          R.mj1 = m_mj1;
+          R.mj2 = m_ej2;
+          R.valid = true;
+        }
+      } // mu loop
+    } // e loop
+
+    // -------------------------------
+    // Apply Section 6.3 thresholds
+    // -------------------------------
+    if (R.valid) {
+        if (R.mj1 < 20.f || R.mj2 < 20.f) R.valid = false;
     }
-    else {
-        R.mj1 = m_mj1;  // jet1–leptonB
-        R.mj2 = m_ej2;  // jet2–leptonA
-    }
 
-    R.valid = true;
     return R;
   }
   // -----------------------------------------------------------------------------
@@ -455,39 +549,41 @@ namespace ttZ{ //GPT aid
       cutA10_mu_clean(mu_keep_flag)
     );
   }
+
+
   // ============================================================
   // dR_matched: returns truth-clean masses in the (l+, l-) basis
   // out[0] = m(l+, b)   , out[1] = m(l-, bbar)
   // ============================================================
   ROOT::VecOps::RVec<int> dR_matched(
-    const ROOT::VecOps::RVec<float>& b_pt,
-    const ROOT::VecOps::RVec<float>& b_eta,
-    const ROOT::VecOps::RVec<float>& b_phi,
-    const ROOT::VecOps::RVec<float>& b_e,
-    const ROOT::VecOps::RVec<float>& bbar_pt,
-    const ROOT::VecOps::RVec<float>& bbar_eta,
-    const ROOT::VecOps::RVec<float>& bbar_phi,
-    const ROOT::VecOps::RVec<float>& bbar_e,
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge,
+    const RVec<float>& b_pt,
+    const RVec<float>& b_eta,
+    const RVec<float>& b_phi,
+    const RVec<float>& b_e,
+    const RVec<float>& bbar_pt,
+    const RVec<float>& bbar_eta,
+    const RVec<float>& bbar_phi,
+    const RVec<float>& bbar_e,
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge,
     const float& dR_cut
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f / 1000.f;
 
-    ROOT::VecOps::RVec<float> out;
+    RVec<float> out;
 
     if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return out;
     if (b_pt.empty() || bbar_pt.empty() || jet_pt.size() < 2) return out;
@@ -534,18 +630,18 @@ namespace ttZ{ //GPT aid
   // returns [jet_for_lplus, jet_for_lminus] else [-1,-1]
   // ============================================================
   ROOT::VecOps::RVec<int> dR_truth_pairing_idx_lp_lm(
-    const ROOT::VecOps::RVec<float>& b_pt,
-    const ROOT::VecOps::RVec<float>& b_eta,
-    const ROOT::VecOps::RVec<float>& b_phi,
-    const ROOT::VecOps::RVec<float>& b_e,
-    const ROOT::VecOps::RVec<float>& bbar_pt,
-    const ROOT::VecOps::RVec<float>& bbar_eta,
-    const ROOT::VecOps::RVec<float>& bbar_phi,
-    const ROOT::VecOps::RVec<float>& bbar_e,
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
+    const RVec<float>& b_pt,
+    const RVec<float>& b_eta,
+    const RVec<float>& b_phi,
+    const RVec<float>& b_e,
+    const RVec<float>& bbar_pt,
+    const RVec<float>& bbar_eta,
+    const RVec<float>& bbar_phi,
+    const RVec<float>& bbar_e,
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
     const float& dR_cut
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
@@ -585,20 +681,20 @@ namespace ttZ{ //GPT aid
   // chi2 pairing in the (l+, l-) basis
   // ============================================================
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
@@ -649,20 +745,20 @@ namespace ttZ{ //GPT aid
   // ============================================================
   // dR ONE
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge1(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
@@ -709,20 +805,20 @@ namespace ttZ{ //GPT aid
   }
   // dR TWO
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge2(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
@@ -769,20 +865,20 @@ namespace ttZ{ //GPT aid
   }
   // dR THREE
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge3(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
@@ -829,20 +925,20 @@ namespace ttZ{ //GPT aid
   }
   // dR FOUR
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge4(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
@@ -889,20 +985,20 @@ namespace ttZ{ //GPT aid
   }
   // dR FIVE
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge5(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;

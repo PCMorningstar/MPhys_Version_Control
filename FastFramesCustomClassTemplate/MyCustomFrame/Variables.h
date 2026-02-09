@@ -24,6 +24,14 @@ namespace ttZ{
     float dr_truth();
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// Order by pT /////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  ROOT::VecOps::RVec<int> pt_order(const RVec<float>& el_pt,
+    const RVec<float>& fv_comp);
+
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// Section 6.1 /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -87,10 +95,6 @@ namespace ttZ{
   bool cutC23_one_el_one_mu(const RVec<float>& el_pt,
     const RVec<float>& mu_pt);
 
-  // Compute m(e,μ) in GeV
-  float inv_mass_elmu(const RVec<float>& el_pt, const RVec<float>& mu_pt,
-    const RVec<float>& el_eta, const RVec<float>& mu_eta,
-    const RVec<float>& el_phi, const RVec<float>& mu_phi);
   // -----------------------------------------------------------------------------
   // C2.4 — Invariant mass threshold m(eμ) ≥ 50 GeV
   // Requirement: m(eμ) ≥ 50 GeV
@@ -109,9 +113,9 @@ namespace ttZ{
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   struct PairingResult {
-    float mj1;   // mass of jet1–lepton pairing
-    float mj2;   // mass of jet2–lepton pairing
-    bool  valid; // whether pairing was computed
+    bool valid = false;
+    float mj1 = -1.f;
+    float mj2 = -1.f;
   };
   // -----------------------------------------------------------------------------
   // Compute Section 6.3 minimal pairing
@@ -158,24 +162,24 @@ namespace ttZ{
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   ROOT::VecOps::RVec<int> jets_clean_from_e(
-      const ROOT::VecOps::RVec<float>& jet_eta,
-      const ROOT::VecOps::RVec<float>& jet_phi,
-      const ROOT::VecOps::RVec<float>& el_eta,
-      const ROOT::VecOps::RVec<float>& el_phi
+      const RVec<float>& jet_eta,
+      const RVec<float>& jet_phi,
+      const RVec<float>& el_eta,
+      const RVec<float>& el_phi
   );
 
   int electron_clean_from_jets(
-      const ROOT::VecOps::RVec<float>& el_eta,
-      const ROOT::VecOps::RVec<float>& el_phi,
-      const ROOT::VecOps::RVec<float>& jet_eta,
-      const ROOT::VecOps::RVec<float>& jet_phi
+      const RVec<float>& el_eta,
+      const RVec<float>& el_phi,
+      const RVec<float>& jet_eta,
+      const RVec<float>& jet_phi
   );
 
   int muon_clean_from_jets(
-      const ROOT::VecOps::RVec<float>& mu_eta,
-      const ROOT::VecOps::RVec<float>& mu_phi,
-      const ROOT::VecOps::RVec<float>& jet_eta,
-      const ROOT::VecOps::RVec<float>& jet_phi
+      const RVec<float>& mu_eta,
+      const RVec<float>& mu_phi,
+      const RVec<float>& jet_eta,
+      const RVec<float>& jet_phi
   );
 
   bool cutA8_jet_clean(const ROOT::VecOps::RVec<int>& jet_keep_flags);
@@ -243,28 +247,28 @@ namespace ttZ{
   // out[0] = m(l+, b)   , out[1] = m(l-, bbar)
   // ============================================================
   ROOT::VecOps::RVec<int> dR_matched(
-    const ROOT::VecOps::RVec<float>& b_pt,
-    const ROOT::VecOps::RVec<float>& b_eta,
-    const ROOT::VecOps::RVec<float>& b_phi,
-    const ROOT::VecOps::RVec<float>& b_e,
-    const ROOT::VecOps::RVec<float>& bbar_pt,
-    const ROOT::VecOps::RVec<float>& bbar_eta,
-    const ROOT::VecOps::RVec<float>& bbar_phi,
-    const ROOT::VecOps::RVec<float>& bbar_e,
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge,
+    const RVec<float>& b_pt,
+    const RVec<float>& b_eta,
+    const RVec<float>& b_phi,
+    const RVec<float>& b_e,
+    const RVec<float>& bbar_pt,
+    const RVec<float>& bbar_eta,
+    const RVec<float>& bbar_phi,
+    const RVec<float>& bbar_e,
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge,
     const float& dR_cut
   );
 
@@ -278,18 +282,18 @@ namespace ttZ{
   // (Since b ↔ l+ and bbar ↔ l-, this is [jet_for_b, jet_for_bbar])
   // ============================================================
   ROOT::VecOps::RVec<int> dR_truth_pairing_idx_lp_lm(
-    const ROOT::VecOps::RVec<float>& b_pt,
-    const ROOT::VecOps::RVec<float>& b_eta,
-    const ROOT::VecOps::RVec<float>& b_phi,
-    const ROOT::VecOps::RVec<float>& b_e,
-    const ROOT::VecOps::RVec<float>& bbar_pt,
-    const ROOT::VecOps::RVec<float>& bbar_eta,
-    const ROOT::VecOps::RVec<float>& bbar_phi,
-    const ROOT::VecOps::RVec<float>& bbar_e,
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
+    const RVec<float>& b_pt,
+    const RVec<float>& b_eta,
+    const RVec<float>& b_phi,
+    const RVec<float>& b_e,
+    const RVec<float>& bbar_pt,
+    const RVec<float>& bbar_eta,
+    const RVec<float>& bbar_phi,
+    const RVec<float>& bbar_e,
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
     const float& dR_cut
   );
 
@@ -299,88 +303,88 @@ namespace ttZ{
   // ============================================================
   // dR ONE
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge1(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   );
   // dR TWO
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge2(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   );
   // dR THREE
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge3(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   );
   // dR FOUR
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge4(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   );
   // dR FIVE
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge5(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   );
 
   // ============================================================
@@ -389,22 +393,22 @@ namespace ttZ{
   // NOTE: el_charge and mu_charge are floats in your ntuples.
   // ============================================================
   ROOT::VecOps::RVec<int> chi2_pairing_min_mlb_by_charge(
-    const ROOT::VecOps::RVec<float>& jet_pt,
-    const ROOT::VecOps::RVec<float>& jet_eta,
-    const ROOT::VecOps::RVec<float>& jet_phi,
-    const ROOT::VecOps::RVec<float>& jet_e,
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
 
-    const ROOT::VecOps::RVec<float>& el_pt,
-    const ROOT::VecOps::RVec<float>& el_eta,
-    const ROOT::VecOps::RVec<float>& el_phi,
-    const ROOT::VecOps::RVec<float>& el_e,
-    const ROOT::VecOps::RVec<float>& el_charge,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
 
-    const ROOT::VecOps::RVec<float>& mu_pt,
-    const ROOT::VecOps::RVec<float>& mu_eta,
-    const ROOT::VecOps::RVec<float>& mu_phi,
-    const ROOT::VecOps::RVec<float>& mu_e,
-    const ROOT::VecOps::RVec<float>& mu_charge
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
   );
 
   int chi2_vs_dR_enum(
