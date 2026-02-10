@@ -1,7 +1,7 @@
 general:
   debug_level: INFO
-  input_filelist_path: "../metadata/filelist_mc23a.txt"
-  input_sumweights_path: "../metadata/sum_of_weights_mc23a.txt"
+  input_filelist_path: "../metadata/filelist.txt"
+  input_sumweights_path: "../metadata/sum_of_weights.txt"
   output_path_histograms: "../output_histograms/"
   output_path_ntuples: "../output_ntuples/"
   default_sumweights: "NOSYS"
@@ -11,9 +11,9 @@ general:
     - files: ["/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/PMGxsecDB_mc23.txt"]
       campaigns: ["mc23a", "mc23e", "mc23d"]
   luminosity:
-    mc23a: 29300.0
+  #  mc23a: 29300.0
   #  mc23e: 109400.0
-  #  mc23d: 26700.0
+    mc23d: 26700.0
   automatic_systematics: False
   nominal_only: True
   config_define_after_custom_class : True
@@ -87,5 +87,5 @@ samples:
 
   - name: "ttll"
     dsids: [601230]
-    campaigns: ["mc23a"]
+    campaigns: ["mc23d"]
     simulation_type: "fullsim"

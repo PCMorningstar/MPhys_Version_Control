@@ -7,9 +7,8 @@
 #include <Math/VectorUtil.h>
 #include <tuple>
 
-using TLV = ROOT::Math::PtEtaPhiEVector;
 
-using ROOT::Math::PtEtaPhiMVector;
+using V4 = ROOT::Math::PtEtaPhiEVector;
 using ROOT::VecOps::RVec;
 
 
@@ -256,7 +255,11 @@ namespace ttZ{
   struct Lepton {
     V4 p4;
     float charge;
+  
+    Lepton(const V4& _p4, float _charge)
+      : p4(_p4), charge(_charge) {}
   };
+  
 
   RVec<int> dR_matched(
     const RVec<float>& b_pt,
@@ -422,12 +425,6 @@ namespace ttZ{
     const RVec<float>& mu_e,
     const RVec<float>& mu_charge
   );
-
-  int chi2_vs_dR_enum(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  );
-
 
   int chi2_vs_dR_enum_lpb(
     const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]

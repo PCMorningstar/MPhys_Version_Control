@@ -18,7 +18,7 @@
 #include "TF1.h"
 #include <tuple>
 
-using ROOT::Math::PtEtaPhiMVector;
+using V4 = ROOT::Math::PtEtaPhiEVector;
 using ROOT::VecOps::RVec;
 
 namespace ttZ{ //GPT aid
@@ -556,11 +556,12 @@ namespace ttZ{ //GPT aid
     int& el_keep_flag,
     int& mu_keep_flag,
     const RVec<char>&  el_tight,
-    const RVec<char>&  mu_tight
+    const RVec<char>&  mu_tight,
+    const RVec<char>& jet_jvt
   )
   {
     return (
-      section_6_1(el_pt, el_eta, el_tight, mu_pt, mu_eta, mu_tight) &&
+      section_6_1(el_pt, el_eta, el_tight, mu_pt, mu_eta, mu_tight, jet_jvt) &&
       section_6_2(el_pt, mu_pt, el_eta, mu_eta, el_phi, mu_phi, el_charge, mu_charge, j_pt) &&
       section_6_3(el_pt, el_eta, el_phi, el_e, mu_pt, mu_eta, mu_phi, mu_e, j_pt, j_eta, j_phi, j_e) &&
 
@@ -611,18 +612,22 @@ namespace ttZ{ //GPT aid
 
     // electrons
     for (size_t i = 0; i < el_pt.size(); ++i) {
-      leptons.push_back({
-        V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV),
-        el_charge[i]
-      });
+      leptons.push_back(
+        Lepton(
+          V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV),
+          el_charge[i]
+        )
+      );      
     }
 
     // muons
     for (size_t i = 0; i < mu_pt.size(); ++i) {
-      leptons.push_back({
-        V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV),
-        mu_charge[i]
-      });
+      leptons.push_back(
+        Lepton(
+          V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV),
+          mu_charge[i]
+        )
+      );      
     }
     
     const V4& lplus  = (leptons[0].charge > 0.f) ? leptons[0].p4 : leptons[1].p4;
@@ -734,12 +739,10 @@ namespace ttZ{ //GPT aid
     }
     
     if (best_b >= 0 && best_bbar >= 0) {
-      idx[0] = best_b;
-      idx[1] = best_bbar;
+      idx[0] = best_b; // for l+
+      idx[1] = best_bbar; // for l-
     }
-    
     return idx;
-    
   }
 
   // ============================================================
@@ -761,40 +764,47 @@ namespace ttZ{ //GPT aid
     const RVec<float>& mu_e,
     const RVec<float>& mu_charge
   ){
-    using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
     RVec<int> idx(2,-1);
 
-    if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
-    if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
+    // Collect all leptons
+    RVec<Lepton> leptons;
+    for (size_t i=0; i<el_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+    for (size_t i=0; i<mu_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
 
-    const V4 lplus  = (el_charge[0]>0.f)
-      ? V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV)
-      : V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+    if (leptons.size() < 2) return idx;
 
-    const V4 lminus = (el_charge[0]>0.f)
-      ? V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV)
-      : V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
+    // Pick one l+ and one l−
+    const V4* lplus = nullptr;
+    const V4* lminus = nullptr;
+    for (const auto& lep : leptons){
+        if (lep.charge > 0.f && !lplus)  lplus = &lep.p4;
+        if (lep.charge < 0.f && !lminus) lminus = &lep.p4;
+    }
+    if (!lplus || !lminus) return idx;
 
+    // Build jets
     std::vector<V4> jets;
     for (size_t i=0;i<jet_pt.size();++i)
-      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+        jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+    if (jets.size() < 2) return idx;
 
-    constexpr float mu_lpb=97.79f, mu_lmbb=97.95f;
-    constexpr float s2_lp=29.95f*29.95f, s2_lm=29.99f*29.99f;
-
-    auto chi2=[&](float a,float b){
-      return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
+    // chi2 constants
+    constexpr float mu_lpb = 97.79f, mu_lmbb = 97.95f;
+    constexpr float s2_lp = 29.95f*29.95f, s2_lm = 29.99f*29.99f;
+    auto chi2 = [&](float a, float b){
+        return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
     };
 
+    // Loop over all unique jet pairs
     float min_chi2 = 1e12f;
     int best_i=-1, best_j=-1;
-
-    // Loop over all unique jet pairs
     for (size_t i=0; i<jets.size(); ++i){
         for (size_t j=i+1; j<jets.size(); ++j){
-            float chiA = chi2( (lplus + jets[i]).M(), (lminus + jets[j]).M() );
-            float chiB = chi2( (lplus + jets[j]).M(), (lminus + jets[i]).M() );
+            float chiA = chi2( (*lplus + jets[i]).M(), (*lminus + jets[j]).M() );
+            float chiB = chi2( (*lplus + jets[j]).M(), (*lminus + jets[i]).M() );
 
             if (chiA < min_chi2) { min_chi2 = chiA; best_i = i; best_j = j; }
             if (chiB < min_chi2) { min_chi2 = chiB; best_i = j; best_j = i; }
@@ -825,40 +835,47 @@ namespace ttZ{ //GPT aid
     const RVec<float>& mu_e,
     const RVec<float>& mu_charge
   ){
-    using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
     RVec<int> idx(2,-1);
 
-    if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
-    if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
+    // Collect all leptons
+    RVec<Lepton> leptons;
+    for (size_t i=0; i<el_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+    for (size_t i=0; i<mu_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
 
-    const V4 lplus  = (el_charge[0]>0.f)
-      ? V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV)
-      : V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+    if (leptons.size() < 2) return idx;
 
-    const V4 lminus = (el_charge[0]>0.f)
-      ? V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV)
-      : V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
+    // Pick one l+ and one l−
+    const V4* lplus = nullptr;
+    const V4* lminus = nullptr;
+    for (const auto& lep : leptons){
+        if (lep.charge > 0.f && !lplus)  lplus = &lep.p4;
+        if (lep.charge < 0.f && !lminus) lminus = &lep.p4;
+    }
+    if (!lplus || !lminus) return idx;
 
+    // Build jets
     std::vector<V4> jets;
     for (size_t i=0;i<jet_pt.size();++i)
-      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+        jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+    if (jets.size() < 2) return idx;
 
-    constexpr float mu_lpb=96.034f, mu_lmbb=95.992f;
-    constexpr float s2_lp=32.107f*32.107f, s2_lm=33.068f*33.068f;
-
-    auto chi2=[&](float a,float b){
-      return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
+    // chi2 constants
+    constexpr float mu_lpb = 97.79f, mu_lmbb = 97.95f;
+    constexpr float s2_lp = 29.95f*29.95f, s2_lm = 29.99f*29.99f;
+    auto chi2 = [&](float a, float b){
+        return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
     };
 
+    // Loop over all unique jet pairs
     float min_chi2 = 1e12f;
     int best_i=-1, best_j=-1;
-
-    // Loop over all unique jet pairs
     for (size_t i=0; i<jets.size(); ++i){
         for (size_t j=i+1; j<jets.size(); ++j){
-            float chiA = chi2( (lplus + jets[i]).M(), (lminus + jets[j]).M() );
-            float chiB = chi2( (lplus + jets[j]).M(), (lminus + jets[i]).M() );
+            float chiA = chi2( (*lplus + jets[i]).M(), (*lminus + jets[j]).M() );
+            float chiB = chi2( (*lplus + jets[j]).M(), (*lminus + jets[i]).M() );
 
             if (chiA < min_chi2) { min_chi2 = chiA; best_i = i; best_j = j; }
             if (chiB < min_chi2) { min_chi2 = chiB; best_i = j; best_j = i; }
@@ -885,40 +902,47 @@ namespace ttZ{ //GPT aid
     const RVec<float>& mu_e,
     const RVec<float>& mu_charge
   ){
-    using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
     RVec<int> idx(2,-1);
 
-    if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
-    if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
+    // Collect all leptons
+    RVec<Lepton> leptons;
+    for (size_t i=0; i<el_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+    for (size_t i=0; i<mu_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
 
-    const V4 lplus  = (el_charge[0]>0.f)
-      ? V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV)
-      : V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+    if (leptons.size() < 2) return idx;
 
-    const V4 lminus = (el_charge[0]>0.f)
-      ? V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV)
-      : V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
+    // Pick one l+ and one l−
+    const V4* lplus = nullptr;
+    const V4* lminus = nullptr;
+    for (const auto& lep : leptons){
+        if (lep.charge > 0.f && !lplus)  lplus = &lep.p4;
+        if (lep.charge < 0.f && !lminus) lminus = &lep.p4;
+    }
+    if (!lplus || !lminus) return idx;
 
+    // Build jets
     std::vector<V4> jets;
     for (size_t i=0;i<jet_pt.size();++i)
-      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+        jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+    if (jets.size() < 2) return idx;
 
-    constexpr float mu_lpb=96.034f, mu_lmbb=95.989f;
-    constexpr float s2_lp=32.114f*32.114f, s2_lm=33.072f*33.072f;
-
-    auto chi2=[&](float a,float b){
-      return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
+    // chi2 constants
+    constexpr float mu_lpb = 97.79f, mu_lmbb = 97.95f;
+    constexpr float s2_lp = 29.95f*29.95f, s2_lm = 29.99f*29.99f;
+    auto chi2 = [&](float a, float b){
+        return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
     };
 
+    // Loop over all unique jet pairs
     float min_chi2 = 1e12f;
     int best_i=-1, best_j=-1;
-
-    // Loop over all unique jet pairs
     for (size_t i=0; i<jets.size(); ++i){
         for (size_t j=i+1; j<jets.size(); ++j){
-            float chiA = chi2( (lplus + jets[i]).M(), (lminus + jets[j]).M() );
-            float chiB = chi2( (lplus + jets[j]).M(), (lminus + jets[i]).M() );
+            float chiA = chi2( (*lplus + jets[i]).M(), (*lminus + jets[j]).M() );
+            float chiB = chi2( (*lplus + jets[j]).M(), (*lminus + jets[i]).M() );
 
             if (chiA < min_chi2) { min_chi2 = chiA; best_i = i; best_j = j; }
             if (chiB < min_chi2) { min_chi2 = chiB; best_i = j; best_j = i; }
@@ -945,40 +969,47 @@ namespace ttZ{ //GPT aid
     const RVec<float>& mu_e,
     const RVec<float>& mu_charge
   ){
-    using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
     RVec<int> idx(2,-1);
 
-    if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
-    if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
+    // Collect all leptons
+    RVec<Lepton> leptons;
+    for (size_t i=0; i<el_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+    for (size_t i=0; i<mu_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
 
-    const V4 lplus  = (el_charge[0]>0.f)
-      ? V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV)
-      : V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+    if (leptons.size() < 2) return idx;
 
-    const V4 lminus = (el_charge[0]>0.f)
-      ? V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV)
-      : V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
+    // Pick one l+ and one l−
+    const V4* lplus = nullptr;
+    const V4* lminus = nullptr;
+    for (const auto& lep : leptons){
+        if (lep.charge > 0.f && !lplus)  lplus = &lep.p4;
+        if (lep.charge < 0.f && !lminus) lminus = &lep.p4;
+    }
+    if (!lplus || !lminus) return idx;
 
+    // Build jets
     std::vector<V4> jets;
     for (size_t i=0;i<jet_pt.size();++i)
-      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+        jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+    if (jets.size() < 2) return idx;
 
-    constexpr float mu_lpb=96.034f, mu_lmbb=95.988f;
-    constexpr float s2_lp=32.119f*32.119f, s2_lm=33.077f*33.077f;
-
-    auto chi2=[&](float a,float b){
-      return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
+    // chi2 constants
+    constexpr float mu_lpb = 97.79f, mu_lmbb = 97.95f;
+    constexpr float s2_lp = 29.95f*29.95f, s2_lm = 29.99f*29.99f;
+    auto chi2 = [&](float a, float b){
+        return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
     };
 
+    // Loop over all unique jet pairs
     float min_chi2 = 1e12f;
     int best_i=-1, best_j=-1;
-
-    // Loop over all unique jet pairs
     for (size_t i=0; i<jets.size(); ++i){
         for (size_t j=i+1; j<jets.size(); ++j){
-            float chiA = chi2( (lplus + jets[i]).M(), (lminus + jets[j]).M() );
-            float chiB = chi2( (lplus + jets[j]).M(), (lminus + jets[i]).M() );
+            float chiA = chi2( (*lplus + jets[i]).M(), (*lminus + jets[j]).M() );
+            float chiB = chi2( (*lplus + jets[j]).M(), (*lminus + jets[i]).M() );
 
             if (chiA < min_chi2) { min_chi2 = chiA; best_i = i; best_j = j; }
             if (chiB < min_chi2) { min_chi2 = chiB; best_i = j; best_j = i; }
@@ -1005,40 +1036,47 @@ namespace ttZ{ //GPT aid
     const RVec<float>& mu_e,
     const RVec<float>& mu_charge
   ){
-    using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
     RVec<int> idx(2,-1);
 
-    if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
-    if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
+    // Collect all leptons
+    RVec<Lepton> leptons;
+    for (size_t i=0; i<el_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+    for (size_t i=0; i<mu_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
 
-    const V4 lplus  = (el_charge[0]>0.f)
-      ? V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV)
-      : V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+    if (leptons.size() < 2) return idx;
 
-    const V4 lminus = (el_charge[0]>0.f)
-      ? V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV)
-      : V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
+    // Pick one l+ and one l−
+    const V4* lplus = nullptr;
+    const V4* lminus = nullptr;
+    for (const auto& lep : leptons){
+        if (lep.charge > 0.f && !lplus)  lplus = &lep.p4;
+        if (lep.charge < 0.f && !lminus) lminus = &lep.p4;
+    }
+    if (!lplus || !lminus) return idx;
 
+    // Build jets
     std::vector<V4> jets;
     for (size_t i=0;i<jet_pt.size();++i)
-      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+        jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+    if (jets.size() < 2) return idx;
 
-    constexpr float mu_lpb=96.034f, mu_lmbb=95.988f;
-    constexpr float s2_lp=32.123f*32.123f, s2_lm=33.080f*33.080f;
-
-    auto chi2=[&](float a,float b){
-      return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
+    // chi2 constants
+    constexpr float mu_lpb = 97.79f, mu_lmbb = 97.95f;
+    constexpr float s2_lp = 29.95f*29.95f, s2_lm = 29.99f*29.99f;
+    auto chi2 = [&](float a, float b){
+        return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
     };
 
+    // Loop over all unique jet pairs
     float min_chi2 = 1e12f;
     int best_i=-1, best_j=-1;
-
-    // Loop over all unique jet pairs
     for (size_t i=0; i<jets.size(); ++i){
         for (size_t j=i+1; j<jets.size(); ++j){
-            float chiA = chi2( (lplus + jets[i]).M(), (lminus + jets[j]).M() );
-            float chiB = chi2( (lplus + jets[j]).M(), (lminus + jets[i]).M() );
+            float chiA = chi2( (*lplus + jets[i]).M(), (*lminus + jets[j]).M() );
+            float chiB = chi2( (*lplus + jets[j]).M(), (*lminus + jets[i]).M() );
 
             if (chiA < min_chi2) { min_chi2 = chiA; best_i = i; best_j = j; }
             if (chiB < min_chi2) { min_chi2 = chiB; best_i = j; best_j = i; }
@@ -1065,40 +1103,47 @@ namespace ttZ{ //GPT aid
     const RVec<float>& mu_e,
     const RVec<float>& mu_charge
   ){
-    using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
     RVec<int> idx(2,-1);
 
-    if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return idx;
-    if (el_charge[0]*mu_charge[0]>=0.f || jet_pt.size()<2) return idx;
+    // Collect all leptons
+    RVec<Lepton> leptons;
+    for (size_t i=0; i<el_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+    for (size_t i=0; i<mu_pt.size(); ++i)
+        leptons.push_back(Lepton{V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
 
-    const V4 lplus  = (el_charge[0]>0.f)
-      ? V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV)
-      : V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+    if (leptons.size() < 2) return idx;
 
-    const V4 lminus = (el_charge[0]>0.f)
-      ? V4(mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV)
-      : V4(el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
+    // Pick one l+ and one l−
+    const V4* lplus = nullptr;
+    const V4* lminus = nullptr;
+    for (const auto& lep : leptons){
+        if (lep.charge > 0.f && !lplus)  lplus = &lep.p4;
+        if (lep.charge < 0.f && !lminus) lminus = &lep.p4;
+    }
+    if (!lplus || !lminus) return idx;
 
+    // Build jets
     std::vector<V4> jets;
     for (size_t i=0;i<jet_pt.size();++i)
-      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+        jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+    if (jets.size() < 2) return idx;
 
-    constexpr float mu_lpb=96.034f, mu_lmbb=95.989f;
-    constexpr float s2_lp=32.125f*32.125f, s2_lm=33.082f*33.082f;
-
-    auto chi2=[&](float a,float b){
-      return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
+    // chi2 constants
+    constexpr float mu_lpb = 97.79f, mu_lmbb = 97.95f;
+    constexpr float s2_lp = 29.95f*29.95f, s2_lm = 29.99f*29.99f;
+    auto chi2 = [&](float a, float b){
+        return (a-mu_lpb)*(a-mu_lpb)/s2_lp + (b-mu_lmbb)*(b-mu_lmbb)/s2_lm;
     };
 
+    // Loop over all unique jet pairs
     float min_chi2 = 1e12f;
     int best_i=-1, best_j=-1;
-
-    // Loop over all unique jet pairs
     for (size_t i=0; i<jets.size(); ++i){
         for (size_t j=i+1; j<jets.size(); ++j){
-            float chiA = chi2( (lplus + jets[i]).M(), (lminus + jets[j]).M() );
-            float chiB = chi2( (lplus + jets[j]).M(), (lminus + jets[i]).M() );
+            float chiA = chi2( (*lplus + jets[i]).M(), (*lminus + jets[j]).M() );
+            float chiB = chi2( (*lplus + jets[j]).M(), (*lminus + jets[i]).M() );
 
             if (chiA < min_chi2) { min_chi2 = chiA; best_i = i; best_j = j; }
             if (chiB < min_chi2) { min_chi2 = chiB; best_i = j; best_j = i; }
@@ -1107,25 +1152,6 @@ namespace ttZ{ //GPT aid
 
     if (best_i >= 0 && best_j >= 0) { idx[0] = best_i; idx[1] = best_j; }
     return idx;
-  }
-
-  // ============================================================
-  // Enum comparison: truth (l+,l-) vs chi2 (l+,l-)
-  // returns 0=invalid, 1=wrong, 2=correct
-  // ============================================================
-  int chi2_vs_dR_enum(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  ){
-    if (truth_lp_lm.size() != 2 || chi2_lp_lm.size() != 2) return 0;
-    if (truth_lp_lm[0] < 0 || truth_lp_lm[1] < 0) return 0;
-    if (chi2_lp_lm[0]  < 0 || chi2_lp_lm[1]  < 0) return 0;
-
-    const bool correct =
-      (chi2_lp_lm[0] == truth_lp_lm[0]) &&
-      (chi2_lp_lm[1] == truth_lp_lm[1]);
-
-    return correct ? 2 : 1;
   }
 
   // Per branch
