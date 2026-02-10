@@ -267,7 +267,18 @@ namespace ttZ{ //GPT aid
     }
     return true;
   }
-
+  // -----------------------------------------------------------------------------
+  // A7.1 — Jet identification quality
+  // Requirement: select jvt flag == 1 (like the lepton tight_ID)
+  // -----------------------------------------------------------------------------
+  bool cutA7_1_jet_jvt(const RVec<char>& jet_jvt)
+  {
+    if (jet_jvt.empty()) return false;  // fail if none
+    for (float id : jet_jvt) {
+      if(id == 0) return false;
+    }
+    return true;
+  }
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// Section 6.2 /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -462,7 +473,8 @@ namespace ttZ{ //GPT aid
     const RVec<char>&  el_tight,
     const RVec<float>& mu_pt,
     const RVec<float>& mu_eta,
-    const RVec<char>&  mu_tight
+    const RVec<char>&  mu_tight,
+    const RVec<char>& jet_jvt
   )
   {
       return (
@@ -472,7 +484,8 @@ namespace ttZ{ //GPT aid
         cutA4_el_tight(el_tight) &&
         cutA5_mu_pt(mu_pt)     &&
         cutA6_mu_eta(mu_eta)   &&
-        cutA7_mu_tight(mu_tight)
+        cutA7_mu_tight(mu_tight) &&
+        cutA7_1_jet_jvt(jet_jvt)
       );
   }
   bool section_6_2(
@@ -589,17 +602,31 @@ namespace ttZ{ //GPT aid
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f / 1000.f;
+    RVec<Lepton> leptons;
 
     RVec<float> out;
 
     if (el_pt.empty() || mu_pt.empty() || el_charge.empty() || mu_charge.empty()) return out;
     if (b_pt.empty() || bbar_pt.empty() || jet_pt.size() < 2) return out;
 
-    const V4 e  (el_pt[0]*GeV, el_eta[0], el_phi[0], el_e[0]*GeV);
-    const V4 mu (mu_pt[0]*GeV, mu_eta[0], mu_phi[0], mu_e[0]*GeV);
+    // electrons
+    for (size_t i = 0; i < el_pt.size(); ++i) {
+      leptons.push_back({
+        V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV),
+        el_charge[i]
+      });
+    }
 
-    const V4 lplus  = (el_charge[0] > 0.f) ? e  : mu;
-    const V4 lminus = (el_charge[0] > 0.f) ? mu : e;
+    // muons
+    for (size_t i = 0; i < mu_pt.size(); ++i) {
+      leptons.push_back({
+        V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV),
+        mu_charge[i]
+      });
+    }
+    
+    const V4& lplus  = (leptons[0].charge > 0.f) ? leptons[0].p4 : leptons[1].p4;
+    const V4& lminus = (leptons[0].charge > 0.f) ? leptons[1].p4 : leptons[0].p4;
 
     std::vector<V4> jets;
     for (size_t i=0;i<jet_pt.size();++i)
@@ -653,35 +680,66 @@ namespace ttZ{ //GPT aid
   ){
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
-    RVec<int> idx(2,-1);
-
-    if (b_pt.empty() || bbar_pt.empty() || jet_pt.size()<2) return idx;
-
-    const V4 b    (b_pt[0]*GeV,    b_eta[0],    b_phi[0],    b_e[0]*GeV);
-    const V4 bbar (bbar_pt[0]*GeV, bbar_eta[0], bbar_phi[0], bbar_e[0]*GeV);
-
+    
+    RVec<int> idx(2, -1);   // [b, bbar]
+    
+    // basic sanity
+    if (b_pt.empty() || bbar_pt.empty() || jet_pt.size() < 2)
+      return idx;
+    
+    // build jets
     std::vector<V4> jets;
-    for (size_t i=0;i<jet_pt.size();++i)
+    jets.reserve(jet_pt.size());
+    for (size_t i = 0; i < jet_pt.size(); ++i)
       jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
-
-    auto dR = [](const V4& a,const V4& b){ return ROOT::Math::VectorUtil::DeltaR(a,b); };
-
-    float minDRb=1e9f, minDRbb=1e9f;
-    int ib=-1, ibbar=-1;
-
-    for (size_t i=0;i<jets.size();++i){
-      float drb  = dR(jets[i], b);
-      float drbb = dR(jets[i], bbar);
-
-      if (drb < dR_cut && drb < minDRb)   { minDRb  = drb;  ib    = i; }
-      if (drbb< dR_cut && drbb< minDRbb)  { minDRbb = drbb; ibbar = i; }
+    
+    // ΔR helper
+    auto dR = [](const V4& a, const V4& b) {
+      return ROOT::Math::VectorUtil::DeltaR(a, b);
+    };
+    
+    float bestScore = 1e9f;
+    int best_b = -1, best_bbar = -1;
+    
+    // loop over *all* truth b and bbar
+    for (size_t ib = 0; ib < b_pt.size(); ++ib) {
+    
+      const V4 b(b_pt[ib]*GeV, b_eta[ib], b_phi[ib], b_e[ib]*GeV);
+    
+      for (size_t ibb = 0; ibb < bbar_pt.size(); ++ibb) {
+    
+        const V4 bbar(bbar_pt[ibb]*GeV, bbar_eta[ibb], bbar_phi[ibb], bbar_e[ibb]*GeV);
+    
+        for (size_t j1 = 0; j1 < jets.size(); ++j1) {
+          float drb = dR(jets[j1], b);
+          if (drb > dR_cut) continue;
+    
+          for (size_t j2 = 0; j2 < jets.size(); ++j2) {
+            if (j2 == j1) continue;
+    
+            float drbb = dR(jets[j2], bbar);
+            if (drbb > dR_cut) continue;
+    
+            // symmetric cost function
+            float score = drb*drb + drbb*drbb;
+    
+            if (score < bestScore) {
+              bestScore = score;
+              best_b    = j1;
+              best_bbar = j2;
+            }
+          }
+        }
+      }
     }
-
-    if (ib>=0 && ibbar>=0 && ib!=ibbar){
-      idx[0]=ib;
-      idx[1]=ibbar;
+    
+    if (best_b >= 0 && best_bbar >= 0) {
+      idx[0] = best_b;
+      idx[1] = best_bbar;
     }
+    
     return idx;
+    
   }
 
   // ============================================================

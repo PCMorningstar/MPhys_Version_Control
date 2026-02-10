@@ -71,6 +71,11 @@ namespace ttZ{
   // Requirement: tight ID flag == 1
   // -----------------------------------------------------------------------------
   bool cutA7_mu_tight(const RVec<char>& mu_tight);
+  // -----------------------------------------------------------------------------
+  // A7.1 — Jet identification quality
+  // Requirement: select jvt flag == 1 (like the lepton tight_ID)
+  // -----------------------------------------------------------------------------
+  bool cutA7_1_jet_jvt(const RVec<char>& jet_jvt);
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// Section 6.2 /////////////////////////////////////////////////////////////////////
@@ -193,7 +198,8 @@ namespace ttZ{
     const RVec<char>&  el_tight,
     const RVec<float>& mu_pt,
     const RVec<float>& mu_eta,
-    const RVec<char>&  mu_tight
+    const RVec<char>&  mu_tight,
+    const RVec<char>& jet_jvt
   );
   bool section_6_2(
     const RVec<float>& el_pt,
@@ -239,13 +245,19 @@ namespace ttZ{
     const RVec<int>& jet_keep_flags,
     int& el_keep_flag,
     int& mu_keep_flag,
-    const RVec<char>&  el_tight,
-    const RVec<char>&  mu_tight
+    const RVec<char>& el_tight,
+    const RVec<char>& mu_tight,
+    const RVec<char>& jet_jvt
   );
   // ============================================================
   // dR_matched: returns truth-clean masses in the (l+, l-) basis
   // out[0] = m(l+, b)   , out[1] = m(l-, bbar)
   // ============================================================
+  struct Lepton {
+    V4 p4;
+    float charge;
+  };
+
   RVec<int> dR_matched(
     const RVec<float>& b_pt,
     const RVec<float>& b_eta,

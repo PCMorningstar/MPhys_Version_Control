@@ -184,6 +184,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
         ttZ::cutA7_mu_tight,
         {"mu_tight_new_NOSYS"}
     );
+
   
     // -----------------------------------------------------------------------------
     // A8 — Jet cleaning (jets removed if ΔR < 0.2 w.r.t electron)
@@ -1153,6 +1154,12 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
         ttZ::pt_order_nonfloat,
         {"mu_select_tight_NOSYS", "mu_pt_NOSYS"}
     );
+    LOG(INFO) << "Adding variable: jet_jvt_new_NOSYS" << std::endl; // Jets
+    mainNode = MainFrame::systematicDefine(mainNode,
+        "jet_jvt_new_NOSYS",
+        ttZ::pt_order_nonfloat,
+        {"jet_select_baselineJvt_NOSYS", "jet_pt_NOSYS"}
+    );
 
     // Sorting charge columns
     LOG(INFO) << "Adding variable: el_charge_new_NOSYS" << std::endl; // Electrons
@@ -1220,6 +1227,14 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
         "cutA7_mu_tight_NOSYS",
         ttZ::cutA7_mu_tight,
         {"mu_tight_new_NOSYS"}
+    );
+
+    LOG(INFO) << "Adding variable: cutA7_1_jet_jvt_NOSYS" << std::endl;
+    mainNode = MainFrame::systematicDefine(
+        mainNode,
+        "cutA7_1_jet_jvt_NOSYS",
+        ttZ::cutA7_mu_tight,
+        {"jet_jvt_new_NOSYS"}
     );
   
     // -----------------------------------------------------------------------------
@@ -1366,7 +1381,8 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
           "el_tight_new_NOSYS",
           "mu_pt_new_NOSYS",
           "mu_eta_new_NOSYS",
-          "mu_tight_new_NOSYS"
+          "mu_tight_new_NOSYS",
+          "jet_jvt_new_NOSYS"
       }
     );
     LOG(INFO) << "Adding variable: section_6_2_NOSYS" << std::endl;
@@ -1411,7 +1427,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
           "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
           "el_charge_new_NOSYS", "mu_charge_new_NOSYS", 
           "jets_clean_from_e_NOSYS", "electron_clean_from_jets_NOSYS", "muon_clean_from_jets_NOSYS",
-          "el_tight_new_NOSYS", "mu_tight_new_NOSYS"
+          "el_tight_new_NOSYS", "mu_tight_new_NOSYS", "jet_jvt_new_NOSYS"
         }
     );
 
