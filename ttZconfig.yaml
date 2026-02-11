@@ -11,9 +11,9 @@ general:
     - files: ["/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/PMGxsecDB_mc23.txt"]
       campaigns: ["mc23a", "mc23e", "mc23d"]
   luminosity:
-  #  mc23a: 29300.0
+    mc23a: 29300.0
   #  mc23e: 109400.0
-    mc23d: 26700.0
+  #  mc23d: 26700.0
   automatic_systematics: False
   nominal_only: True
   config_define_after_custom_class : True
@@ -45,13 +45,16 @@ ntuples:
   #regions:
   #  - sec_region
   # If you want a selection here, use the same as the region:
-  selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 5"
+  selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 2"
   branches:
     - truth_m_lpb_NOSYS
     - truth_m_lmbb_NOSYS
 
     - chi_lpb_NOSYS
     - chi_lmbb_NOSYS
+    - misms_lpb_NOSYS
+    - misms_lmbb_NOSYS
+
     - weight_mc_NOSYS              # MC generator weight
     - weight_pileup_NOSYS          # pileup weight
     - weight_leptonSF_tight_NOSYS  # lepton SF
@@ -87,5 +90,5 @@ samples:
 
   - name: "ttll"
     dsids: [601230]
-    campaigns: ["mc23d"]
+    campaigns: ["mc23a"]
     simulation_type: "fullsim"

@@ -262,14 +262,14 @@ namespace ttZ{
   
 
   RVec<int> dR_matched(
-    const RVec<float>& b_pt,
-    const RVec<float>& b_eta,
-    const RVec<float>& b_phi,
-    const RVec<float>& b_e,
-    const RVec<float>& bbar_pt,
-    const RVec<float>& bbar_eta,
-    const RVec<float>& bbar_phi,
-    const RVec<float>& bbar_e,
+    const RVec<float>& b_pti,
+    const RVec<float>& b_etai,
+    const RVec<float>& b_phii,
+    const RVec<float>& b_ei,
+    const RVec<float>& bbar_pti,
+    const RVec<float>& bbar_etai,
+    const RVec<float>& bbar_phii,
+    const RVec<float>& bbar_ei,
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -297,14 +297,14 @@ namespace ttZ{
   // (Since b ↔ l+ and bbar ↔ l-, this is [jet_for_b, jet_for_bbar])
   // ============================================================
   RVec<int> dR_truth_pairing_idx_lp_lm(
-    const RVec<float>& b_pt,
-    const RVec<float>& b_eta,
-    const RVec<float>& b_phi,
-    const RVec<float>& b_e,
-    const RVec<float>& bbar_pt,
-    const RVec<float>& bbar_eta,
-    const RVec<float>& bbar_phi,
-    const RVec<float>& bbar_e,
+    const RVec<float>& b_pti,
+    const RVec<float>& b_etai,
+    const RVec<float>& b_phii,
+    const RVec<float>& b_ei,
+    const RVec<float>& bbar_pti,
+    const RVec<float>& bbar_etai,
+    const RVec<float>& bbar_phii,
+    const RVec<float>& bbar_ei,
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -434,5 +434,45 @@ namespace ttZ{
   int chi2_vs_dR_enum_lmbb(
     const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
     const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
+  );
+
+  // ============================================================
+  // Minimum Invariant Squared Mass Sum (MISMS)
+  // pairing in the (l+, l-) basis
+  // Minimises:  M(l+ b)^2 + M(l- b)^2
+  // ============================================================
+
+  RVec<int> misms_pairing_min_mlb2_by_charge(
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
+  );
+  // Per branch
+  // ============================================================
+  // Per-branch enum: l+ ↔ b
+  // returns 0=invalid, 1=wrong, 2=correct
+  // ============================================================
+  int misms_pairing_min_mlb2_lpb(
+    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& misms_lp_lm   // [jet_for_lplus, jet_for_lminus]
+  );
+  // ============================================================
+  // Per-branch enum: l- ↔ bbar
+  // returns 0=invalid, 1=wrong, 2=correct
+  // ============================================================
+  int misms_pairing_min_mlb2_lmbb(
+    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
+    const RVec<int>& misms_lp_lm   // [jet_for_lplus, jet_for_lminus]
   );
 }

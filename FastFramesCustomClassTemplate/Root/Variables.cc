@@ -577,14 +577,14 @@ namespace ttZ{ //GPT aid
   // out[0] = m(l+, b)   , out[1] = m(l-, bbar)
   // ============================================================
   RVec<int> dR_matched(
-    const RVec<float>& b_pt,
-    const RVec<float>& b_eta,
-    const RVec<float>& b_phi,
-    const RVec<float>& b_e,
-    const RVec<float>& bbar_pt,
-    const RVec<float>& bbar_eta,
-    const RVec<float>& bbar_phi,
-    const RVec<float>& bbar_e,
+    const RVec<float>& b_pti,
+    const RVec<float>& b_etai,
+    const RVec<float>& b_phii,
+    const RVec<float>& b_ei,
+    const RVec<float>& bbar_pti,
+    const RVec<float>& bbar_etai,
+    const RVec<float>& bbar_phii,
+    const RVec<float>& bbar_ei,
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
@@ -601,6 +601,28 @@ namespace ttZ{ //GPT aid
     const RVec<float>& mu_charge,
     const float& dR_cut
   ){
+    // Sorting through each of the truth b and bbar by pT (quicker here)
+    // Truth b
+    auto b_pt = ROOT::VecOps::Take(b_pti,
+      ROOT::VecOps::Argsort(b_pti, [](float a, float b){ return a > b;}));
+    auto b_eta = ROOT::VecOps::Take(b_etai,
+      ROOT::VecOps::Argsort(b_pti, [](float a, float b){ return a > b;}));
+    auto b_phi = ROOT::VecOps::Take(b_phii,
+      ROOT::VecOps::Argsort(b_pti, [](float a, float b){ return a > b;}));
+    auto b_e = ROOT::VecOps::Take(b_ei,
+      ROOT::VecOps::Argsort(b_pti, [](float a, float b){ return a > b;}));
+    
+    // Truth bbar
+    auto bbar_pt = ROOT::VecOps::Take(bbar_pti,
+      ROOT::VecOps::Argsort(bbar_pti, [](float a, float b){ return a > b;}));
+    auto bbar_eta = ROOT::VecOps::Take(bbar_etai,
+      ROOT::VecOps::Argsort(bbar_pti, [](float a, float b){ return a > b;}));
+    auto bbar_phi = ROOT::VecOps::Take(bbar_phii,
+      ROOT::VecOps::Argsort(bbar_pti, [](float a, float b){ return a > b;}));
+    auto bbar_e = ROOT::VecOps::Take(bbar_ei,
+      ROOT::VecOps::Argsort(bbar_pti, [](float a, float b){ return a > b;}));
+
+    // deltaR code beginning
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f / 1000.f;
     RVec<Lepton> leptons;
@@ -669,20 +691,42 @@ namespace ttZ{ //GPT aid
   // returns [jet_for_lplus, jet_for_lminus] else [-1,-1]
   // ============================================================
   RVec<int> dR_truth_pairing_idx_lp_lm(
-    const RVec<float>& b_pt,
-    const RVec<float>& b_eta,
-    const RVec<float>& b_phi,
-    const RVec<float>& b_e,
-    const RVec<float>& bbar_pt,
-    const RVec<float>& bbar_eta,
-    const RVec<float>& bbar_phi,
-    const RVec<float>& bbar_e,
+    const RVec<float>& b_pti,
+    const RVec<float>& b_etai,
+    const RVec<float>& b_phii,
+    const RVec<float>& b_ei,
+    const RVec<float>& bbar_pti,
+    const RVec<float>& bbar_etai,
+    const RVec<float>& bbar_phii,
+    const RVec<float>& bbar_ei,
     const RVec<float>& jet_pt,
     const RVec<float>& jet_eta,
     const RVec<float>& jet_phi,
     const RVec<float>& jet_e,
     const float& dR_cut
   ){
+    // Sorting through each of the truth b and bbar by pT (quicker here)
+    // Truth b
+    auto b_pt = ROOT::VecOps::Take(b_pti,
+      ROOT::VecOps::Argsort(b_pti, [](float a, float b){ return a > b;}));
+    auto b_eta = ROOT::VecOps::Take(b_etai,
+      ROOT::VecOps::Argsort(b_pti, [](float a, float b){ return a > b;}));
+    auto b_phi = ROOT::VecOps::Take(b_phii,
+      ROOT::VecOps::Argsort(b_pti, [](float a, float b){ return a > b;}));
+    auto b_e = ROOT::VecOps::Take(b_ei,
+      ROOT::VecOps::Argsort(b_pti, [](float a, float b){ return a > b;}));
+    
+    // Truth bbar
+    auto bbar_pt = ROOT::VecOps::Take(bbar_pti,
+      ROOT::VecOps::Argsort(bbar_pti, [](float a, float b){ return a > b;}));
+    auto bbar_eta = ROOT::VecOps::Take(bbar_etai,
+      ROOT::VecOps::Argsort(bbar_pti, [](float a, float b){ return a > b;}));
+    auto bbar_phi = ROOT::VecOps::Take(bbar_phii,
+      ROOT::VecOps::Argsort(bbar_pti, [](float a, float b){ return a > b;}));
+    auto bbar_e = ROOT::VecOps::Take(bbar_ei,
+      ROOT::VecOps::Argsort(bbar_pti, [](float a, float b){ return a > b;}));
+
+    // deltaR code beginning
     using V4 = ROOT::Math::PtEtaPhiEVector;
     constexpr float GeV = 1.f/1000.f;
     
@@ -1182,4 +1226,144 @@ namespace ttZ{ //GPT aid
 
     return (chi2_lp_lm[1] == truth_lp_lm[1]) ? 2 : 1;
   }
+
+
+// ============================================================
+// Minimum Invariant Squared Mass Sum (MISMS)
+// pairing in the (l+, l-) basis
+// Minimises:  M(l+ b)^2 + M(l- b)^2
+// ============================================================
+
+RVec<int> misms_pairing_min_mlb2_by_charge(
+  const RVec<float>& jet_pt,
+  const RVec<float>& jet_eta,
+  const RVec<float>& jet_phi,
+  const RVec<float>& jet_e,
+  const RVec<float>& el_pt,
+  const RVec<float>& el_eta,
+  const RVec<float>& el_phi,
+  const RVec<float>& el_e,
+  const RVec<float>& el_charge,
+  const RVec<float>& mu_pt,
+  const RVec<float>& mu_eta,
+  const RVec<float>& mu_phi,
+  const RVec<float>& mu_e,
+  const RVec<float>& mu_charge
+){
+
+  constexpr float GeV = 1.f/1000.f;
+  RVec<int> idx(2,-1);
+
+  // -------------------------
+  // Collect leptons
+  // -------------------------
+  RVec<Lepton> leptons;
+
+  for (size_t i=0; i<el_pt.size(); ++i)
+    leptons.push_back(
+      Lepton{ V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV),
+              el_charge[i] });
+
+  for (size_t i=0; i<mu_pt.size(); ++i)
+    leptons.push_back(
+      Lepton{ V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV),
+              mu_charge[i] });
+
+  if (leptons.size() < 2) return idx;
+
+  // -------------------------
+  // Pick one l+ and one l−
+  // -------------------------
+  const V4* lplus  = nullptr;
+  const V4* lminus = nullptr;
+
+  for (const auto& lep : leptons){
+    if (lep.charge > 0.f && !lplus)  lplus  = &lep.p4;
+    if (lep.charge < 0.f && !lminus) lminus = &lep.p4;
+  }
+
+  if (!lplus || !lminus) return idx;
+
+  // -------------------------
+  // Build jets
+  // -------------------------
+  std::vector<V4> jets;
+
+  for (size_t i=0;i<jet_pt.size();++i)
+    jets.emplace_back(
+      jet_pt[i]*GeV,
+      jet_eta[i],
+      jet_phi[i],
+      jet_e[i]*GeV
+    );
+
+  if (jets.size() < 2) return idx;
+
+  // -------------------------
+  // MISMS minimisation
+  // -------------------------
+  float min_sum = 1e12f;
+  int best_i = -1;
+  int best_j = -1;
+
+  for (size_t i=0; i<jets.size(); ++i){
+    for (size_t j=i+1; j<jets.size(); ++j){
+
+      // Assignment A: l+ → i, l− → j
+      float sumA =
+        (*lplus  + jets[i]).M2() +
+        (*lminus + jets[j]).M2();
+
+      // Assignment B: l+ → j, l− → i
+      float sumB =
+        (*lplus  + jets[j]).M2() +
+        (*lminus + jets[i]).M2();
+
+      if (sumA < min_sum){
+        min_sum = sumA;
+        best_i  = i;
+        best_j  = j;
+      }
+
+      if (sumB < min_sum){
+        min_sum = sumB;
+        best_i  = j;
+        best_j  = i;
+      }
+    }
+  }
+  if (best_i >= 0 && best_j >= 0){
+    idx[0] = best_i;  // l+
+    idx[1] = best_j;  // l−
+  }
+  return idx;
+}
+// Per branch
+// ============================================================
+// Per-branch enum: l+ ↔ b
+// returns 0=invalid, 1=wrong, 2=correct
+// ============================================================
+int misms_pairing_min_mlb2_lpb(
+  const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
+  const RVec<int>& misms_lp_lm   // [jet_for_lplus, jet_for_lminus]
+){
+  if (truth_lp_lm.size() != 2 || misms_lp_lm.size() != 2) return 0;
+  if (truth_lp_lm[0] < 0 || misms_lp_lm[0] < 0) return 0;
+
+  return (misms_lp_lm[0] == truth_lp_lm[0]) ? 2 : 1;
+}
+// ============================================================
+// Per-branch enum: l- ↔ bbar
+// returns 0=invalid, 1=wrong, 2=correct
+// ============================================================
+int misms_pairing_min_mlb2_lmbb(
+  const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
+  const RVec<int>& misms_lp_lm   // [jet_for_lplus, jet_for_lminus]
+){
+  if (truth_lp_lm.size() != 2 || misms_lp_lm.size() != 2) return 0;
+  if (truth_lp_lm[1] < 0 || misms_lp_lm[1] < 0) return 0;
+
+  return (misms_lp_lm[1] == truth_lp_lm[1]) ? 2 : 1;
+}
+
 } // namespace ttZ
