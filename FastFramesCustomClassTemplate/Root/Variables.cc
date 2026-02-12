@@ -65,23 +65,23 @@ namespace ttZ{ //GPT aid
   // creating multiply dRs for efficiency v. dR
   float dr_one()
   {
-    return (0.2f);
+    return (0.5f);
   }
   float dr_two()
   {
-    return (0.4f);
+    return (2.0f);
   }
   float dr_three()
   {
-    return (0.6f);
+    return (3.0f);
   }
   float dr_four()
   {
-    return (0.8f);
+    return (4.0f);
   }
   float dr_five()
   {
-    return (1.0f);
+    return (5.0f);
   }
 
 
@@ -806,8 +806,8 @@ namespace ttZ{ //GPT aid
     RVec<int> idx(2, -1);  // [jet for l+, jet for l-]
 
     // chi2 constants
-    constexpr float mu_lpb = 97.79f, mu_lmbb = 97.95f;
-    constexpr float s_lp = 29.95f, s_lm = 29.99f;
+    constexpr float mu_lpb = 89.27f, mu_lmbb = 95.45f;
+    constexpr float s_lp = 28.25f, s_lm = 29.33f;
     constexpr float s2_lp = s_lp*s_lp, s2_lm = s_lm*s_lm;
 
     // Collect all leptons
