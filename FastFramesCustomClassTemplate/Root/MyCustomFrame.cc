@@ -901,7 +901,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lpb,
       {
         "dR_truth_pairing_idx_one_NOSYS",
-        "chi_indexed1_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   // l- ↔ bbar
@@ -912,7 +912,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lmbb,
       {
         "dR_truth_pairing_idx_one_NOSYS",
-        "chi_indexed1_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   /// chi2 for each dR TWO ////////////////////////////
@@ -935,7 +935,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lpb,
       {
         "dR_truth_pairing_idx_two_NOSYS",
-        "chi_indexed2_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   // l- ↔ bbar
@@ -946,7 +946,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lmbb,
       {
         "dR_truth_pairing_idx_two_NOSYS",
-        "chi_indexed2_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   /// chi2 for each dR THREE ////////////////////////////
@@ -969,7 +969,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lpb,
       {
         "dR_truth_pairing_idx_three_NOSYS",
-        "chi_indexed3_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   // l- ↔ bbar
@@ -980,7 +980,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lmbb,
       {
         "dR_truth_pairing_idx_three_NOSYS",
-        "chi_indexed3_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   /// chi2 for each dR FOUR ////////////////////////////
@@ -1019,7 +1019,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
   );
   /// chi2 for each dR FIVE ////////////////////////////
   // l+ ↔ b
-  LOG(INFO) << "Adding variable: chi_indexed4_NOSYS" << std::endl;
+  LOG(INFO) << "Adding variable: chi_indexed5_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "chi_indexed5_NOSYS",
@@ -1037,7 +1037,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lpb,
       {
         "dR_truth_pairing_idx_five_NOSYS",
-        "chi_indexed5_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   // l- ↔ bbar
@@ -1048,7 +1048,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lmbb,
       {
         "dR_truth_pairing_idx_five_NOSYS",
-        "chi_indexed5_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
 
@@ -1991,7 +1991,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lpb,
       {
         "dR_truth_pairing_idx_one_NOSYS",
-        "chi_indexed1_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   // l- ↔ bbar
@@ -2002,7 +2002,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lmbb,
       {
         "dR_truth_pairing_idx_one_NOSYS",
-        "chi_indexed1_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   /// chi2 for each dR TWO ////////////////////////////
@@ -2025,7 +2025,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lpb,
       {
         "dR_truth_pairing_idx_two_NOSYS",
-        "chi_indexed2_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   // l- ↔ bbar
@@ -2036,7 +2036,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lmbb,
       {
         "dR_truth_pairing_idx_two_NOSYS",
-        "chi_indexed2_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   /// chi2 for each dR THREE ////////////////////////////
@@ -2059,7 +2059,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lpb,
       {
         "dR_truth_pairing_idx_three_NOSYS",
-        "chi_indexed3_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   // l- ↔ bbar
@@ -2070,7 +2070,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lmbb,
       {
         "dR_truth_pairing_idx_three_NOSYS",
-        "chi_indexed3_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   /// chi2 for each dR FOUR ////////////////////////////
@@ -2093,7 +2093,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lpb,
       {
         "dR_truth_pairing_idx_four_NOSYS",
-        "chi_indexed4_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   // l- ↔ bbar
@@ -2104,12 +2104,12 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lmbb,
       {
         "dR_truth_pairing_idx_four_NOSYS",
-        "chi_indexed4_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   /// chi2 for each dR FIVE ////////////////////////////
   // l+ ↔ b
-  LOG(INFO) << "Adding variable: chi_indexed4_NOSYS" << std::endl;
+  LOG(INFO) << "Adding variable: chi_indexed5_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "chi_indexed5_NOSYS",
@@ -2127,7 +2127,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lpb,
       {
         "dR_truth_pairing_idx_five_NOSYS",
-        "chi_indexed5_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
   // l- ↔ bbar
@@ -2138,7 +2138,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::chi2_vs_dR_enum_lmbb,
       {
         "dR_truth_pairing_idx_five_NOSYS",
-        "chi_indexed5_NOSYS"
+        "chi_indexed_NOSYS"
       }
   );
 

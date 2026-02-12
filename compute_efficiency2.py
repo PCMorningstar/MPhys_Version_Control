@@ -31,12 +31,7 @@ weight_jvt = tree["weight_jvt_effSF_NOSYS"].array()
 # Compute total event weight
 weights = weight_mc * weight_pu * weight_lep * weight_jvt
 
-# Optional: apply selection mask if you have one
-if "selection_cuts_NOSYS" in tree.keys():
-    selection_mask = tree["selection_cuts_NOSYS"].array() == 1
-    chi_lpb = chi_lpb[selection_mask]
-    chi_lmbb = chi_lmbb[selection_mask]
-    weights = weights[selection_mask]
+
 
 # -------------------------------
 # Efficiency function

@@ -45,7 +45,7 @@ ntuples:
   #regions:
   #  - sec_region
   # If you want a selection here, use the same as the region:
-  selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 2"
+  selection: "selection_cuts_NOSYS == 1" #&& jet_size_NOSYS == 2
   branches:
     - truth_m_lpb_NOSYS
     - truth_m_lmbb_NOSYS
@@ -70,17 +70,6 @@ ntuples:
     - chi_lmbb_four_NOSYS
     - chi_lpb_five_NOSYS
     - chi_lmbb_five_NOSYS
-
-    - truth_m_lpb1_NOSYS
-    - truth_m_lmbb1_NOSYS
-    - truth_m_lpb2_NOSYS
-    - truth_m_lmbb2_NOSYS
-    - truth_m_lpb3_NOSYS
-    - truth_m_lmbb3_NOSYS
-    - truth_m_lpb4_NOSYS
-    - truth_m_lmbb4_NOSYS
-    - truth_m_lpb5_NOSYS
-    - truth_m_lmbb5_NOSYS
 
 samples:
   - name: "data"

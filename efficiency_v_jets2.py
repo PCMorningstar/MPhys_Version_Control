@@ -1,4 +1,4 @@
-# Number of Jets, Reconstruction efficiency, Error - lpb - chi2
+# Number of Jets, Reconstruction efficiency, Error - lpb - MISMS
 2, 
 3, 
 4, 
@@ -21,4 +21,3 @@
 9, 
 10, 
 11, 
-
