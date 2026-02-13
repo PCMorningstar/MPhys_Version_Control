@@ -56,7 +56,7 @@ plt.bar(x + bar_width, eff_hyper, width=bar_width, yerr=err_hyper, capsize=4,
 plt.xticks(x, nj_chi2.astype(int))  # Jet multiplicity as ticks
 plt.xlabel("Jet Multiplicity")
 plt.ylabel("Reconstruction Efficiency")
-plt.title(r"[$\bar{b}$-Pairing] Event Reconstruction Efficiency: Technique Comparison")
+plt.title(r"[$\bar{t}$] Event Reconstruction Efficiency: Technique Comparison")
 plt.ylim(0,1)
 plt.grid(True, which="both", linestyle=":", linewidth=0.7)
 plt.legend(frameon=False)

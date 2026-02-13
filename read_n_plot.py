@@ -27,11 +27,11 @@ def read_efficiency_block(filename, header):
 
 
 nj_lpb, eff_lpb, err_lpb = read_efficiency_block(
-    "efficiency_v_jets.py", "lpb"
+    "efficiency_v_jets2.py", "lpb"
 )
 
 nj_lmbb, eff_lmbb, err_lmbb = read_efficiency_block(
-    "efficiency_v_jets.py", "lmbb"
+    "efficiency_v_jets2.py", "lmbb"
 )
 
 plt.figure(figsize=(7,5))
@@ -44,7 +44,7 @@ plt.step(
     where="mid",
     color="blue",
     linewidth=1.5,
-    label=r"$b$-lepton pairing"
+    label=r"$t$"
 )
 
 plt.errorbar(
@@ -64,7 +64,7 @@ plt.step(
     where="mid",
     color="red",
     linewidth=1.5,
-    label=r"$\bar{b}$-lepton pairing"
+    label=r"$\bar{t}$"
 )
 
 plt.errorbar(
@@ -78,7 +78,7 @@ plt.errorbar(
 
 plt.xlabel("Jet Multiplicity")
 plt.ylabel("Reconstruction efficiency")
-plt.title(r"$\chi^2$ Efficiency vs. Jet Multiplicity")
+plt.title(r"MISMS Event Reconstruction Efficiency vs. Jet Multiplicity")
 
 plt.grid(True, which="both", linestyle=":", linewidth=0.7)
 plt.legend(frameon=False)

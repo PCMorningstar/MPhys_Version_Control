@@ -1312,13 +1312,13 @@ RVec<int> misms_pairing_min_mlb2_by_charge(
 
       // Assignment A: l+ → i, l− → j
       float sumA =
-        (*lplus  + jets[i]).M2() +
-        (*lminus + jets[j]).M2();
+      std::pow((*lplus  + jets[i]).M2(), 2) +
+      std::pow((*lminus + jets[j]).M2(), 2);
 
       // Assignment B: l+ → j, l− → i
       float sumB =
-        (*lplus  + jets[j]).M2() +
-        (*lminus + jets[i]).M2();
+        std::pow((*lplus  + jets[j]).M2(), 2) +
+        std::pow((*lminus + jets[i]).M2(), 2);
 
       if (sumA < min_sum){
         min_sum = sumA;
