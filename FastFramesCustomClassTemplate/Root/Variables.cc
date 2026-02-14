@@ -806,8 +806,8 @@ namespace ttZ{ //GPT aid
     RVec<int> idx(2, -1);  // [jet for l+, jet for l-]
 
     // chi2 constants
-    constexpr float mu_lpb = 89.27f, mu_lmbb = 95.45f;
-    constexpr float s_lp = 28.25f, s_lm = 29.33f;
+    constexpr float mu_lpb = 98.10f, mu_lmbb = 98.27f;
+    constexpr float s_lp = 29.89f, s_lm = 29.92f;
     constexpr float s2_lp = s_lp*s_lp, s2_lm = s_lm*s_lm;
 
     // Collect all leptons

@@ -25,7 +25,7 @@ def read_efficiency_block(filename, header_keyword):
 # ---------------------------
 # Load all three techniques
 # ---------------------------
-filename = "efficiency_v_bbjets.py"  # change to your actual file path
+filename = "efficiency_v_bjets.py"  # change to your actual file path
 
 chi2_data  = read_efficiency_block(filename, "chi2")
 misms_data = read_efficiency_block(filename, "MISMS")
@@ -56,12 +56,12 @@ plt.bar(x + bar_width, eff_hyper, width=bar_width, yerr=err_hyper, capsize=4,
 plt.xticks(x, nj_chi2.astype(int))  # Jet multiplicity as ticks
 plt.xlabel("Jet Multiplicity")
 plt.ylabel("Reconstruction Efficiency")
-plt.title(r"[$\bar{t}$] Event Reconstruction Efficiency: Technique Comparison")
+plt.title(r"[$t$] Event Reconstruction Efficiency: Technique Comparison")
 plt.ylim(0,1)
 plt.grid(True, which="both", linestyle=":", linewidth=0.7)
 plt.legend(frameon=False)
 
 plt.tight_layout()
-plt.savefig("lmbb_recon_comparison.png", dpi=300)
+plt.savefig("lpb_recon_comparison.png", dpi=300)
 plt.show()
 plt.close()

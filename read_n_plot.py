@@ -27,11 +27,11 @@ def read_efficiency_block(filename, header):
 
 
 nj_lpb, eff_lpb, err_lpb = read_efficiency_block(
-    "efficiency_v_jets2.py", "lpb"
+    "efficiency_v_jets.py", "lpb"
 )
 
 nj_lmbb, eff_lmbb, err_lmbb = read_efficiency_block(
-    "efficiency_v_jets2.py", "lmbb"
+    "efficiency_v_jets.py", "lmbb"
 )
 
 plt.figure(figsize=(7,5))
@@ -78,7 +78,7 @@ plt.errorbar(
 
 plt.xlabel("Jet Multiplicity")
 plt.ylabel("Reconstruction efficiency")
-plt.title(r"MISMS Event Reconstruction Efficiency vs. Jet Multiplicity")
+plt.title(r"$\chi^2$ Event Reconstruction Efficiency vs. Jet Multiplicity")
 
 plt.grid(True, which="both", linestyle=":", linewidth=0.7)
 plt.legend(frameon=False)
@@ -87,6 +87,6 @@ plt.xlim(left=0)
 plt.ylim(bottom=0.0, top=1.0)
 
 plt.tight_layout()
-plt.savefig("misms_v_njets.png", dpi=300)
+plt.savefig("chi2_v_njets.png", dpi=300)
 plt.show()
 plt.close()

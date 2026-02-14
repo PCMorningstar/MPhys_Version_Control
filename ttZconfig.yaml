@@ -60,17 +60,6 @@ ntuples:
     - weight_leptonSF_tight_NOSYS  # lepton SF
     - weight_jvt_effSF_NOSYS       # jet SF 
 
-    - chi_lpb_one_NOSYS 
-    - chi_lmbb_one_NOSYS
-    - chi_lpb_two_NOSYS
-    - chi_lmbb_two_NOSYS
-    - chi_lpb_three_NOSYS
-    - chi_lmbb_three_NOSYS
-    - chi_lpb_four_NOSYS
-    - chi_lmbb_four_NOSYS
-    - chi_lpb_five_NOSYS
-    - chi_lmbb_five_NOSYS
-
 samples:
   - name: "data"
     dsids: [0]
