@@ -14,12 +14,6 @@ using ROOT::VecOps::RVec;
 
 namespace ttZ{ 
 
-    // creating multiply dRs for efficiency v. dR
-    float dr_one();
-    float dr_two();
-    float dr_three();
-    float dr_four();
-    float dr_five();
     float dr_truth();
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -312,95 +306,6 @@ namespace ttZ{
     const float& dR_cut
   );
 
-  // ============================================================
-  // Enum comparison for each dR condition: truth (l+,l-) vs chi2 (l+,l-)
-  // returns 0=invalid, 1=wrong, 2=correct
-  // ============================================================
-  // dR ONE
-  RVec<int> chi2_pairing_min_mlb_by_charge1(
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge
-  );
-  // dR TWO
-  RVec<int> chi2_pairing_min_mlb_by_charge2(
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge
-  );
-  // dR THREE
-  RVec<int> chi2_pairing_min_mlb_by_charge3(
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge
-  );
-  // dR FOUR
-  RVec<int> chi2_pairing_min_mlb_by_charge4(
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge
-  );
-  // dR FIVE
-  RVec<int> chi2_pairing_min_mlb_by_charge5(
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge
-  );
 
   // ============================================================
   // chi2 pairing in the (l+, l-) basis

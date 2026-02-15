@@ -27,11 +27,11 @@ def read_efficiency_block(filename, header):
 
 
 nj_lpb, eff_lpb, err_lpb = read_efficiency_block(
-    "efficiency_v_jets.py", "lpb"
+    "efficiency_v_jets_chi2.py", "lpb"
 )
 
 nj_lmbb, eff_lmbb, err_lmbb = read_efficiency_block(
-    "efficiency_v_jets.py", "lmbb"
+    "efficiency_v_jets_chi2.py", "lmbb"
 )
 
 plt.figure(figsize=(7,5))
