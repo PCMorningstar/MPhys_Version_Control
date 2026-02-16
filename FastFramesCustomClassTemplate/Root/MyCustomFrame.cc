@@ -459,14 +459,23 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
       "detailed_truth_NOSYS",
       ttZ::detailed_truth,
     { 
-       // Truth b-bbar
-       "event_jet_truth_idx",
+       // Truth b
+       "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+       "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+       "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+       "Ttbar_History_MC_b_beforeFSR_from_t_m",
+
+       // Truth bbar
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
 
        // Reco jets
-       "jet_pt_NOSYS", "jet_eta_NOSYS", "jet_phi_NOSYS", "jet_e_NOSYS",
-        "el_pt_NOSYS", "el_eta_NOSYS", "el_phi_NOSYS", "el_e_NOSYS", "el_charge_NOSYS",
-        "mu_pt_NOSYS", "mu_eta_NOSYS", "mu_phi_NOSYS", "mu_e_NOSYS", "mu_charge_NOSYS",
-        "met_met_NOSYS", "met_phi_NOSYS"
+       "jet_pt_new_NOSYS", "jet_eta_new_NOSYS", "jet_phi_new_NOSYS", "jet_e_new_NOSYS",
+        "el_pt_new_NOSYS", "el_eta_new_NOSYS", "el_phi_new_NOSYS", "el_e_new_NOSYS", "el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS", "mu_eta_new_NOSYS", "mu_phi_new_NOSYS", "mu_e_new_NOSYS", "mu_charge_new_NOSYS",
+        "met_met_NOSYS", "met_phi_NOSYS", "dr_truth_NOSYS"
     }
   );
 
@@ -1079,14 +1088,23 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       "detailed_truth_NOSYS",
       ttZ::detailed_truth,
     { 
-       // Truth b-bbar
-       "event_jet_truth_idx",
+       // Truth b
+       "Ttbar_History_MC_b_beforeFSR_from_t_pt",
+       "Ttbar_History_MC_b_beforeFSR_from_t_eta",
+       "Ttbar_History_MC_b_beforeFSR_from_t_phi",
+       "Ttbar_History_MC_b_beforeFSR_from_t_m",
+
+       // Truth bbar
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_pt",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_eta",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_phi",
+       "Ttbar_History_MC_bbar_beforeFSR_from_tbar_m",
 
        // Reco jets
-       "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS",
-        "el_pt_NOSYS", "el_eta", "el_phi", "el_e_NOSYS", "el_charge",
-        "mu_pt_NOSYS", "mu_eta", "mu_phi", "mu_e_NOSYS", "mu_charge",
-        "met_met_NOSYS", "met_phi_NOSYS"
+       "jet_pt_new_NOSYS", "jet_eta_new_NOSYS", "jet_phi_new_NOSYS", "jet_e_new_NOSYS",
+        "el_pt_new_NOSYS", "el_eta_new_NOSYS", "el_phi_new_NOSYS", "el_e_new_NOSYS", "el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS", "mu_eta_new_NOSYS", "mu_phi_new_NOSYS", "mu_e_new_NOSYS", "mu_charge_new_NOSYS",
+        "met_met_NOSYS", "met_phi_NOSYS", "dr_truth_NOSYS"
     }
   );
 
@@ -1169,9 +1187,9 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       "chi_indexed_NOSYS",
       ttZ::chi2_pairing_min_mlb_by_charge,
       {
-        "jet_pt_NOSYS","jet_eta","jet_phi","jet_e_NOSYS",
-        "el_pt_NOSYS","el_eta","el_phi","el_e_NOSYS","el_charge",
-        "mu_pt_NOSYS","mu_eta","mu_phi","mu_e_NOSYS","mu_charge",
+        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
         "met_met_NOSYS", "met_phi_NOSYS", "jet_size_NOSYS"
       }
   );
@@ -1184,7 +1202,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       "chi_lpb_NOSYS",
       ttZ::chi2_vs_dR_enum_lpb,
       {
-        "event_jet_truth_idx",
+        "dR_truth_pairing_idx_lp_lm_NOSYS",
         "chi_indexed_NOSYS"
       }
   );
@@ -1196,7 +1214,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       "chi_lmbb_NOSYS",
       ttZ::chi2_vs_dR_enum_lmbb,
       {
-        "event_jet_truth_idx",
+        "dR_truth_pairing_idx_lp_lm_NOSYS",
         "chi_indexed_NOSYS"
       }
   );
@@ -1253,7 +1271,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       }
   );
 
-  // quantile v dR enum per branch
+    // quantile v dR enum per branch
   // l+ ↔ b
   LOG(INFO) << "Adding variable: quantile_lpb_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
