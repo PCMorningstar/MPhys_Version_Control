@@ -405,7 +405,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
       {}
   );
 
-  // dR matching (calibration)
+  // dR matching
   LOG(INFO) << "Adding variable: dR_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
@@ -451,6 +451,63 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
     "dR_NOSYS"
     }
   );
+
+  // Corrected truth distribution extraction /////////////////////////////////////////
+  LOG(INFO) << "Adding variable: detailed_truth_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "detailed_truth_NOSYS",
+      ttZ::detailed_truth,
+    { 
+       // Truth b-bbar
+       "event_jet_truth_idx",
+
+       // Reco jets
+       "jet_pt_NOSYS", "jet_eta_NOSYS", "jet_phi_NOSYS", "jet_e_NOSYS",
+        "el_pt_NOSYS", "el_eta_NOSYS", "el_phi_NOSYS", "el_e_NOSYS", "el_charge_NOSYS",
+        "mu_pt_NOSYS", "mu_eta_NOSYS", "mu_phi_NOSYS", "mu_e_NOSYS", "mu_charge_NOSYS",
+        "met_met_NOSYS", "met_phi_NOSYS"
+    }
+  );
+
+  // Extracting all truth distributions for Gaussian fitting /////////////////////////
+  LOG(INFO) << "Adding variable: truth_pTdiff_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_pTdiff_NOSYS",
+      ttZ::truth_pTdiff,
+    {
+     "detailed_truth_NOSYS"
+    }
+  );
+  LOG(INFO) << "Adding variable: truth_sum_deltaR_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_sum_deltaR_NOSYS",
+      ttZ::truth_sum_deltaR,
+    {
+      "detailed_truth_NOSYS"
+    }
+  );
+  LOG(INFO) << "Adding variable: truth_mllbb_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_mllbb_NOSYS",
+      ttZ::truth_mllbb,
+    {
+     "detailed_truth_NOSYS"
+    }
+  );
+  LOG(INFO) << "Adding variable: truth_mT_ttbar_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_mT_ttbar_NOSYS",
+      ttZ::truth_mT_ttbar,
+    {
+      "detailed_truth_NOSYS"
+    }
+  );
+
 
   LOG(INFO) << "Adding variable: dR_truth_pairing_idx_lp_lm_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
@@ -1015,6 +1072,73 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
     }
   );
 
+    // Corrected truth distribution extraction /////////////////////////////////////////
+  LOG(INFO) << "Adding variable: detailed_truth_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "detailed_truth_NOSYS",
+      ttZ::detailed_truth,
+    { 
+       // Truth b-bbar
+       "event_jet_truth_idx",
+
+       // Reco jets
+       "jet_pt_NOSYS", "jet_eta", "jet_phi", "jet_e_NOSYS",
+        "el_pt_NOSYS", "el_eta", "el_phi", "el_e_NOSYS", "el_charge",
+        "mu_pt_NOSYS", "mu_eta", "mu_phi", "mu_e_NOSYS", "mu_charge",
+        "met_met_NOSYS", "met_phi_NOSYS"
+    }
+  );
+
+  // Extracting all truth distributions for Gaussian fitting /////////////////////////
+  LOG(INFO) << "Adding variable: truth_pTdiff_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_pTdiff_NOSYS",
+      ttZ::truth_pTdiff,
+    {
+     "detailed_truth_NOSYS"
+    }
+  );
+  LOG(INFO) << "Adding variable: truth_sum_deltaR_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_sum_deltaR_NOSYS",
+      ttZ::truth_sum_deltaR,
+    {
+      "detailed_truth_NOSYS"
+    }
+  );
+  LOG(INFO) << "Adding variable: truth_mllbb_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_mllbb_NOSYS",
+      ttZ::truth_mllbb,
+    {
+     "detailed_truth_NOSYS"
+    }
+  );
+  LOG(INFO) << "Adding variable: truth_mT_ttbar_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "truth_mT_ttbar_NOSYS",
+      ttZ::truth_mT_ttbar,
+    {
+      "detailed_truth_NOSYS"
+    }
+  );
+
+  // Jet number condition (efficiency v. jet multiplicity)
+  LOG(INFO) << "Adding variable: jet_size_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_size_NOSYS",
+      ttZ::jet_size,
+      {
+        "jet_pt_new_NOSYS"
+      }
+  );
+
   LOG(INFO) << "Adding variable: dR_truth_pairing_idx_lp_lm_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
@@ -1038,20 +1162,21 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       }
   );
 
-    //chi2 Indexed
+  //chi2 Indexed
   LOG(INFO) << "Adding variable: chi_indexed_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "chi_indexed_NOSYS",
       ttZ::chi2_pairing_min_mlb_by_charge,
       {
-        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
-        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
-        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS"
+        "jet_pt_NOSYS","jet_eta","jet_phi","jet_e_NOSYS",
+        "el_pt_NOSYS","el_eta","el_phi","el_e_NOSYS","el_charge",
+        "mu_pt_NOSYS","mu_eta","mu_phi","mu_e_NOSYS","mu_charge",
+        "met_met_NOSYS", "met_phi_NOSYS", "jet_size_NOSYS"
       }
   );
 
-    // chi2 v dR enum per branch
+  // chi2 v dR enum per branch
   // l+ ↔ b
   LOG(INFO) << "Adding variable: chi_lpb_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
@@ -1059,7 +1184,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       "chi_lpb_NOSYS",
       ttZ::chi2_vs_dR_enum_lpb,
       {
-        "dR_truth_pairing_idx_lp_lm_NOSYS",
+        "event_jet_truth_idx",
         "chi_indexed_NOSYS"
       }
   );
@@ -1071,19 +1196,8 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       "chi_lmbb_NOSYS",
       ttZ::chi2_vs_dR_enum_lmbb,
       {
-        "dR_truth_pairing_idx_lp_lm_NOSYS",
+        "event_jet_truth_idx",
         "chi_indexed_NOSYS"
-      }
-  );
-
-  // Jet number condition (efficiency v. jet multiplicity)
-  LOG(INFO) << "Adding variable: jet_size_NOSYS" << std::endl;
-  mainNode = MainFrame::systematicDefine(
-      mainNode,
-      "jet_size_NOSYS",
-      ttZ::jet_size,
-      {
-        "jet_pt_new_NOSYS"
       }
   );
 
@@ -1122,6 +1236,45 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       {
         "dR_truth_pairing_idx_lp_lm_NOSYS",
         "misms_indexed_NOSYS"
+      }
+  );
+
+  //quantile Indexed
+  LOG(INFO) << "Adding variable: quantile_indexed_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "quantile_indexed_NOSYS",
+      ttZ::quantile_pairing_min_mlb_by_charge,
+      {
+        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
+        "met_met_NOSYS", "met_phi_NOSYS", "jet_size_NOSYS"
+      }
+  );
+
+  // quantile v dR enum per branch
+  // l+ ↔ b
+  LOG(INFO) << "Adding variable: quantile_lpb_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "quantile_lpb_NOSYS",
+      ttZ::quantile_vs_dR_enum_lpb,
+      {
+        "dR_truth_pairing_idx_lp_lm_NOSYS",
+        "quantile_indexed_NOSYS"
+      }
+  );
+
+  // l- ↔ bbar
+  LOG(INFO) << "Adding variable: quantile_lmbb_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "quantile_lmbb_NOSYS",
+      ttZ::quantile_vs_dR_enum_lmbb,
+      {
+        "dR_truth_pairing_idx_lp_lm_NOSYS",
+        "quantile_indexed_NOSYS"
       }
   );
 

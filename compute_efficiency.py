@@ -78,8 +78,8 @@ eff_lmbb, sigma_lmbb, Np_lmbb, Nf_lmbb, Nt_lmbb = efficiency_fail_success(chi_lm
 # -------------------------------
 # Print results
 # -------------------------------
-print("Efficiency for chi_lpb_NOSYS:")
+print("Efficiency for lpb_NOSYS:")
 print(f"{eff_lpb:.4f}, {sigma_lpb:.4f}\n")
 
-print("Efficiency for chi_lmbb_NOSYS:")
+print("Efficiency for lmbb_NOSYS:")
 print(f"{eff_lmbb:.4f}, {sigma_lmbb:.4f}")

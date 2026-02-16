@@ -70,39 +70,7 @@ A_mj1, mu_mj1, sigma_mj1 = popt_mj1
 # Print results
 # --------------------------------------------------
 print("m_lpb_truth:")
-print(f"  mu    = {mu_ej1:.2f} GeV")
-print(f"  sigma = {sigma_ej1:.2f} GeV")
+print(f"  mu, sigma    = {mu_ej1:.2f}, {sigma_ej1:.2f} GeV")
 
 print("m_lmbbar_truth:")
-print(f"  mu    = {mu_mj1:.2f} GeV")
-print(f"  sigma = {sigma_mj1:.2f} GeV")
-
-# --------------------------------------------------
-# Plotting
-# --------------------------------------------------
-xplot = np.linspace(0, 400, 800)
-
-def plot(data, popt, xlabel, fname):
-    A, mu, sigma = popt
-
-    plt.figure(figsize=(7, 4))
-    plt.hist(
-        data,
-        bins=100,
-        range=(0, 400),
-        histtype="step",
-        label=f"deltaR Matched Data"
-    )
-
-    plt.plot(
-        xplot,
-        gaussian(xplot, *popt),
-        label=fr"Gaussian fit: $\mu={mu:.1f}$ GeV, $\sigma={sigma:.1f}$ GeV"
-    )
-
-    plt.xlabel(xlabel)
-    plt.ylabel("Events")
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(fname, dpi=300)
-    plt.close()
+print(f"  mu, sigma    = {mu_mj1:.2f}, {sigma_mj1:.2f} GeV")
