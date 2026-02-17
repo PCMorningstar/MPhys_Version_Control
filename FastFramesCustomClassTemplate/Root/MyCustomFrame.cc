@@ -1245,56 +1245,118 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       }
   );
 
-  // l- ↔ bbar
-  LOG(INFO) << "Adding variable: misms_lmbb_NOSYS" << std::endl;
-  mainNode = MainFrame::systematicDefine(
-      mainNode,
-      "misms_lmbb_NOSYS",
-      ttZ::misms_pairing_min_mlb2_lmbb,
-      {
-        "dR_truth_pairing_idx_lp_lm_NOSYS",
-        "misms_indexed_NOSYS"
-      }
+  // New attempt at Chi2 analysis (no external dR func idx needed BUT means and stand devs!)
+  // Ordering truth jet idx & candidates
+  // b-jet
+  LOG(INFO) << "Adding variable: bjet_new_idx_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "bjet_new_idx_NOSYS",
+      ttZ::b_selector,
+      {"event_jet_truth_idx"} 
+  );
+  LOG(INFO) << "Adding variable: bjet_new_candicate_NOSYS" << std::endl; 
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "bjet_new_candicate_NOSYS",
+      ttZ::b_selector,
+      {"event_jet_truth_candidates"}
+  );
+  // bb-jet
+  LOG(INFO) << "Adding variable: bbarjet_new_idx_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "bbarjet_new_idx_NOSYS",
+      ttZ::bbar_selector,
+      {"event_jet_truth_idx"} 
+  );
+  LOG(INFO) << "Adding variable: bbarjet_new_candicate_NOSYS" << std::endl; 
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "bbarjet_new_candicate_NOSYS",
+      ttZ::bbar_selector,
+      {"event_jet_truth_candidates"}
   );
 
-  //quantile Indexed
-  LOG(INFO) << "Adding variable: quantile_indexed_NOSYS" << std::endl;
+  // New detailed truth distributions
+  LOG(INFO) << "Adding variable: new_detailed_truth_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "quantile_indexed_NOSYS",
-      ttZ::quantile_pairing_min_mlb_by_charge,
+      "new_detailed_truth_NOSYS",
+      ttZ::new_detailed_truth,
       {
         "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
         "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
         "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
-        "met_met_NOSYS", "met_phi_NOSYS", "jet_size_NOSYS"
+        "met_met_NOSYS", "met_phi_NOSYS", "bjet_new_idx_NOSYS", "bbarjet_new_idx_NOSYS"
       }
   );
 
-    // quantile v dR enum per branch
-  // l+ ↔ b
-  LOG(INFO) << "Adding variable: quantile_lpb_NOSYS" << std::endl;
+  // truth distribution extraction
+  LOG(INFO) << "Adding variable: new_truth_mlpb_NOSYS" << std::endl; 
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "new_truth_mlpb_NOSYS",
+      ttZ::new_truth_mlpb,
+      {"new_detailed_truth_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: new_truth_mlmbb_NOSYS" << std::endl; 
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "new_truth_mlmbb_NOSYS",
+      ttZ::new_truth_mlmbb,
+      {"new_detailed_truth_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: new_truth_pTdiff_NOSYS" << std::endl; 
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "new_truth_pTdiff_NOSYS",
+      ttZ::new_truth_pTdiff,
+      {"new_detailed_truth_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: new_truth_sum_deltaR_NOSYS" << std::endl; 
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "new_truth_sum_deltaR_NOSYS",
+      ttZ::new_truth_sum_deltaR,
+      {"new_detailed_truth_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: new_truth_mllbb_NOSYS" << std::endl; 
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "new_truth_mllbb_NOSYS",
+      ttZ::new_truth_mllbb,
+      {"new_detailed_truth_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: new_truth_mT_ttbar_NOSYS" << std::endl; 
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "new_truth_mT_ttbar_NOSYS",
+      ttZ::new_truth_mT_ttbar,
+      {"new_detailed_truth_NOSYS"}
+  );
+
+  // New Chi2 function - returns correctness for efficiency calculations
+  LOG(INFO) << "Adding variable: new_chi_indexed_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "quantile_lpb_NOSYS",
-      ttZ::quantile_vs_dR_enum_lpb,
+      "new_chi_indexed_NOSYS",
+      ttZ::new_chi_indexed,
       {
-        "dR_truth_pairing_idx_lp_lm_NOSYS",
-        "quantile_indexed_NOSYS"
+        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
+        "met_met_NOSYS", "met_phi_NOSYS", "jet_size_NOSYS", "bjet_new_idx_NOSYS", "bbarjet_new_idx_NOSYS",
+        "bjet_new_candicate_NOSYS", "bbarjet_new_candicate_NOSYS"
       }
   );
 
-  // l- ↔ bbar
-  LOG(INFO) << "Adding variable: quantile_lmbb_NOSYS" << std::endl;
+  // New MISMS function - returns correctness for efficiency calculations
+  LOG(INFO) << "Adding variable: new_misms_indexed_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "quantile_lmbb_NOSYS",
-      ttZ::quantile_vs_dR_enum_lmbb,
+      "new_misms_indexed_NOSYS",
+      ttZ::new_misms_pairing,
       {
-        "dR_truth_pairing_idx_lp_lm_NOSYS",
-        "quantile_indexed_NOSYS"
+        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS", 
+        "bjet_new_idx_NOSYS", "bbarjet_new_idx_NOSYS",
+        "bjet_new_candicate_NOSYS", "bbarjet_new_candicate_NOSYS"
       }
   );
+
+
 
   return mainNode;
 }

@@ -8,10 +8,15 @@ f = uproot.open("/eos/user/p/pzeman/FFTutorial2/output_ntuples/ttll_601230_mc23a
 tree = f["reco"]
 
 # -------------------------------
-# Load arrays
+# Load arrays - Unbiased Truth
 # -------------------------------
-chi_lpb = tree["chi_lpb_NOSYS"].array()
-chi_lmbb = tree["chi_lmbb_NOSYS"].array()
+chi_lpb = tree["new_chi_indexed_NOSYS"].array()
+chi_lmbb = tree["new_misms_indexed_NOSYS"].array()
+# -------------------------------
+# Load arrays - Biased Truth
+# -------------------------------
+chi_lpb1 = tree["chi_lpb_NOSYS"].array()
+chi_lmbb1 = tree["misms_lpb_NOSYS"].array()
 
 # Load all event weights
 weight_mc = tree["weight_mc_NOSYS"].array()
@@ -21,13 +26,6 @@ weight_jvt = tree["weight_jvt_effSF_NOSYS"].array()
 
 # Compute total event weight
 weights = weight_mc * weight_pu * weight_lep * weight_jvt
-
-# Optional: apply selection mask if you have one
-if "selection_cuts_NOSYS" in tree.keys():
-    selection_mask = tree["selection_cuts_NOSYS"].array() == 1
-    chi_lpb = chi_lpb[selection_mask]
-    chi_lmbb = chi_lmbb[selection_mask]
-    weights = weights[selection_mask]
 
 # -------------------------------
 # Efficiency function
@@ -42,13 +40,13 @@ def efficiency_fail_success(values, weights):
     values = np.asarray(values)
     weights = np.asarray(weights)
 
-    # Only valid events (1 or 2)
-    valid_mask = (values > 0)
+    # Only valid events (0 or 1)
+    valid_mask = (values >= 0)
     values = values[valid_mask]
     weights = weights[valid_mask]
 
-    pass_mask = (values == 2)
-    fail_mask = (values == 1)
+    pass_mask = (values == 1)
+    fail_mask = (values == 0)
 
     N_pass = np.sum(weights[pass_mask])
     N_fail = np.sum(weights[fail_mask])
@@ -74,12 +72,20 @@ def efficiency_fail_success(values, weights):
 # -------------------------------
 eff_lpb, sigma_lpb, Np_lpb, Nf_lpb, Nt_lpb = efficiency_fail_success(chi_lpb, weights)
 eff_lmbb, sigma_lmbb, Np_lmbb, Nf_lmbb, Nt_lmbb = efficiency_fail_success(chi_lmbb, weights)
+eff_lpb1, sigma_lpb1, Np_lpb1, Nf_lpb1, Nt_lpb1 = efficiency_fail_success(chi_lpb1, weights)
+eff_lmbb1, sigma_lmbb1, Np_lmbb1, Nf_lmbb1, Nt_lmbb1 = efficiency_fail_success(chi_lmbb1, weights)
 
 # -------------------------------
 # Print results
 # -------------------------------
-print("Efficiency for lpb_NOSYS:")
+#print("Efficiency for lpb_NOSYS:")
+print("Efficiency for chi2 (Old Truth):")
+print(f"{eff_lpb1:.4f}, {sigma_lpb1:.4f}")
+print("Efficiency for chi2 (Better Truth):")
 print(f"{eff_lpb:.4f}, {sigma_lpb:.4f}\n")
 
-print("Efficiency for lmbb_NOSYS:")
+#print("Efficiency for lmbb_NOSYS:")
+print("Efficiency for misms (Old Truth):")
+print(f"{eff_lmbb1:.4f}, {sigma_lmbb1:.4f}")
+print("Efficiency for misms (Better Truth):")
 print(f"{eff_lmbb:.4f}, {sigma_lmbb:.4f}")

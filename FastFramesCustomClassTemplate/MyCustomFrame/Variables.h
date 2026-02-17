@@ -24,6 +24,10 @@ namespace ttZ{
 
   RVec<char> pt_order_nonfloat(const RVec<char>& comp, const RVec<float>& pt);
 
+  int b_selector(const RVec<int>& comp);
+
+  int bbar_selector(const RVec<int>& comp);
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// Section 6.1 /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -463,4 +467,94 @@ namespace ttZ{
     const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
     const RVec<int>& quantile_lp_lm   // [jet_for_lplus, jet_for_lminus]
   );
+
+  // New attempt at detailed truths - hence new mus and sigmas needed for chi2!
+  // ============================================================
+  // Detailed truth observables using fixed truth jet indices
+  // ============================================================
+  RVec<float> new_detailed_truth(
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge,
+    const float& met_met,
+    const float& met_phi,
+    const int& event_jet_truth_idx_b,
+    const int& event_jet_truth_idx_bbar);
+
+  // Safe scalar extractors - additional for chi2
+  float new_truth_mlpb (const RVec<float>& v);
+  float new_truth_mlmbb(const RVec<float>& v);
+  float new_truth_pTdiff (const RVec<float>& v);
+  float new_truth_sum_deltaR(const RVec<float>& v);
+  float new_truth_mllbb (const RVec<float>& v);
+  float new_truth_mT_ttbar(const RVec<float>& v);
+
+  // ============================================================
+  // new chi2 pairing in the (l+, l-) basis
+  // returns:
+  //  1  -> correct pairing
+  //  0  -> wrong pairing
+  // -1  -> no valid truth
+  // ============================================================
+  int new_chi_indexed(
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge,
+    const float& met_met,
+    const float& met_phi,
+    const int& jet_size,
+    // --- truth inputs (pT ordered)
+    const int& event_jet_truth_idx_b,
+    const int& event_jet_truth_idx_bbar,
+    const int& event_jet_truth_candidates_b,
+    const int& event_jet_truth_candidates_bbar);
+
+  // ============================================================
+  // NEW Minimum Invariant Squared Mass Sum (MISMS)
+  // pairing in the (l+, l-) basis
+  // Minimises:  M(l+ b)^2 + M(l- b)^2
+  // ============================================================
+
+  int new_misms_pairing(
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge,
+    // --- truth inputs (pT ordered)
+    const int& event_jet_truth_idx_b,
+    const int& event_jet_truth_idx_bbar,
+    const int& event_jet_truth_candidates_b,
+    const int& event_jet_truth_candidates_bbar);
 }

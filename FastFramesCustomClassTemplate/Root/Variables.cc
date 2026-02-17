@@ -10,6 +10,8 @@
 #include <numeric>   // std::iota
 #include <algorithm> // std::sort (if used nearby)
 #include <type_traits> // std::is_same
+#include <map>
+#include <limits>
 
 #include "Math/Vector4D.h"
 #include "TLorentzVector.h"
@@ -44,6 +46,18 @@ namespace ttZ{ //GPT aid
     return obj_pt_sorted;
   }
 
+  int b_selector(const RVec<int>& comp)
+  {
+    int obj_pt_sorted = comp[0];
+    return obj_pt_sorted;
+  }
+
+  int bbar_selector(const RVec<int>& comp)
+  {
+    int obj_pt_sorted = comp[3];
+    return obj_pt_sorted;
+  }
+
   // Usefull formulae for the analysis
   // Invariant mass calculator
 
@@ -54,7 +68,7 @@ namespace ttZ{ //GPT aid
   // -----------------------------------------------------------------------------
   bool cutC25_exactly2jets(const RVec<float>& j_pt)
   {
-      return (j_pt.size() >= 0); // CHANGED ACCORDING TO THE NEW REQUIREMENT
+    return (j_pt.size() >= 0); // CHANGED ACCORDING TO THE NEW REQUIREMENT
   }
 
   int jet_size(const RVec<float>& j_pt)
@@ -1183,19 +1197,22 @@ namespace ttZ{ //GPT aid
     return idx;
   }
 
-  // Per branch
+  // Full Recon
   // ============================================================
-  // Per-branch enum: l+ ↔ b
+  // Full Recon
   // returns 0=invalid, 1=wrong, 2=correct
   // ============================================================
   int chi2_vs_dR_enum_lpb(
     const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
     const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
   ){
-    if (truth_lp_lm.size() != 2 || chi2_lp_lm.size() != 2) return 0;
-    if (truth_lp_lm[0] < 0 || chi2_lp_lm[0] < 0) return 0;
+    if (truth_lp_lm.size() != 2 || chi2_lp_lm.size() != 2) return -1;
+    if (truth_lp_lm[0] < 0 || chi2_lp_lm[0] < 0 || truth_lp_lm[1] < 0 || chi2_lp_lm[1] < 0) return -1;
 
-    return (chi2_lp_lm[0] == truth_lp_lm[0]) ? 2 : 1;
+    bool correct =
+    (truth_lp_lm[0] == chi2_lp_lm[0] && chi2_lp_lm[1] == truth_lp_lm[1]);
+
+  return correct ? 1 : 0;
   }
 
   // ============================================================
@@ -1323,22 +1340,25 @@ RVec<int> misms_pairing_min_mlb2_by_charge(
   }
   return idx;
 }
-// Per branch
+// Full Recon
 // ============================================================
-// Per-branch enum: l+ ↔ b
+// Full Recon
 // returns 0=invalid, 1=wrong, 2=correct
 // ============================================================
 int misms_pairing_min_mlb2_lpb(
   const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
   const RVec<int>& misms_lp_lm   // [jet_for_lplus, jet_for_lminus]
 ){
-  if (truth_lp_lm.size() != 2 || misms_lp_lm.size() != 2) return 0;
-  if (truth_lp_lm[0] < 0 || misms_lp_lm[0] < 0) return 0;
+  if (truth_lp_lm.size() != 2 || misms_lp_lm.size() != 2) return -1;
+  if (truth_lp_lm[0] < 0 || misms_lp_lm[0] < 0 || truth_lp_lm[1] < 0 || misms_lp_lm[1] < 0) return -1;
 
-  return (misms_lp_lm[0] == truth_lp_lm[0]) ? 2 : 1;
+  bool correct =
+    (misms_lp_lm[0] == truth_lp_lm[0] && misms_lp_lm[1] == truth_lp_lm[1]);
+
+  return correct ? 1 : 0;
 }
 // ============================================================
-// Per-branch enum: l- ↔ bbar
+// Per-branch enum: l- ↔ bbar - REDUNDANT
 // returns 0=invalid, 1=wrong, 2=correct
 // ============================================================
 int misms_pairing_min_mlb2_lmbb(
@@ -1350,7 +1370,6 @@ int misms_pairing_min_mlb2_lmbb(
 
   return (misms_lp_lm[1] == truth_lp_lm[1]) ? 2 : 1;
 }
-
 
 // ============================================================
 // Quantile pairing in the (l+, l-) basis
@@ -1582,34 +1601,525 @@ RVec<int> quantile_pairing_min_mlb_by_charge(
   return idx;
   }
 
-  // Per branch
-  // ============================================================
-  // Per-branch enum: l+ ↔ b
-  // returns 0=invalid, 1=wrong, 2=correct
-  // ============================================================
-  int quantile_vs_dR_enum_lpb(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& quantile_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  ){
-    if (truth_lp_lm.size() != 2 || quantile_lp_lm.size() != 2) return 0;
-    if (truth_lp_lm[0] < 0 || quantile_lp_lm[0] < 0) return 0;
+// New chi2 attempt - utilising direct indices - reduce bias!
 
-    return (quantile_lp_lm[0] == truth_lp_lm[0]) ? 2 : 1;
+
+// New attempt at detailed truths - hence new mus and sigmas needed for chi2!
+// ============================================================
+// Detailed truth observables using fixed truth jet indices
+// ============================================================
+RVec<float> new_detailed_truth(
+  const RVec<float>& jet_pt,
+  const RVec<float>& jet_eta,
+  const RVec<float>& jet_phi,
+  const RVec<float>& jet_e,
+  const RVec<float>& el_pt,
+  const RVec<float>& el_eta,
+  const RVec<float>& el_phi,
+  const RVec<float>& el_e,
+  const RVec<float>& el_charge,
+  const RVec<float>& mu_pt,
+  const RVec<float>& mu_eta,
+  const RVec<float>& mu_phi,
+  const RVec<float>& mu_e,
+  const RVec<float>& mu_charge,
+  const float& met_met,
+  const float& met_phi,
+  const int& event_jet_truth_idx_b,
+  const int& event_jet_truth_idx_bbar
+) {
+  using V4 = ROOT::Math::PtEtaPhiEVector;
+  constexpr float GeV = 1.f / 1000.f;
+
+  RVec<float> out;
+
+  // ----------------------------------------------------------
+  // Require at least two leptons and two jets
+  // ----------------------------------------------------------
+  if ((el_pt.size() + mu_pt.size()) != 2) return out;
+  if (jet_pt.size() < 2) return out;
+
+  // ----------------------------------------------------------
+  // Build lepton collection and sort by charge
+  // ----------------------------------------------------------
+  RVec<Lepton> leptons;
+
+  for (size_t i = 0; i < el_pt.size(); ++i)
+      leptons.emplace_back(V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]);
+
+  for (size_t i = 0; i < mu_pt.size(); ++i)
+      leptons.emplace_back(V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]);
+
+  if (leptons[0].charge * leptons[1].charge >= 0) return out;
+
+  const V4& lplus  = (leptons[0].charge > 0.f) ? leptons[0].p4 : leptons[1].p4;
+  const V4& lminus = (leptons[0].charge < 0.f) ? leptons[0].p4 : leptons[1].p4;
+
+  // ----------------------------------------------------------
+  // Build jets
+  // ----------------------------------------------------------
+  std::vector<V4> jets;
+  for (size_t i = 0; i < jet_pt.size(); ++i)
+      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+
+  // ----------------------------------------------------------
+  // Use fixed truth indices for b and bbar jets
+  // event_jet_truth_idx_b -> b
+  // event_jet_truth_idx_bbar -> bbar
+  // ----------------------------------------------------------
+  int ib = event_jet_truth_idx_b;
+  int ibbar = event_jet_truth_idx_bbar;
+
+  if (ib < 0 || ibbar < 0) return out;
+  if (ib >= static_cast<int>(jets.size()) || ibbar >= static_cast<int>(jets.size())) return out;
+
+  const V4& jet_b    = jets[ib];
+  const V4& jet_bbar = jets[ibbar];
+
+  // ----------------------------------------------------------
+  // Compute observables
+  // ----------------------------------------------------------
+  // 1) mlb
+  float mlb_plus  = (lplus  + jet_b).M();
+  float mlb_minus = (lminus + jet_bbar).M();
+
+  // 2) pT difference
+  V4 vis0 = lplus  + jet_b;
+  V4 vis1 = lminus + jet_bbar;
+  float pTdiff = vis0.Pt() - vis1.Pt();
+
+  // 3) sum deltaR
+  float sum_deltaR = ROOT::Math::VectorUtil::DeltaR(lplus,  jet_b)
+                   + ROOT::Math::VectorUtil::DeltaR(lminus, jet_bbar);
+
+  // 4) m(llbb)
+  V4 vis = lplus + lminus + jet_b + jet_bbar;
+  float mllbb = vis.M();
+
+  // 5) mT(ttbar)
+  float met_px = met_met*GeV * std::cos(met_phi);
+  float met_py = met_met*GeV * std::sin(met_phi);
+  float m_vis  = vis.M();
+  float pT_vis = vis.Pt();
+  float Et_vis = std::sqrt(std::max(0.f, m_vis*m_vis + pT_vis*pT_vis));
+  float px_sum = vis.Px() + met_px;
+  float py_sum = vis.Py() + met_py;
+  float arg = (Et_vis + met_met*GeV)*(Et_vis + met_met*GeV) - (px_sum*px_sum + py_sum*py_sum);
+  float mT_ttbar = (arg > 0.f) ? std::sqrt(arg) : 0.f;
+
+  // ----------------------------------------------------------
+  // Return all observables
+  // ----------------------------------------------------------
+  out = {mlb_plus, mlb_minus, pTdiff, sum_deltaR, mllbb, mT_ttbar};
+  return out;
+}
+
+// Safe scalar extractors - additional for chi2
+float new_truth_mlpb (const RVec<float>& v){ return (v.size()>0 ? v[0] : -1.f); }
+float new_truth_mlmbb(const RVec<float>& v){ return (v.size()>1 ? v[1] : -1.f); }
+float new_truth_pTdiff (const RVec<float>& v){ return (v.size()>2 ? v[2] : -1.f); }
+float new_truth_sum_deltaR(const RVec<float>& v){ return (v.size()>3 ? v[3] : -1.f); }
+float new_truth_mllbb (const RVec<float>& v){ return (v.size()>4 ? v[4] : -1.f); }
+float new_truth_mT_ttbar(const RVec<float>& v){ return (v.size()>5 ? v[5] : -1.f); }
+
+// ============================================================
+// chi2 pairing in the (l+, l-) basis
+// returns:
+//  1  -> correct pairing
+//  0  -> wrong pairing
+// -1  -> no valid truth
+// ============================================================
+struct ObsStats {
+  float mean;
+  float sigma;
+};
+
+int new_chi_indexed(
+  const RVec<float>& jet_pt,
+  const RVec<float>& jet_eta,
+  const RVec<float>& jet_phi,
+  const RVec<float>& jet_e,
+  const RVec<float>& el_pt,
+  const RVec<float>& el_eta,
+  const RVec<float>& el_phi,
+  const RVec<float>& el_e,
+  const RVec<float>& el_charge,
+  const RVec<float>& mu_pt,
+  const RVec<float>& mu_eta,
+  const RVec<float>& mu_phi,
+  const RVec<float>& mu_e,
+  const RVec<float>& mu_charge,
+  const float& met_met,
+  const float& met_phi,
+  const int& jet_size,
+
+  // --- truth inputs (pT ordered)
+  const int& event_jet_truth_idx_b,
+  const int& event_jet_truth_idx_bbar,
+  const int& event_jet_truth_candidates_b,
+  const int& event_jet_truth_candidates_bbar
+){
+  constexpr float GeV = 1.f/1000.f;
+
+  // =========================
+  // Basic event selection
+  // =========================
+  RVec<Lepton> leptons;
+  for (size_t i = 0; i < el_pt.size(); ++i)
+      leptons.push_back({V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+
+  for (size_t i = 0; i < mu_pt.size(); ++i)
+      leptons.push_back({V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
+
+  if (leptons.size() != 2) return -1;
+  if (leptons[0].charge * leptons[1].charge >= 0) return -1;
+
+  const V4& lplus  = (leptons[0].charge > 0) ? leptons[0].p4 : leptons[1].p4;
+  const V4& lminus = (leptons[0].charge < 0) ? leptons[0].p4 : leptons[1].p4;
+
+  // =========================
+  // Build jets (pT ordered)
+  // =========================
+  std::vector<V4> jets;
+  for (size_t i = 0; i < jet_pt.size(); ++i)
+      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+
+  if (jets.size() < 2) return -1;
+
+  // -----------------------------
+  // Observable mean/sigma map
+  // -----------------------------
+  std::map<std::string, ObsStats> obs_map;
+
+  if (jet_size == 2) {
+    obs_map["mlb_plus"]   = {98.26f, 30.42f};
+    obs_map["mlb_minus"]  = {98.34f, 30.49f};
+    obs_map["pTdiff"]     = {0.00f, 50.81f};
+    obs_map["sum_deltaR"] = {3.60f, 1.43f};
+    obs_map["mllbb"]      = {303.21f, 85.56f};
+    obs_map["mT_ttbar"]   = {377.03f, 94.96f};}
+  else if (jet_size == 3) {
+    obs_map["mlb_plus"]   = {97.23f, 31.28f};
+    obs_map["mlb_minus"]  = {97.32f, 31.34f};
+    obs_map["pTdiff"]     = {0.00f, 59.38f};
+    obs_map["sum_deltaR"] = {3.46f, 1.39f};
+    obs_map["mllbb"]      = {306.21f, 89.54f};
+    obs_map["mT_ttbar"]   = {381.30f, 99.61f};}
+  else if (jet_size == 4) {
+    obs_map["mlb_plus"]   = {96.46f, 32.05f};
+    obs_map["mlb_minus"]  = {96.84f, 31.92f};
+    obs_map["pTdiff"]     = {0.00f, 68.03f};
+    obs_map["sum_deltaR"] = {3.35f, 1.35f};
+    obs_map["mllbb"]      = {311.15f, 94.40f};
+    obs_map["mT_ttbar"]   = {388.19f, 105.37f};}
+  else if (jet_size == 5) {
+    obs_map["mlb_plus"]   = {96.53f, 32.30f};
+    obs_map["mlb_minus"]  = {96.69f, 32.26f};
+    obs_map["pTdiff"]     = {0.00f, 77.32f};
+    obs_map["sum_deltaR"] = {3.26f, 1.32f};
+    obs_map["mllbb"]      = {317.27f, 99.47f};
+    obs_map["mT_ttbar"]   = {395.96f, 110.84f};}
+  else if (jet_size == 6) {
+    obs_map["mlb_plus"]   = {96.40f, 32.60f};
+    obs_map["mlb_minus"]  = {96.45f, 32.56f};
+    obs_map["pTdiff"]     = {0.00f, 87.36f};
+    obs_map["sum_deltaR"] = {3.17f, 1.30f};
+    obs_map["mllbb"]      = {322.65f, 104.40f};
+    obs_map["mT_ttbar"]   = {403.99f, 117.36f};}
+  else if (jet_size == 7) {
+    obs_map["mlb_plus"]   = {96.54f, 32.92f};
+    obs_map["mlb_minus"]  = {96.44f, 33.14f};
+    obs_map["pTdiff"]     = {0.00f, 94.02f};
+    obs_map["sum_deltaR"] = {3.08f, 1.28f};
+    obs_map["mllbb"]      = {329.41f, 108.16f};
+    obs_map["mT_ttbar"]   = {413.13f, 121.96f};}
+  else if (jet_size == 8) {
+    obs_map["mlb_plus"]   = {97.62f, 33.56f};
+    obs_map["mlb_minus"]  = {96.62f, 33.30f};
+    obs_map["pTdiff"]     = {0.00f, 108.20f};
+    obs_map["sum_deltaR"] = {3.04f, 1.27f};
+    obs_map["mllbb"]      = {338.37f, 117.51f};
+    obs_map["mT_ttbar"]   = {423.95f, 131.37f};}
+  else if (jet_size == 9) {
+    obs_map["mlb_plus"]   = {97.62f, 33.56f};
+    obs_map["mlb_minus"]  = {96.62f, 33.30f};
+    obs_map["pTdiff"]     = {0.00f, 108.20f};
+    obs_map["sum_deltaR"] = {3.04f, 1.27f};
+    obs_map["mllbb"]      = {338.37f, 117.51f};
+    obs_map["mT_ttbar"]   = {423.95f, 131.37f};}
+  else if (jet_size == 10) {
+    obs_map["mlb_plus"]   = {101.64f, 29.87f};
+    obs_map["mlb_minus"]  = {99.40f, 36.47f};
+    obs_map["pTdiff"]     = {0.00f, 124.86f};
+    obs_map["sum_deltaR"] = {2.94f, 1.26f};
+    obs_map["mllbb"]      = {357.22f, 131.86f};
+    obs_map["mT_ttbar"]   = {450.76f, 151.15f};}
+
+  // -----------------------------
+  // Lambda to compute chi2
+  // -----------------------------
+  auto chi2 = [&](const V4& jet1, const V4& jet2) -> double {
+
+    V4 vis_plus  = lplus + jet1;
+    V4 vis_minus = lminus + jet2;
+    V4 vis_tot   = lplus + lminus + jet1 + jet2;
+
+    double chi = 0.0;
+
+    chi += std::pow(
+        (vis_plus.M() - obs_map["mlb_plus"].mean)
+        / obs_map["mlb_plus"].sigma,
+        2.0
+    );
+
+    chi += std::pow(
+        (vis_minus.M() - obs_map["mlb_minus"].mean)
+        / obs_map["mlb_minus"].sigma,
+        2.0
+    );
+
+    chi += std::pow(
+        (vis_plus.Pt() - vis_minus.Pt() - obs_map["pTdiff"].mean)
+        / obs_map["pTdiff"].sigma,
+        2.0
+    );
+
+    chi += std::pow(
+        (ROOT::Math::VectorUtil::DeltaR(lplus, jet1)
+      + ROOT::Math::VectorUtil::DeltaR(lminus, jet2)
+      - obs_map["sum_deltaR"].mean)
+      / obs_map["sum_deltaR"].sigma,
+        2.0
+    );
+
+    chi += std::pow(
+        (vis_tot.M() - obs_map["mllbb"].mean)
+        / obs_map["mllbb"].sigma,
+        2.0
+    );
+
+    // MET components
+    double met_px = met_met * GeV * std::cos(met_phi);
+    double met_py = met_met * GeV * std::sin(met_phi);
+
+    // Visible transverse energy (fixed std::max)
+    double Et_vis = std::sqrt(
+        std::max(
+            0.0,
+            vis_tot.M()*vis_tot.M() + vis_tot.Pt()*vis_tot.Pt()
+        )
+    );
+
+    double arg =
+        (Et_vis + met_met*GeV)*(Et_vis + met_met*GeV)
+        - (vis_tot.Px() + met_px)*(vis_tot.Px() + met_px)
+        - (vis_tot.Py() + met_py)*(vis_tot.Py() + met_py);
+
+    double mT_ttbar = (arg > 0.0) ? std::sqrt(arg) : 0.0;
+
+    chi += std::pow(
+        (mT_ttbar - obs_map["mT_ttbar"].mean)
+        / obs_map["mT_ttbar"].sigma,
+        2.0
+    );
+
+    return chi;
+  };
+
+
+  // =========================
+  // Find best chi2 pairing
+  // =========================
+  double min_chi2 = 1e12;
+  int best_i = -1;
+  int best_j = -1;
+
+  for (size_t i = 0; i < jets.size(); ++i) {
+    for (size_t j = 0; j < jets.size(); ++j) {
+
+        if (i == j) continue;
+
+        double chi_val = chi2(jets[i], jets[j]);
+
+        if (chi_val < min_chi2) {
+            min_chi2 = chi_val;
+            best_i = static_cast<int>(i);
+            best_j = static_cast<int>(j);
+        }
+    }
   }
 
-  // ============================================================
-  // Per-branch enum: l- ↔ bbar
-  // returns 0=invalid, 1=wrong, 2=correct
-  // ============================================================
-  int quantile_vs_dR_enum_lmbb(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& quantile_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  ){
-    if (truth_lp_lm.size() != 2 || quantile_lp_lm.size() != 2) return 0;
-    if (truth_lp_lm[1] < 0 || quantile_lp_lm[1] < 0) return 0;
+  if (best_i < 0 || best_j < 0)
+    return -1;
 
-    return (quantile_lp_lm[1] == truth_lp_lm[1]) ? 2 : 1;
+
+  // =========================
+  // Truth extraction
+  // =========================
+  int truth_b = -1;
+  int truth_bbar = -1;
+
+  bool validB =
+    (event_jet_truth_idx_b != -1 &&
+    event_jet_truth_candidates_b == 1);
+
+  bool validBbar =
+    (event_jet_truth_idx_bbar != -1 &&
+    event_jet_truth_candidates_bbar == 1);
+
+  if (validB && validBbar) {
+    truth_b    = event_jet_truth_idx_b;
+    truth_bbar = event_jet_truth_idx_bbar;
+  }
+
+  if (truth_b < 0 || truth_bbar < 0)
+    return -1;
+
+
+  // =========================
+  // Correctness flag
+  // =========================
+  bool correct =
+    (best_i == truth_b && best_j == truth_bbar);
+
+  return correct ? 1 : 0;
+}
+
+// ============================================================
+// NEW Minimum Invariant Squared Mass Sum (MISMS)
+// pairing in the (l+, l-) basis
+// Minimises:  M(l+ b)^2 + M(l- b)^2
+// ============================================================
+int new_misms_pairing(
+  const RVec<float>& jet_pt,
+  const RVec<float>& jet_eta,
+  const RVec<float>& jet_phi,
+  const RVec<float>& jet_e,
+  const RVec<float>& el_pt,
+  const RVec<float>& el_eta,
+  const RVec<float>& el_phi,
+  const RVec<float>& el_e,
+  const RVec<float>& el_charge,
+  const RVec<float>& mu_pt,
+  const RVec<float>& mu_eta,
+  const RVec<float>& mu_phi,
+  const RVec<float>& mu_e,
+  const RVec<float>& mu_charge,
+  // --- truth inputs (pT ordered)
+  const int& event_jet_truth_idx_b,
+  const int& event_jet_truth_idx_bbar,
+  const int& event_jet_truth_candidates_b,
+  const int& event_jet_truth_candidates_bbar
+){
+
+  constexpr float GeV = 1.f/1000.f;
+
+  // -------------------------
+  // Collect leptons
+  // -------------------------
+  RVec<Lepton> leptons;
+
+  for (size_t i=0; i<el_pt.size(); ++i)
+    leptons.push_back(
+      Lepton{ V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV),
+              el_charge[i] });
+
+  for (size_t i=0; i<mu_pt.size(); ++i)
+    leptons.push_back(
+      Lepton{ V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV),
+              mu_charge[i] });
+
+  if (leptons.size() < 2) return -1;
+
+  // -------------------------
+  // Pick one l+ and one l−
+  // -------------------------
+  const V4* lplus  = nullptr;
+  const V4* lminus = nullptr;
+
+  for (const auto& lep : leptons){
+    if (lep.charge > 0.f && !lplus)  lplus  = &lep.p4;
+    if (lep.charge < 0.f && !lminus) lminus = &lep.p4;
+  }
+
+  if (!lplus || !lminus) return -1;
+
+  // -------------------------
+  // Build jets
+  // -------------------------
+  std::vector<V4> jets;
+  for (size_t i=0;i<jet_pt.size();++i)
+    jets.emplace_back(
+      jet_pt[i]*GeV,
+      jet_eta[i],
+      jet_phi[i],
+      jet_e[i]*GeV
+    );
+  if (jets.size() < 2) return -1;
+
+  // -------------------------
+  // MISMS minimisation
+  // -------------------------
+  float min_sum = 1e12f;
+  int best_i = -1;
+  int best_j = -1;
+
+  for (size_t i=0; i<jets.size(); ++i){
+    for (size_t j=i+1; j<jets.size(); ++j){
+
+      // Assignment A: l+ → i, l− → j
+      float sumA =
+      std::pow((*lplus  + jets[i]).M2(), 2) +
+      std::pow((*lminus + jets[j]).M2(), 2);
+
+      // Assignment B: l+ → j, l− → i
+      float sumB =
+        std::pow((*lplus  + jets[j]).M2(), 2) +
+        std::pow((*lminus + jets[i]).M2(), 2);
+
+      if (sumA < min_sum){
+        min_sum = sumA;
+        best_i  = i;
+        best_j  = j;
+      }
+
+      if (sumB < min_sum){
+        min_sum = sumB;
+        best_i  = j;
+        best_j  = i;
+      }
+    }
+  }
+  // =========================
+  // Truth extraction
+  // =========================
+  int truth_b = -1;
+  int truth_bbar = -1;
+
+      bool validB =
+          (event_jet_truth_idx_b != -1 &&
+              event_jet_truth_candidates_b == 1);
+
+      bool validBbar =
+          (event_jet_truth_idx_bbar != -1 &&
+              event_jet_truth_candidates_bbar == 1);
+
+      if (validB && validBbar) {
+          truth_b    = event_jet_truth_idx_b;
+          truth_bbar = event_jet_truth_idx_bbar;
+      }
+
+  if (truth_b < 0 || truth_bbar < 0) return -1;
+
+  // =========================
+  // Correctness flag (out[5])
+  // =========================
+  bool correct =
+  (best_i == truth_b && best_j == truth_bbar); 
+
+  return correct ? 1 : 0;
   }
 
 
-} // namespace ttZ
+}
+ // namespace ttZ

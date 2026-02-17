@@ -14,10 +14,12 @@ from scipy.optimize import curve_fit
 file = uproot.open("output_ntuples/ttll_601230_mc23a_fullsim.root")
 tree = file["reco"]
 
-m_eb = tree["truth_pTdiff_NOSYS"].array(library="np")
-m_eb1 = tree["truth_sum_deltaR_NOSYS"].array(library="np")
-m_eb2 = tree["truth_mllbb_NOSYS"].array(library="np")
-m_eb3 = tree["truth_mT_ttbar_NOSYS"].array(library="np")
+m_eby = tree["new_truth_mlpb_NOSYS"].array(library="np")
+m_ebz = tree["new_truth_mlmbb_NOSYS"].array(library="np")
+m_eb = tree["new_truth_pTdiff_NOSYS"].array(library="np")
+m_eb1 = tree["new_truth_sum_deltaR_NOSYS"].array(library="np")
+m_eb2 = tree["new_truth_mllbb_NOSYS"].array(library="np")
+m_eb3 = tree["new_truth_mT_ttbar_NOSYS"].array(library="np")
 
 # --------------------------------------------------
 # Clean arrays
@@ -26,6 +28,8 @@ def clean(arr):
     arr = arr[np.isfinite(arr)]
     return arr[arr > 0.0]
 
+m_ebcy = clean(m_eby)
+m_ebcz = clean(m_ebz)
 m_ebc = clean(m_eb)
 m_ebc1 = clean(m_eb1)
 m_ebc2 = clean(m_eb2)
@@ -80,6 +84,10 @@ def fit_gaussian(data, bins=100, xmin=None, xmax=None):
 # --------------------------------------------------
 # Fits
 # --------------------------------------------------
+popt_ejy, perr_ejy = fit_gaussian(m_ebcy)
+A_ejy, mu_ejy, sigma_ejy = popt_ejy
+popt_ejz, perr_ejz = fit_gaussian(m_ebcz)
+A_ejz, mu_ejz, sigma_ejz = popt_ejz
 popt_ej1, perr_ej1 = fit_gaussian(m_ebc)
 A_ej1, mu_ej1, sigma_ej1 = popt_ej1
 popt_ej2, perr_ej2 = fit_gaussian(m_ebc1)
@@ -92,14 +100,19 @@ A_ej4, mu_ej4, sigma_ej4 = popt_ej4
 # --------------------------------------------------
 # Print results
 # --------------------------------------------------
-print("truth_pTdiff_NOSYS:")
-print(f"mu, sigma = {mu_ej1:.2f}, {sigma_ej1:.2f}")
+print("truth_mlpb:")
+print(f"mu, sigma = {mu_ejy:.2f}f, {sigma_ejy:.2f}f")
 print("")
-print("truth_sum_deltaR_NOSYS:")
-print(f"mu, sigma = {mu_ej2:.2f}, {sigma_ej2:.2f}")
+print("truth_mlmbb:")
+print(f"mu, sigma = {mu_ejz:.2f}f, {sigma_ejz:.2f}f")
+print("truth_pTdiff:")
+print(f"mu, sigma = {mu_ej1:.2f}f, {sigma_ej1:.2f}f")
 print("")
-print("truth_mllbb_NOSYS:")
-print(f"mu, sigma = {mu_ej3:.2f}, {sigma_ej3:.2f}")
+print("truth_sum_deltaR:")
+print(f"mu, sigma = {mu_ej2:.2f}f, {sigma_ej2:.2f}f")
 print("")
-print("truth_mT_ttbar_NOSYS:")
-print(f"mu, sigma = {mu_ej4:.2f}, {sigma_ej4:.2f}")
+print("truth_mllbb:")
+print(f"mu, sigma = {mu_ej3:.2f}f, {sigma_ej3:.2f}f")
+print("")
+print("truth_mT_ttbar:")
+print(f"mu, sigma = {mu_ej4:.2f}f, {sigma_ej4:.2f}f")
