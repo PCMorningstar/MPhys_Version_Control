@@ -45,14 +45,14 @@ ntuples:
   #regions:
   #  - sec_region
   # If you want a selection here, use the same as the region:
-  selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 3" #&& jet_size_NOSYS == 2
+  selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 10" #&& jet_size_NOSYS == 2
   branches:
     #- truth_m_lpb_NOSYS
     #- truth_m_lmbb_NOSYS
 
-    - chi_lpb_NOSYS
+    #- chi_lpb_NOSYS
     #- chi_lmbb_NOSYS
-    - misms_lpb_NOSYS
+    #- misms_lpb_NOSYS
     #- misms_lmbb_NOSYS
     #- quantile_lpb_NOSYS
     #- quantile_lmbb_NOSYS
@@ -73,7 +73,7 @@ ntuples:
 
     # NEW chi2 & MISMS indeces
     - new_chi_indexed_NOSYS
-    - new_misms_indexed_NOSYS
+    #- new_misms_indexed_NOSYS
 
     - weight_mc_NOSYS              # MC generator weight
     - weight_pileup_NOSYS          # pileup weight

@@ -27,11 +27,11 @@ def read_efficiency_block(filename, header):
 
 
 nj_lpb, eff_lpb, err_lpb = read_efficiency_block(
-    "efficiency_v_jets_chi2.py", "lpb"
+    "new_efficiency_v_jets_chi2.py", "Number of Jets, NEW (ALL TERMS) Reconstruction efficiency, Error - chi2"
 )
 
 nj_lmbb, eff_lmbb, err_lmbb = read_efficiency_block(
-    "efficiency_v_jets_chi2.py", "lmbb"
+    "new_efficiency_v_jets_chi2.py", "Number of Jets, NEW Reconstruction efficiency - all terms - (Constant), Error - chi2"
 )
 
 plt.figure(figsize=(7,5))
@@ -44,7 +44,7 @@ plt.step(
     where="mid",
     color="blue",
     linewidth=1.5,
-    label=r"$t$"
+    label=r"Non-Constant $\mu$ & $\sigma$"
 )
 
 plt.errorbar(
@@ -64,7 +64,7 @@ plt.step(
     where="mid",
     color="red",
     linewidth=1.5,
-    label=r"$\bar{t}$"
+    label=r"Constant $\mu$ & $\sigma$"
 )
 
 plt.errorbar(
@@ -77,8 +77,8 @@ plt.errorbar(
 )
 
 plt.xlabel("Jet Multiplicity")
-plt.ylabel("Reconstruction efficiency")
-plt.title(r"$\chi^2$ Event Reconstruction Efficiency vs. Jet Multiplicity")
+plt.ylabel("Full Reconstruction efficiency")
+plt.title(r"$\chi^2$ Efficiency vs. Jet Multiplicity [Non-Constant vs. Constant $\mu$ & $\sigma$]")
 
 plt.grid(True, which="both", linestyle=":", linewidth=0.7)
 plt.legend(frameon=False)
@@ -87,6 +87,6 @@ plt.xlim(left=0)
 plt.ylim(bottom=0.0, top=1.0)
 
 plt.tight_layout()
-plt.savefig("chi2_v_njets.png", dpi=300)
+plt.savefig("ncVc_newe_new_chi2_v_njets.png", dpi=300)
 plt.show()
 plt.close()
