@@ -50,7 +50,7 @@ ntuples:
     #- truth_m_lpb_NOSYS
     #- truth_m_lmbb_NOSYS
 
-    #- chi_lpb_NOSYS
+    - chi_lpb_NOSYS
     #- chi_lmbb_NOSYS
     #- misms_lpb_NOSYS
     #- misms_lmbb_NOSYS

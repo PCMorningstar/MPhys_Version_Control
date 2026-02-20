@@ -977,20 +977,22 @@ namespace ttZ{ //GPT aid
     float sigma_mllbb = 1.f, sigma_mT_ttbar = 1.f;
 
     if (jet_size >= 2) {
-      mean_m_lpb  = 98.10f;
-      mean_m_lmbb = 98.27f;
+      mean_m_lpb  = 98.26f;
+      mean_m_lmbb = 98.34f;
       mean_pTdiff = 0.00f;
-      mean_sum_deltaR = 3.58f;
-      mean_mllbb = 302.99f;
-      mean_mT_ttbar = 376.69f;
+      mean_sum_deltaR = 3.60f;
+      mean_mllbb = 303.21f;
+      mean_mT_ttbar = 377.03f;
   
-      sigma_m_lpb = 29.89f;
-      sigma_m_lmbb =  29.92f;
-      sigma_pTdiff =  50.74f;
-      sigma_sum_deltaR = 1.42f;
-      sigma_mllbb =  85.26f;
-      sigma_mT_ttbar =  94.61f;
+      sigma_m_lpb = 30.42f;
+      sigma_m_lmbb = 30.49f;
+      sigma_pTdiff = 50.81f;
+      sigma_sum_deltaR = 1.43f;
+      sigma_mllbb = 85.56f;
+      sigma_mT_ttbar = 94.96f;
     }
+    
+  
 
     // Collect all leptons
     RVec<Lepton> leptons;
@@ -1679,7 +1681,7 @@ int new_chi_indexed(
     obs_map["mllbb"]      = {303.21f, 85.56f};
     obs_map["mT_ttbar"]   = {377.03f, 94.96f};}
 
-
+  
   // -----------------------------
   // Lambda to compute chi2
   // -----------------------------

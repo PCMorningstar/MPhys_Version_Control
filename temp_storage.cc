@@ -49,12 +49,12 @@ if (jet_size == 2) {
     obs_map["mllbb"]      = {338.37f, 117.51f};
     obs_map["mT_ttbar"]   = {423.95f, 131.37f};}
   else if (jet_size == 9) {
-    obs_map["mlb_plus"]   = {97.62f, 33.56f};
-    obs_map["mlb_minus"]  = {96.62f, 33.30f};
-    obs_map["pTdiff"]     = {0.00f, 108.20f};
-    obs_map["sum_deltaR"] = {3.04f, 1.27f};
-    obs_map["mllbb"]      = {338.37f, 117.51f};
-    obs_map["mT_ttbar"]   = {423.95f, 131.37f};}
+    obs_map["mlb_plus"]   = {98.59f, 31.11f};
+    obs_map["mlb_minus"]  = {99.05f, 34.81f};
+    obs_map["pTdiff"]     = {0.00f, 107.27f};
+    obs_map["sum_deltaR"] = {2.96f, 1.28f};
+    obs_map["mllbb"]      = {340.30f, 113.98f};
+    obs_map["mT_ttbar"]   = {427.42f, 133.88f};}
   else if (jet_size == 10) {
     obs_map["mlb_plus"]   = {101.64f, 29.87f};
     obs_map["mlb_minus"]  = {99.40f, 36.47f};
@@ -70,7 +70,7 @@ if (jet_size == 2) {
     mean_pTdiff = 0.00f;
     mean_sum_deltaR = 3.58f;
     mean_mllbb = 302.99f;
-    mean_mT_ttbar = 376.69f;
+    mean_mT_ttbar = 376.69f;  
 
     sigma_m_lpb = 29.89f;
     sigma_m_lmbb =  29.92f;

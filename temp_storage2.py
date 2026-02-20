@@ -89,7 +89,7 @@ plt.errorbar(
 plt.step(
     nj_hyper, eff_hyper,
     where="mid",
-    color="orange",
+    color="yellow",
     linewidth=1.5,
     label=r"HyPER"
 )
@@ -114,7 +114,7 @@ plt.title("Full Event Reconstruction Efficiency: Technique Comparison")
 plt.grid(True, linestyle=":", linewidth=0.7)
 plt.legend(frameon=False)
 
-plt.xlim(0.0, max(nj_chi2) + 0.5)
+plt.xlim(min(nj_chi2) - 0.5, max(nj_chi2) + 0.5)
 plt.ylim(0.0, 1.1)
 
 plt.tight_layout()

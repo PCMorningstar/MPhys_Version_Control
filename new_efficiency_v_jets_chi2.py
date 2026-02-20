@@ -17,7 +17,7 @@
 6, 0.1202, 0.0017
 7, 0.0970, 0.0027
 8, 0.0797, 0.0044
-9, 0.0599, 0.0067
+9, 0.0649, 0.0070
 10, 0.0411, 0.0102
 
 # Number of Jets, OLD (OLD TRUTH ASSUMPTION) Reconstruction efficiency - only mass term, Error - chi2
