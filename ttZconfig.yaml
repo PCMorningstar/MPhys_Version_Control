@@ -45,12 +45,12 @@ ntuples:
   #regions:
   #  - sec_region
   # If you want a selection here, use the same as the region:
-  selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 10" #&& jet_size_NOSYS == 2
+  selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 2" #&& jet_size_NOSYS == 2
   branches:
     #- truth_m_lpb_NOSYS
     #- truth_m_lmbb_NOSYS
 
-    - chi_lpb_NOSYS
+    #- chi_lpb_NOSYS
     #- chi_lmbb_NOSYS
     #- misms_lpb_NOSYS
     #- misms_lmbb_NOSYS
@@ -64,15 +64,15 @@ ntuples:
     #- truth_mT_ttbar_NOSYS
 
     # New truth distributions
-    #- new_truth_mlpb_NOSYS
-    #- new_truth_mlmbb_NOSYS
-    #- new_truth_pTdiff_NOSYS
-    #- new_truth_sum_deltaR_NOSYS
-    #- new_truth_mllbb_NOSYS
-    #- new_truth_mT_ttbar_NOSYS
+    - new_truth_mlpb_NOSYS
+    - new_truth_mlmbb_NOSYS
+    - new_truth_pTdiff_NOSYS
+    - new_truth_sum_deltaR_NOSYS
+    - new_truth_mllbb_NOSYS
+    - new_truth_mT_ttbar_NOSYS
 
     # NEW chi2 & MISMS indeces
-    - new_chi_indexed_NOSYS
+    #- new_chi_indexed_NOSYS
     #- new_misms_indexed_NOSYS
 
     - weight_mc_NOSYS              # MC generator weight

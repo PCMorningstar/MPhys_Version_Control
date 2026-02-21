@@ -14,12 +14,14 @@ from scipy.optimize import curve_fit
 file = uproot.open("output_ntuples/ttll_601230_mc23a_fullsim.root")
 tree = file["reco"]
 
-m_eby = tree["new_truth_mlpb_NOSYS"].array(library="np")
-m_ebz = tree["new_truth_mlmbb_NOSYS"].array(library="np")
-m_eb = tree["new_truth_pTdiff_NOSYS"].array(library="np")
-m_eb1 = tree["new_truth_sum_deltaR_NOSYS"].array(library="np")
-m_eb2 = tree["new_truth_mllbb_NOSYS"].array(library="np")
-m_eb3 = tree["new_truth_mT_ttbar_NOSYS"].array(library="np")
+variables = {
+    "Truth-Matched m(lp,b) [GeV]": tree["new_truth_mlpb_NOSYS"].array(library="np"),
+    "Truth-Matched m(lm,bbar) [GeV]": tree["new_truth_mlmbb_NOSYS"].array(library="np"),
+    "Truth-Matched pTdiff [GeV]": tree["new_truth_pTdiff_NOSYS"].array(library="np"),
+    "Truth-Matched sum_deltaR [rad]": tree["new_truth_sum_deltaR_NOSYS"].array(library="np"),
+    "Truth-Matched m(lp,lm,b,bbar) [GeV]": tree["new_truth_mllbb_NOSYS"].array(library="np"),
+    "Truth-Matched mT(t,tbar) [GeV]": tree["new_truth_mT_ttbar_NOSYS"].array(library="np"),
+}
 
 # --------------------------------------------------
 # Clean arrays
@@ -28,13 +30,6 @@ def clean(arr):
     arr = arr[np.isfinite(arr)]
     return arr[arr > 0.0]
 
-m_ebcy = clean(m_eby)
-m_ebcz = clean(m_ebz)
-m_ebc = clean(m_eb)
-m_ebc1 = clean(m_eb1)
-m_ebc2 = clean(m_eb2)
-m_ebc3 = clean(m_eb3)
-
 # --------------------------------------------------
 # Gaussian model
 # --------------------------------------------------
@@ -42,15 +37,14 @@ def gaussian(x, A, mu, sigma):
     return A * np.exp(-(x - mu)**2 / (2.0 * sigma**2))
 
 # --------------------------------------------------
-# Gaussian fit
+# Gaussian fit function
 # --------------------------------------------------
 def fit_gaussian(data, bins=100, xmin=None, xmax=None):
     data = np.array(data)
     data = data[np.isfinite(data)]
     data = data[data > 0.0]
 
-    # Use quantiles to define initial guess if xmin/xmax not given
-    q_low, q_high = np.percentile(data, [5, 95])
+    q_low, q_high = np.percentile(data, [5, 95]) # Best against outliers
     if xmin is None:
         xmin = 0
     if xmax is None:
@@ -59,10 +53,9 @@ def fit_gaussian(data, bins=100, xmin=None, xmax=None):
     counts, edges = np.histogram(data, bins=bins, range=(xmin, xmax))
     centers = 0.5 * (edges[:-1] + edges[1:])
 
-    # Robust initial guesses
     A0 = counts.max()
     mu0 = centers[np.argmax(counts)]
-    sigma0 = 0.5*(q_high - q_low)  # 1σ approx from 16-84 percentile
+    sigma0 = 0.5*(q_high - q_low)
 
     try:
         popt, pcov = curve_fit(
@@ -75,44 +68,40 @@ def fit_gaussian(data, bins=100, xmin=None, xmax=None):
         )
         perr = np.sqrt(np.diag(pcov))
     except RuntimeError:
-        # fallback
         popt = [A0, mu0, sigma0]
         perr = [0, 0, 0]
 
-    return popt, perr
+    return popt, perr, xmin, xmax
 
 # --------------------------------------------------
-# Fits
+# Loop over variables and plot
 # --------------------------------------------------
-popt_ejy, perr_ejy = fit_gaussian(m_ebcy)
-A_ejy, mu_ejy, sigma_ejy = popt_ejy
-popt_ejz, perr_ejz = fit_gaussian(m_ebcz)
-A_ejz, mu_ejz, sigma_ejz = popt_ejz
-popt_ej1, perr_ej1 = fit_gaussian(m_ebc)
-A_ej1, mu_ej1, sigma_ej1 = popt_ej1
-popt_ej2, perr_ej2 = fit_gaussian(m_ebc1)
-A_ej2, mu_ej2, sigma_ej2 = popt_ej2
-popt_ej3, perr_ej3 = fit_gaussian(m_ebc2)
-A_ej3, mu_ej3, sigma_ej3 = popt_ej3
-popt_ej4, perr_ej4 = fit_gaussian(m_ebc3)
-A_ej4, mu_ej4, sigma_ej4 = popt_ej4
+for label, array in variables.items():
+    data = clean(array)
+    popt, perr, xmin, xmax = fit_gaussian(data)
+    A, mu, sigma = popt
 
-# --------------------------------------------------
-# Print results
-# --------------------------------------------------
-print("truth_mlpb:")
-print(f"mu, sigma = {mu_ejy:.2f}f, {sigma_ejy:.2f}f")
-print("")
-print("truth_mlmbb:")
-print(f"mu, sigma = {mu_ejz:.2f}f, {sigma_ejz:.2f}f")
-print("truth_pTdiff:")
-print(f"mu, sigma = {mu_ej1:.2f}f, {sigma_ej1:.2f}f")
-print("")
-print("truth_sum_deltaR:")
-print(f"mu, sigma = {mu_ej2:.2f}f, {sigma_ej2:.2f}f")
-print("")
-print("truth_mllbb:")
-print(f"mu, sigma = {mu_ej3:.2f}f, {sigma_ej3:.2f}f")
-print("")
-print("truth_mT_ttbar:")
-print(f"mu, sigma = {mu_ej4:.2f}f, {sigma_ej4:.2f}f")
+    print(f"{label}: mu = {mu:.2f}, sigma = {sigma:.2f}")
+
+    x_fit = np.linspace(xmin, xmax, 1000)
+
+    plt.figure(figsize=(7,5))
+    plt.hist(
+        data, bins=100, range=(xmin, xmax),
+        histtype="step", linewidth=1.5, color="blue", label="Distribution"
+    )
+    plt.plot(
+        x_fit, gaussian(x_fit, *popt),
+        color="red", linewidth=1.5,
+        label=rf"Gaussian Fit ($\mu={mu:.2f}$, $\sigma={sigma:.2f}$)"
+    )
+
+    plt.xlabel(f"{label}")
+    plt.ylabel("Events")
+    plt.title(f"Gaussian Fit of {label} [2 Jets]")
+    plt.grid(True, which="both", linestyle=":", linewidth=0.7)
+    plt.legend(frameon=False)
+    plt.xlim(xmin, xmax)
+    plt.tight_layout()
+    plt.savefig(f"gauss_fit_{label}.png", dpi=300)
+    plt.close()
