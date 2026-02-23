@@ -77,7 +77,7 @@ plt.errorbar(
 )
 
 plt.xlabel("Jet Multiplicity")
-plt.ylabel("Full Reconstruction efficiency")
+plt.ylabel("Full Reconstruction Efficiency")
 plt.title(r"$\chi^2$ Efficiency vs. Jet Multiplicity [Non-Constant vs. Constant $\mu$ & $\sigma$]")
 
 plt.grid(True, which="both", linestyle=":", linewidth=0.7)

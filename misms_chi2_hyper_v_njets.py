@@ -1,13 +1,13 @@
-# Number of Jets, NEW Reconstruction efficiency - all terms - (Constant), Error - chi2
-2, 0.7996, 0.0017
-3, 0.3700, 0.0010
-4, 0.2110, 0.0010
-5, 0.1312, 0.0011
-6, 0.0889, 0.0015
-7, 0.0662, 0.0022
-8, 0.0494, 0.0034
-9, 0.0471, 0.0059
-10, 0.0332, 0.0091
+# Number of Jets, NEW Reconstruction efficiency - all terms , Error - chi2
+2, 0.8050, 0.0017
+3, 0.3813, 0.0010
+4, 0.2352, 0.0010
+5, 0.1614, 0.0013
+6, 0.1230, 0.0018
+7, 0.0999, 0.0027
+8, 0.0801, 0.0044
+9, 0.0780, 0.0077
+10, 0.0558, 0.0124
 
 # Number of Jets, NEW Reconstruction efficiency, Error - MISMS
 2, 0.8182, 0.0017

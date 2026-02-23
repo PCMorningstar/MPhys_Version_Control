@@ -27,43 +27,53 @@ general:
 regions:
   - name: "sec_region"
     selection: "selection_cuts_NOSYS == 1"
-    variables:
-      - name: "chi_lpb"
-        definition: chi_lpb_NOSYS
-        title: "Chi2 l+ b"
-        binning: &lpb_jet_binning
-          min: -0.5
-          max: 2.5
-          number_of_bins: 3
 
-      - name: "chi_lmbb"
-        definition: chi_lmbb_NOSYS
-        title: "Chi2 l- bbar"
-        binning: *lpb_jet_binning
+  - name: "2jets_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 2"
+
+  - name: "3jets_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 3"
+
+  - name: "4jets_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 4"
+
+  - name: "5jets_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 5"
+
+  - name: "6jets_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 6"
+
+  - name: "7jets_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 7"
+
+  - name: "8jets_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 8"
+
+  - name: "9jets_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 9"
+
+  - name: "10jets_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 10"
 
 ntuples:
-  #regions:
-  #  - sec_region
+  regions:
+    - sec_region
+    - 2jets_region
+    - 3jets_region
+    - 4jets_region
+    - 5jets_region
+    - 6jets_region
+    - 7jets_region
+    - 8jets_region
+    - 9jets_region
+    - 10jets_region 
   # If you want a selection here, use the same as the region:
-  selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 2" #&& jet_size_NOSYS == 2
+  #selection: "selection_cuts_NOSYS" #&& jet_size_NOSYS == 2
   branches:
-    #- truth_m_lpb_NOSYS
-    #- truth_m_lmbb_NOSYS
-
-    #- chi_lpb_NOSYS
-    #- chi_lmbb_NOSYS
-    #- misms_lpb_NOSYS
-    #- misms_lmbb_NOSYS
-    #- quantile_lpb_NOSYS
-    #- quantile_lmbb_NOSYS
-
+    - jet_size_NOSYS
+    - selection_cuts_NOSYS
+    
     # additional truth distributions - for mean and std extraction
-    #- truth_pTdiff_NOSYS
-    #- truth_sum_deltaR_NOSYS
-    #- truth_mllbb_NOSYS
-    #- truth_mT_ttbar_NOSYS
-
-    # New truth distributions
     - new_truth_mlpb_NOSYS
     - new_truth_mlmbb_NOSYS
     - new_truth_pTdiff_NOSYS
@@ -71,9 +81,11 @@ ntuples:
     - new_truth_mllbb_NOSYS
     - new_truth_mT_ttbar_NOSYS
 
-    # NEW chi2 & MISMS indeces
-    #- new_chi_indexed_NOSYS
-    #- new_misms_indexed_NOSYS
+    # NEW chi2 indexed
+    - new_chi_indexed_jets_NOSYS
+
+    # NEW MISMS indexed
+    - new_misms_indexed_jets_NOSYS
 
     - weight_mc_NOSYS              # MC generator weight
     - weight_pileup_NOSYS          # pileup weight

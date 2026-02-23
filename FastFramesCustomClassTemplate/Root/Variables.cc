@@ -77,11 +77,6 @@ namespace ttZ{ //GPT aid
   }
 
 
-  float dr_truth()
-  {
-    return (0.4f);
-  }
-
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// Section 6.1 /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -563,696 +558,6 @@ namespace ttZ{ //GPT aid
     );
   }
 
-
-  // ============================================================
-  // dR_matched: returns truth-clean masses in the (l+, l-) basis
-  // out[0] = m(l+, b)   , out[1] = m(l-, bbar)
-  // ============================================================
-  RVec<float> dR_matched(
-    const RVec<float>& b_pti,
-    const RVec<float>& b_etai,
-    const RVec<float>& b_phii,
-    const RVec<float>& b_ei,
-    const RVec<float>& bbar_pti,
-    const RVec<float>& bbar_etai,
-    const RVec<float>& bbar_phii,
-    const RVec<float>& bbar_ei,
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge,
-    const float& dR_cut
-  ){
-    using V4 = ROOT::Math::PtEtaPhiEVector;
-    constexpr float GeV = 1.f / 1000.f;
-
-    RVec<float> out;
-
-    // ----------------------------------------------------------
-    // Require at least two leptons and two jets
-    // ----------------------------------------------------------
-    if ((el_pt.size() + mu_pt.size()) < 2) return out;
-    if (jet_pt.size() < 2) return out;
-    if (b_pti.empty() || bbar_pti.empty()) return out;
-
-    // ----------------------------------------------------------
-    // Sort truth b and bbar by pT
-    // ----------------------------------------------------------
-    auto idx_b    = ROOT::VecOps::Argsort(b_pti, [](float a,float b){return a>b;});
-    auto idx_bbar = ROOT::VecOps::Argsort(bbar_pti, [](float a,float b){return a>b;});
-
-    V4 b    (b_pti[idx_b[0]]    *GeV, b_etai[idx_b[0]],    b_phii[idx_b[0]],    b_ei[idx_b[0]]    *GeV);
-    V4 bbar (bbar_pti[idx_bbar[0]]*GeV, bbar_etai[idx_bbar[0]], bbar_phii[idx_bbar[0]], bbar_ei[idx_bbar[0]]*GeV);
-
-    // ----------------------------------------------------------
-    // Build lepton collection
-    // ----------------------------------------------------------
-    RVec<Lepton> leptons;
-
-    for(size_t i=0;i<el_pt.size();++i)
-      leptons.emplace_back(
-        V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV),
-        el_charge[i]
-      );
-
-    for(size_t i=0;i<mu_pt.size();++i)
-      leptons.emplace_back(
-        V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV),
-        mu_charge[i]
-      );
-
-    if(leptons.size() != 2) return out;
-    if(leptons[0].charge * leptons[1].charge >= 0) return out;
-
-    const V4& lplus  = (leptons[0].charge > 0.f) ? leptons[0].p4 : leptons[1].p4;
-    const V4& lminus = (leptons[0].charge < 0.f) ? leptons[0].p4 : leptons[1].p4;
-
-    // ----------------------------------------------------------
-    // Build reco jets
-    // ----------------------------------------------------------
-    std::vector<V4> jets;
-    for(size_t i=0;i<jet_pt.size();++i)
-      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
-
-    auto dR = [](const V4& a,const V4& b){
-      return ROOT::Math::VectorUtil::DeltaR(a,b);
-    };
-
-    // ----------------------------------------------------------
-    // GLOBAL 2D ΔR MINIMISATION
-    // ----------------------------------------------------------
-    float best_metric = 1e9;
-    int best_ib = -1;
-    int best_ibbar = -1;
-
-    for(size_t i=0;i<jets.size();++i){
-      for(size_t j=0;j<jets.size();++j){
-
-        if(i==j) continue;
-
-        float dr_b    = dR(jets[i], b);
-        float dr_bbar = dR(jets[j], bbar);
-
-        if(dr_b > dR_cut || dr_bbar > dR_cut) continue;
-
-        float metric = dr_b*dr_b + dr_bbar*dr_bbar;
-
-        if(metric < best_metric){
-          best_metric = metric;
-          best_ib = i;
-          best_ibbar = j;
-        }
-      }
-    }
-    if(best_ib < 0 || best_ibbar < 0) return out;
-
-    // ----------------------------------------------------------
-    // Return invariant masses
-    // ----------------------------------------------------------
-    out.push_back( (lplus  + jets[best_ib]).M() );
-    out.push_back( (lminus + jets[best_ibbar]).M() );
-
-    return out;
-  }
-
-  // Safe scalar extractors
-  float truth_m_lpb (const RVec<float>& v){ return (v.size()>0 ? v[0] : -1.f); }
-  float truth_m_lmbb(const RVec<float>& v){ return (v.size()>1 ? v[1] : -1.f); }
-
-  // ============================================================
-  // Additional truth pairing indices in the (l+, l-) basis
-  // returns [jet_for_lplus, jet_for_lminus] else [-1,-1]
-  // ============================================================  
-  RVec<float> detailed_truth(
-    const RVec<float>& b_pti,
-    const RVec<float>& b_etai,
-    const RVec<float>& b_phii,
-    const RVec<float>& b_ei,
-    const RVec<float>& bbar_pti,
-    const RVec<float>& bbar_etai,
-    const RVec<float>& bbar_phii,
-    const RVec<float>& bbar_ei,
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge,
-    const float& met_met,
-    const float& met_phi,
-    const float& dR_cut)
-  {
-    using V4 = ROOT::Math::PtEtaPhiEVector;
-    constexpr float GeV = 1.f / 1000.f;
-
-    RVec<float> out;
-
-    // ----------------------------------------------------------
-    // Require at least two leptons and two jets
-    // ----------------------------------------------------------
-    if ((el_pt.size() + mu_pt.size()) < 2) return out;
-    if (jet_pt.size() < 2) return out;
-    if (b_pti.empty() || bbar_pti.empty()) return out;
-
-    // ----------------------------------------------------------
-    // Sort truth b and bbar by pT
-    // ----------------------------------------------------------
-    auto idx_b    = ROOT::VecOps::Argsort(b_pti, [](float a,float b){return a>b;});
-    auto idx_bbar = ROOT::VecOps::Argsort(bbar_pti, [](float a,float b){return a>b;});
-
-    V4 b    (b_pti[idx_b[0]]*GeV, b_etai[idx_b[0]], b_phii[idx_b[0]], b_ei[idx_b[0]]*GeV);
-    V4 bbar (bbar_pti[idx_bbar[0]]*GeV, bbar_etai[idx_bbar[0]], bbar_phii[idx_bbar[0]], bbar_ei[idx_bbar[0]]*GeV);
-
-    // ----------------------------------------------------------
-    // Build lepton collection
-    // ----------------------------------------------------------
-    RVec<Lepton> leptons;
-
-    for(size_t i=0;i<el_pt.size();++i)
-      leptons.emplace_back(
-        V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV),
-        el_charge[i]
-      );
-
-    for(size_t i=0;i<mu_pt.size();++i)
-      leptons.emplace_back(
-        V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV),
-        mu_charge[i]
-      );
-
-    if(leptons.size() != 2) return out;
-    if(leptons[0].charge * leptons[1].charge >= 0) return out;
-
-    const V4& lplus  = (leptons[0].charge > 0.f) ? leptons[0].p4 : leptons[1].p4;
-    const V4& lminus = (leptons[0].charge < 0.f) ? leptons[0].p4 : leptons[1].p4;
-
-    // ----------------------------------------------------------
-    // Build reco jets
-    // ----------------------------------------------------------
-    std::vector<V4> jets;
-    for(size_t i=0;i<jet_pt.size();++i)
-      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
-
-    auto dR = [](const V4& a,const V4& b){
-      return ROOT::Math::VectorUtil::DeltaR(a,b);
-    };
-
-    // ----------------------------------------------------------
-    // GLOBAL 2D ΔR MINIMISATION
-    // ----------------------------------------------------------
-    float best_metric = 1e9;
-    int best_ib = -1;
-    int best_ibbar = -1;
-
-    for(size_t i=0;i<jets.size();++i){
-      for(size_t j=0;j<jets.size();++j){
-
-        if(i==j) continue;
-
-        float dr_b    = dR(jets[i], b);
-        float dr_bbar = dR(jets[j], bbar);
-
-        if(dr_b > dR_cut || dr_bbar > dR_cut) continue;
-
-        float metric = dr_b*dr_b + dr_bbar*dr_bbar;
-
-        if(metric < best_metric){
-          best_metric = metric;
-          best_ib = i;
-          best_ibbar = j;
-        }
-      }
-    }
-    if(best_ib < 0 || best_ibbar < 0) return out;
-
-    const V4& jet_b    = jets[best_ib]; // Matched jets (dR)
-    const V4& jet_bbar = jets[best_ibbar];
-    // ----------------------------------------------------------
-    // Return invariant masses
-    // ----------------------------------------------------------
-    // out.push_back( (lplus  + jets[best_ib]).M() );
-    // out.push_back( (lminus + jets[best_ibbar]).M() );
-
-    // 1) mlb
-    float mlb_plus  = (lplus  + jet_b).M();
-    float mlb_minus = (lminus + jet_bbar).M();
-    // 2) pT difference
-    V4 vis0 = lplus  + jet_b;
-    V4 vis1 = lminus + jet_bbar;
-    float pTdiff = vis0.Pt() - vis1.Pt();
-    // 3) ΔR sum
-    float sum_deltaR =
-    ROOT::Math::VectorUtil::DeltaR(lplus,  jet_b) +
-    ROOT::Math::VectorUtil::DeltaR(lminus, jet_bbar);
-    // 4) m(llbb)
-    V4 vis = lplus + lminus + jet_b + jet_bbar;
-    float mllbb = vis.M();
-    // 5) mT(ttbar)
-    float met_px = met_met*GeV * std::cos(met_phi);
-    float met_py = met_met*GeV * std::sin(met_phi);
-
-    float m_vis = vis.M();
-    float pT_vis = vis.Pt();
-    float Et_vis = std::sqrt(std::max(0.f, m_vis*m_vis + pT_vis*pT_vis));
-
-    float px_sum = vis.Px() + met_px;
-    float py_sum = vis.Py() + met_py;
-
-    float arg =
-      (Et_vis + met_met*GeV)*(Et_vis + met_met*GeV)
-      - (px_sum*px_sum + py_sum*py_sum);
-
-    float mT_ttbar = (arg > 0.f) ? std::sqrt(arg) : 0.f;
-
-    // Return everything
-    out = {
-      mlb_plus,
-      mlb_minus,
-      pTdiff,
-      sum_deltaR,
-      mllbb,
-      mT_ttbar
-    };
-
-    return out;
-  }
-
-  // Safe scalar extractors - additional for chi2
-  float truth_pTdiff (const RVec<float>& v){ return (v.size()>2 ? v[2] : -1.f); }
-  float truth_sum_deltaR(const RVec<float>& v){ return (v.size()>3 ? v[3] : -1.f); }
-  float truth_mllbb (const RVec<float>& v){ return (v.size()>4 ? v[4] : -1.f); }
-  float truth_mT_ttbar(const RVec<float>& v){ return (v.size()>5 ? v[5] : -1.f); }
-
-  // ============================================================
-  // dR truth pairing indices in the (l+, l-) basis
-  // returns [jet_for_lplus, jet_for_lminus] else [-1,-1]
-  // ============================================================
-  RVec<int> dR_truth_pairing_idx_lp_lm(
-    const RVec<float>& b_pti,
-    const RVec<float>& b_etai,
-    const RVec<float>& b_phii,
-    const RVec<float>& b_ei,
-    const RVec<float>& bbar_pti,
-    const RVec<float>& bbar_etai,
-    const RVec<float>& bbar_phii,
-    const RVec<float>& bbar_ei,
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const float& dR_cut
-  ){
-    using V4 = ROOT::Math::PtEtaPhiEVector;
-    constexpr float GeV = 1.f / 1000.f;
-
-    RVec<int> out;
-
-    // Require at least two jets and truth b/bbar
-    if (jet_pt.size() < 2) return out;
-    if (b_pti.empty() || bbar_pti.empty()) return out;
-
-    // ----------------------------------------------------------
-    // Sort truth b and bbar by pT (highest pT first)
-    // ----------------------------------------------------------
-    auto idx_b    = ROOT::VecOps::Argsort(b_pti, [](float a,float b){return a>b;});
-    auto idx_bbar = ROOT::VecOps::Argsort(bbar_pti, [](float a,float b){return a>b;});
-
-    V4 b    (b_pti[idx_b[0]]*GeV, b_etai[idx_b[0]],    b_phii[idx_b[0]],    b_ei[idx_b[0]]*GeV);
-    V4 bbar (bbar_pti[idx_bbar[0]]*GeV, bbar_etai[idx_bbar[0]], bbar_phii[idx_bbar[0]], bbar_ei[idx_bbar[0]]*GeV);
-
-    // ----------------------------------------------------------
-    // Build reco jets
-    // ----------------------------------------------------------
-    std::vector<V4> jets;
-    jets.reserve(jet_pt.size());
-
-    for(size_t i=0;i<jet_pt.size();++i)
-      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
-
-    auto dR = [](const V4& a,const V4& b){
-      return ROOT::Math::VectorUtil::DeltaR(a,b);
-    };
-
-    // ----------------------------------------------------------
-    // GLOBAL 2D MINIMISATION OVER JET PAIRS
-    // ----------------------------------------------------------
-    float best_metric = 1e9f;
-    int best_ib = -1;
-    int best_ibbar = -1;
-
-    for(size_t i=0;i<jets.size();++i){
-      for(size_t j=0;j<jets.size();++j){
-
-        if(i == j) continue;
-
-        float dr_b    = dR(jets[i], b);
-        float dr_bbar = dR(jets[j], bbar);
-
-        if(dr_b > dR_cut || dr_bbar > dR_cut) continue;
-
-        float metric = dr_b*dr_b + dr_bbar*dr_bbar;
-
-        if(metric < best_metric){
-          best_metric = metric;
-          best_ib = i;
-          best_ibbar = j;
-        }
-      }
-    }
-
-    if(best_ib < 0 || best_ibbar < 0) return out;
-
-    out.push_back(best_ib);
-    out.push_back(best_ibbar);
-
-    return out;
-  }
-
-  // ============================================================
-  // chi2 pairing in the (l+, l-) basis
-  // ============================================================
-  RVec<int> chi2_pairing_min_mlb_by_charge(
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge,
-    const float& met_met,
-    const float& met_phi,
-    const int& jet_size
-  ){
-    constexpr float GeV = 1.f/1000.f;
-    RVec<int> idx(2, -1);  // [jet for l+, jet for l-]
-
-    float mean_m_lpb = 0.f, mean_m_lmbb = 0.f, mean_pTdiff = 0.f, mean_sum_deltaR = 0.f;
-    float mean_mllbb = 0.f, mean_mT_ttbar = 0.f;
-    float sigma_m_lpb = 1.f, sigma_m_lmbb = 1.f, sigma_pTdiff = 1.f, sigma_sum_deltaR = 1.f;
-    float sigma_mllbb = 1.f, sigma_mT_ttbar = 1.f;
-
-    if (jet_size >= 2) {
-      mean_m_lpb  = 98.26f;
-      mean_m_lmbb = 98.34f;
-      mean_pTdiff = 0.00f;
-      mean_sum_deltaR = 3.60f;
-      mean_mllbb = 303.21f;
-      mean_mT_ttbar = 377.03f;
-  
-      sigma_m_lpb = 30.42f;
-      sigma_m_lmbb = 30.49f;
-      sigma_pTdiff = 50.81f;
-      sigma_sum_deltaR = 1.43f;
-      sigma_mllbb = 85.56f;
-      sigma_mT_ttbar = 94.96f;
-    }
-    
-  
-
-    // Collect all leptons
-    RVec<Lepton> leptons;
-    for (size_t i = 0; i < el_pt.size(); ++i)
-        leptons.push_back(Lepton{V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
-    for (size_t i = 0; i < mu_pt.size(); ++i)
-        leptons.push_back(Lepton{V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
-
-    if (leptons.size() != 2) return idx; // Enforces dilepton (precaution)
-
-    if (leptons[0].charge * leptons[1].charge >= 0) // Enforces opposite charge (precaution)
-    return idx;
-    const V4& lplus  = (leptons[0].charge > 0) ? leptons[0].p4 : leptons[1].p4;
-    const V4& lminus = (leptons[0].charge < 0) ? leptons[0].p4 : leptons[1].p4;
-
-    // Build jets
-    std::vector<V4> jets;
-    for (size_t i = 0; i < jet_pt.size(); ++i)
-        jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
-    if (jets.size() < 2) return idx;
-
-    // chi2 
-    auto chi2 = [&](const V4& jet1, const V4& jet2) -> float {
-        // mlb
-        float mlb_plus  = (lplus  + jet1).M();
-        float mlb_minus = (lminus + jet2).M();
-
-        // pT difference
-        V4 vis0 = lplus  + jet1;
-        V4 vis1 = lminus + jet2;
-        float pTdiff = vis0.Pt() - vis1.Pt();
-
-        // sum deltaR
-        float sum_deltaR = ROOT::Math::VectorUtil::DeltaR(lplus, jet1)
-                         + ROOT::Math::VectorUtil::DeltaR(lminus, jet2);
-
-        // mllbb
-        V4 vis = lplus + lminus + jet1 + jet2;
-        float mllbb = vis.M();
-
-        // mT_ttbar
-        float met_px = met_met*GeV * std::cos(met_phi);
-        float met_py = met_met*GeV * std::sin(met_phi);
-        float m_vis = vis.M();
-        float pT_vis = vis.Pt();
-        float Et_vis = std::sqrt(std::max(0.f, m_vis*m_vis + pT_vis*pT_vis));
-        float px_sum = vis.Px() + met_px;
-        float py_sum = vis.Py() + met_py;
-        float arg = (Et_vis + met_met)*(Et_vis + met_met) - (px_sum*px_sum + py_sum*py_sum);
-        float mT_ttbar = (arg > 0.f) ? std::sqrt(arg) : 0.f;
-
-        // chi2 combination
-        float chi = (mlb_plus - mean_m_lpb)*(mlb_plus - mean_m_lpb)/(sigma_m_lpb*sigma_m_lpb)
-                  + (mlb_minus - mean_m_lmbb)*(mlb_minus - mean_m_lmbb)/(sigma_m_lmbb*sigma_m_lmbb)
-                  + (pTdiff - mean_pTdiff)*(pTdiff - mean_pTdiff)/(sigma_pTdiff*sigma_pTdiff)
-                  + (sum_deltaR - mean_sum_deltaR)*(sum_deltaR - mean_sum_deltaR)/(sigma_sum_deltaR*sigma_sum_deltaR)
-                  + (mllbb - mean_mllbb)*(mllbb - mean_mllbb)/(sigma_mllbb*sigma_mllbb)
-                  + (mT_ttbar - mean_mT_ttbar)*(mT_ttbar - mean_mT_ttbar)/(sigma_mT_ttbar*sigma_mT_ttbar);
-
-        return chi;
-    };
-
-    // Loop over all unique jet pairs for 2D minimization
-    float min_chi2 = 1e12f;
-    int best_i = -1, best_j = -1;
-
-    for (size_t i = 0; i < jets.size(); ++i) {
-      for (size_t j = 0; j < jets.size(); ++j) {
-        if (i == j) continue;  // avoid assigning same jet to both leptons
-
-        float chi_val = chi2(jets[i], jets[j]);
-        if (chi_val < min_chi2) {
-          min_chi2 = chi_val;
-          best_i = i;
-          best_j = j;
-        }
-      }
-    }
-
-    if (best_i >= 0 && best_j >= 0) {
-      idx[0] = best_i;   // jet assigned to l+
-      idx[1] = best_j;   // jet assigned to l-
-    }
-    return idx;
-  }
-
-  // Full Recon
-  // ============================================================
-  // Full Recon
-  // returns 0=invalid, 1=wrong, 2=correct
-  // ============================================================
-  int chi2_vs_dR_enum_lpb(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  ){
-    if (truth_lp_lm.size() != 2 || chi2_lp_lm.size() != 2) return -1;
-    if (truth_lp_lm[0] < 0 || chi2_lp_lm[0] < 0 || truth_lp_lm[1] < 0 || chi2_lp_lm[1] < 0) return -1;
-
-    bool correct =
-    (truth_lp_lm[0] == chi2_lp_lm[0] && chi2_lp_lm[1] == truth_lp_lm[1]);
-
-  return correct ? 1 : 0;
-  }
-
-  // ============================================================
-  // Per-branch enum: l- ↔ bbar
-  // returns 0=invalid, 1=wrong, 2=correct
-  // ============================================================
-  int chi2_vs_dR_enum_lmbb(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  ){
-    if (truth_lp_lm.size() != 2 || chi2_lp_lm.size() != 2) return 0;
-    if (truth_lp_lm[1] < 0 || chi2_lp_lm[1] < 0) return 0;
-
-    return (chi2_lp_lm[1] == truth_lp_lm[1]) ? 2 : 1;
-  }
-
-
-// ============================================================
-// Minimum Invariant Squared Mass Sum (MISMS)
-// pairing in the (l+, l-) basis
-// Minimises:  M(l+ b)^2 + M(l- b)^2
-// ============================================================
-
-RVec<int> misms_pairing_min_mlb2_by_charge(
-  const RVec<float>& jet_pt,
-  const RVec<float>& jet_eta,
-  const RVec<float>& jet_phi,
-  const RVec<float>& jet_e,
-  const RVec<float>& el_pt,
-  const RVec<float>& el_eta,
-  const RVec<float>& el_phi,
-  const RVec<float>& el_e,
-  const RVec<float>& el_charge,
-  const RVec<float>& mu_pt,
-  const RVec<float>& mu_eta,
-  const RVec<float>& mu_phi,
-  const RVec<float>& mu_e,
-  const RVec<float>& mu_charge
-){
-
-  constexpr float GeV = 1.f/1000.f;
-  RVec<int> idx(2,-1);
-
-  // -------------------------
-  // Collect leptons
-  // -------------------------
-  RVec<Lepton> leptons;
-
-  for (size_t i=0; i<el_pt.size(); ++i)
-    leptons.push_back(
-      Lepton{ V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV),
-              el_charge[i] });
-
-  for (size_t i=0; i<mu_pt.size(); ++i)
-    leptons.push_back(
-      Lepton{ V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV),
-              mu_charge[i] });
-
-  if (leptons.size() < 2) return idx;
-
-  // -------------------------
-  // Pick one l+ and one l−
-  // -------------------------
-  const V4* lplus  = nullptr;
-  const V4* lminus = nullptr;
-
-  for (const auto& lep : leptons){
-    if (lep.charge > 0.f && !lplus)  lplus  = &lep.p4;
-    if (lep.charge < 0.f && !lminus) lminus = &lep.p4;
-  }
-
-  if (!lplus || !lminus) return idx;
-
-  // -------------------------
-  // Build jets
-  // -------------------------
-  std::vector<V4> jets;
-
-  for (size_t i=0;i<jet_pt.size();++i)
-    jets.emplace_back(
-      jet_pt[i]*GeV,
-      jet_eta[i],
-      jet_phi[i],
-      jet_e[i]*GeV
-    );
-
-  if (jets.size() < 2) return idx;
-
-  // -------------------------
-  // MISMS minimisation
-  // -------------------------
-  float min_sum = 1e12f;
-  int best_i = -1;
-  int best_j = -1;
-
-  for (size_t i=0; i<jets.size(); ++i){
-    for (size_t j=i+1; j<jets.size(); ++j){
-
-      // Assignment A: l+ → i, l− → j
-      float sumA =
-      std::pow((*lplus  + jets[i]).M2(), 2) +
-      std::pow((*lminus + jets[j]).M2(), 2);
-
-      // Assignment B: l+ → j, l− → i
-      float sumB =
-        std::pow((*lplus  + jets[j]).M2(), 2) +
-        std::pow((*lminus + jets[i]).M2(), 2);
-
-      if (sumA < min_sum){
-        min_sum = sumA;
-        best_i  = i;
-        best_j  = j;
-      }
-
-      if (sumB < min_sum){
-        min_sum = sumB;
-        best_i  = j;
-        best_j  = i;
-      }
-    }
-  }
-  if (best_i >= 0 && best_j >= 0){
-    idx[0] = best_i;  // l+
-    idx[1] = best_j;  // l−
-  }
-  return idx;
-}
-// Full Recon
-// ============================================================
-// Full Recon
-// returns 0=invalid, 1=wrong, 2=correct
-// ============================================================
-int misms_pairing_min_mlb2_lpb(
-  const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-  const RVec<int>& misms_lp_lm   // [jet_for_lplus, jet_for_lminus]
-){
-  if (truth_lp_lm.size() != 2 || misms_lp_lm.size() != 2) return -1;
-  if (truth_lp_lm[0] < 0 || misms_lp_lm[0] < 0 || truth_lp_lm[1] < 0 || misms_lp_lm[1] < 0) return -1;
-
-  bool correct =
-    (misms_lp_lm[0] == truth_lp_lm[0] && misms_lp_lm[1] == truth_lp_lm[1]);
-
-  return correct ? 1 : 0;
-}
-// ============================================================
-// Per-branch enum: l- ↔ bbar - REDUNDANT
-// returns 0=invalid, 1=wrong, 2=correct
-// ============================================================
-int misms_pairing_min_mlb2_lmbb(
-  const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-  const RVec<int>& misms_lp_lm   // [jet_for_lplus, jet_for_lminus]
-){
-  if (truth_lp_lm.size() != 2 || misms_lp_lm.size() != 2) return 0;
-  if (truth_lp_lm[1] < 0 || misms_lp_lm[1] < 0) return 0;
-
-  return (misms_lp_lm[1] == truth_lp_lm[1]) ? 2 : 1;
-}
-
 // ============================================================
 // Quantile pairing in the (l+, l-) basis
 // ============================================================
@@ -1490,6 +795,7 @@ RVec<int> quantile_pairing_min_mlb_by_charge(
 // ============================================================
 // Detailed truth observables using fixed truth jet indices
 // ============================================================
+
 RVec<float> new_detailed_truth(
   const RVec<float>& jet_pt,
   const RVec<float>& jet_eta,
@@ -1515,70 +821,50 @@ RVec<float> new_detailed_truth(
 
   RVec<float> out;
 
-  // ----------------------------------------------------------
-  // Require at least two leptons and two jets
-  // ----------------------------------------------------------
+  // Require exactly 2 leptons total
   if ((el_pt.size() + mu_pt.size()) != 2) return out;
   if (jet_pt.size() < 2) return out;
 
-  // ----------------------------------------------------------
-  // Build lepton collection and sort by charge
-  // ----------------------------------------------------------
+  // Build lepton collection
   RVec<Lepton> leptons;
-
   for (size_t i = 0; i < el_pt.size(); ++i)
       leptons.emplace_back(V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]);
-
   for (size_t i = 0; i < mu_pt.size(); ++i)
       leptons.emplace_back(V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]);
 
-  if (leptons[0].charge * leptons[1].charge >= 0) return out;
+  // Require opposite-charge leptons
+  if (leptons[0].charge * leptons[1].charge >= 0.f) return out;
 
   const V4& lplus  = (leptons[0].charge > 0.f) ? leptons[0].p4 : leptons[1].p4;
   const V4& lminus = (leptons[0].charge < 0.f) ? leptons[0].p4 : leptons[1].p4;
 
-  // ----------------------------------------------------------
-  // Build jets
-  // ----------------------------------------------------------
+  // Build jets safely
+  const int n_jets = jet_pt.size();
   std::vector<V4> jets;
-  for (size_t i = 0; i < jet_pt.size(); ++i)
+  for (int i = 0; i < n_jets; ++i)
       jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
 
-  // ----------------------------------------------------------
-  // Use fixed truth indices for b and bbar jets
-  // event_jet_truth_idx_b -> b
-  // event_jet_truth_idx_bbar -> bbar
-  // ----------------------------------------------------------
-  int ib = event_jet_truth_idx_b;
-  int ibbar = event_jet_truth_idx_bbar;
+  // Check b/bbar indices
+  if (event_jet_truth_idx_b < 0 || event_jet_truth_idx_bbar < 0) return out;
+  if (event_jet_truth_idx_b >= n_jets || event_jet_truth_idx_bbar >= n_jets) return out;
+  if (event_jet_truth_idx_b == event_jet_truth_idx_bbar) return out;
 
-  if (ib < 0 || ibbar < 0) return out;
-  if (ib >= static_cast<int>(jets.size()) || ibbar >= static_cast<int>(jets.size())) return out;
+  const V4& jet_b    = jets[event_jet_truth_idx_b];
+  const V4& jet_bbar = jets[event_jet_truth_idx_bbar];
 
-  const V4& jet_b    = jets[ib];
-  const V4& jet_bbar = jets[ibbar];
-
-  // ----------------------------------------------------------
   // Compute observables
-  // ----------------------------------------------------------
-  // 1) mlb
   float mlb_plus  = (lplus  + jet_b).M();
   float mlb_minus = (lminus + jet_bbar).M();
 
-  // 2) pT difference
-  V4 vis0 = lplus  + jet_b;
-  V4 vis1 = lminus + jet_bbar;
-  float pTdiff = vis0.Pt() - vis1.Pt();
+  float pTdiff = std::abs((lplus + jet_b).Pt() - (lminus + jet_bbar).Pt());
 
-  // 3) sum deltaR
   float sum_deltaR = ROOT::Math::VectorUtil::DeltaR(lplus,  jet_b)
                    + ROOT::Math::VectorUtil::DeltaR(lminus, jet_bbar);
 
-  // 4) m(llbb)
   V4 vis = lplus + lminus + jet_b + jet_bbar;
   float mllbb = vis.M();
 
-  // 5) mT(ttbar)
+  // mT(ttbar)
   float met_px = met_met*GeV * std::cos(met_phi);
   float met_py = met_met*GeV * std::sin(met_phi);
   float m_vis  = vis.M();
@@ -1589,9 +875,6 @@ RVec<float> new_detailed_truth(
   float arg = (Et_vis + met_met*GeV)*(Et_vis + met_met*GeV) - (px_sum*px_sum + py_sum*py_sum);
   float mT_ttbar = (arg > 0.f) ? std::sqrt(arg) : 0.f;
 
-  // ----------------------------------------------------------
-  // Return all observables
-  // ----------------------------------------------------------
   out = {mlb_plus, mlb_minus, pTdiff, sum_deltaR, mllbb, mT_ttbar};
   return out;
 }
@@ -1633,7 +916,6 @@ int new_chi_indexed(
   const RVec<float>& mu_charge,
   const float& met_met,
   const float& met_phi,
-  const int& jet_size,
 
   // --- truth inputs (pT ordered)
   const int& event_jet_truth_idx_b,
@@ -1642,7 +924,7 @@ int new_chi_indexed(
   const int& event_jet_truth_candidates_bbar
 ){
   constexpr float GeV = 1.f/1000.f;
-
+  const int jet_size = jet_pt.size();
   // =========================
   // Basic event selection
   // =========================
@@ -1663,7 +945,7 @@ int new_chi_indexed(
   // Build jets (pT ordered)
   // =========================
   std::vector<V4> jets;
-  for (size_t i = 0; i < jet_pt.size(); ++i)
+  for (int i = 0; i < jet_size; ++i)
       jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
 
   if (jets.size() < 2) return -1;
@@ -1674,14 +956,14 @@ int new_chi_indexed(
   std::map<std::string, ObsStats> obs_map;
 
   if (jet_size >= 2) {
-    obs_map["mlb_plus"]   = {98.26f, 30.42f};
-    obs_map["mlb_minus"]  = {98.34f, 30.49f};
-    obs_map["pTdiff"]     = {0.00f, 50.81f};
-    obs_map["sum_deltaR"] = {3.60f, 1.43f};
-    obs_map["mllbb"]      = {303.21f, 85.56f};
-    obs_map["mT_ttbar"]   = {377.03f, 94.96f};}
+    obs_map["mlb_plus"]   = {98.24f, 30.44f};
+    obs_map["mlb_minus"]  = {98.35f, 30.51f};
+    obs_map["pTdiff"]     = {-18.14f, 60.30f};
+    obs_map["sum_deltaR"] = {3.59f, 1.46f};
+    obs_map["mllbb"]      = {303.20f, 85.88f};
+    obs_map["mT_ttbar"]   = {376.98f, 95.08f};
+  }
 
-  
   // -----------------------------
   // Lambda to compute chi2
   // -----------------------------
@@ -1840,7 +1122,7 @@ int new_misms_pairing(
 ){
 
   constexpr float GeV = 1.f/1000.f;
-
+  const int jet_size = jet_pt.size();
   // -------------------------
   // Collect leptons
   // -------------------------
@@ -1875,7 +1157,7 @@ int new_misms_pairing(
   // Build jets
   // -------------------------
   std::vector<V4> jets;
-  for (size_t i=0;i<jet_pt.size();++i)
+  for (int i=0;i<jet_size;++i)
     jets.emplace_back(
       jet_pt[i]*GeV,
       jet_eta[i],

@@ -11,11 +11,15 @@
 using V4 = ROOT::Math::PtEtaPhiEVector;
 using ROOT::VecOps::RVec;
 
-
 namespace ttZ{ 
 
-    float dr_truth();
-
+  struct Lepton {
+    ROOT::Math::PtEtaPhiEVector p4;
+    float charge;
+    Lepton(const ROOT::Math::PtEtaPhiEVector& vec, float q)
+      : p4(vec), charge(q) {}
+  };
+  
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// Order by pT /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +37,16 @@ namespace ttZ{
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   int jet_size(const RVec<float>& j_pt);
+  int jet_size_two(const RVec<float>& j_pt);
+  int jet_size_three(const RVec<float>& j_pt);
+  int jet_size_four(const RVec<float>& j_pt);
+  int jet_size_five(const RVec<float>& j_pt);
+  int jet_size_six(const RVec<float>& j_pt);
+  int jet_size_seven(const RVec<float>& j_pt);
+  int jet_size_eight(const RVec<float>& j_pt);
+  int jet_size_nine(const RVec<float>& j_pt);
+  int jet_size_ten(const RVec<float>& j_pt);
+  
   // -----------------------------------------------------------------------------
   // A1 — Electron transverse momentum requirement
   // Requirement: pT(e) ≥ 28 GeV
@@ -246,227 +260,6 @@ namespace ttZ{
     const RVec<char>& mu_tight,
     const RVec<char>& jet_jvt
   );
-  // ============================================================
-  // dR_matched: returns truth-clean masses in the (l+, l-) basis
-  // out[0] = m(l+, b)   , out[1] = m(l-, bbar)
-  // ============================================================
-  struct Lepton {
-    V4 p4;
-    float charge;
-  
-    Lepton(const V4& _p4, float _charge)
-      : p4(_p4), charge(_charge) {}
-  };
-  
-
-  RVec<float> dR_matched(
-    const RVec<float>& b_pti,
-    const RVec<float>& b_etai,
-    const RVec<float>& b_phii,
-    const RVec<float>& b_ei,
-    const RVec<float>& bbar_pti,
-    const RVec<float>& bbar_etai,
-    const RVec<float>& bbar_phii,
-    const RVec<float>& bbar_ei,
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge,
-    const float& dR_cut
-  );
-
-  // Safe scalar extractors (now for l+/l- masses)
-  float truth_m_lpb (const RVec<float>& v);
-  float truth_m_lmbb(const RVec<float>& v);
-
-  // ============================================================
-  // Additional truth pairing indices in the (l+, l-) basis
-  // returns [jet_for_lplus, jet_for_lminus] else [-1,-1]
-  // ============================================================  
-  RVec<float> detailed_truth(
-    const RVec<float>& b_pti,
-    const RVec<float>& b_etai,
-    const RVec<float>& b_phii,
-    const RVec<float>& b_ei,
-    const RVec<float>& bbar_pti,
-    const RVec<float>& bbar_etai,
-    const RVec<float>& bbar_phii,
-    const RVec<float>& bbar_ei,
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge,
-    const float& met_met,
-    const float& met_phi,
-    const float& dR_cut);
-  
-  // Safe scalar extractors - additional for chi2
-  float truth_pTdiff (const RVec<float>& v);
-  float truth_sum_deltaR(const RVec<float>& v);
-  float truth_mllbb (const RVec<float>& v);
-  float truth_mT_ttbar(const RVec<float>& v);
-
-  // ============================================================
-  // dR truth pairing indices in the (l+, l-) basis
-  // returns [jet_for_lplus, jet_for_lminus] among (0,1), else [-1,-1]
-  // (Since b ↔ l+ and bbar ↔ l-, this is [jet_for_b, jet_for_bbar])
-  // ============================================================
-  RVec<int> dR_truth_pairing_idx_lp_lm(
-    const RVec<float>& b_pti,
-    const RVec<float>& b_etai,
-    const RVec<float>& b_phii,
-    const RVec<float>& b_ei,
-    const RVec<float>& bbar_pti,
-    const RVec<float>& bbar_etai,
-    const RVec<float>& bbar_phii,
-    const RVec<float>& bbar_ei,
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const float& dR_cut
-  );
-
-
-  // ============================================================
-  // chi2 pairing in the (l+, l-) basis
-  // returns [jet_for_lplus, jet_for_lminus] among (0,1), else [-1,-1]
-  // NOTE: el_charge and mu_charge are floats in your ntuples.
-  // ============================================================
-  RVec<int> chi2_pairing_min_mlb_by_charge(
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge,
-
-    const float& met_met,
-    const float& met_phi,
-    const int& jet_size
-  );
-
-  int chi2_vs_dR_enum_lpb(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  );
-
-  int chi2_vs_dR_enum_lmbb(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& chi2_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  );
-
-  // ============================================================
-  // Minimum Invariant Squared Mass Sum (MISMS)
-  // pairing in the (l+, l-) basis
-  // Minimises:  M(l+ b)^2 + M(l- b)^2
-  // ============================================================
-
-  RVec<int> misms_pairing_min_mlb2_by_charge(
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge
-  );
-  // Per branch
-  // ============================================================
-  // Per-branch enum: l+ ↔ b
-  // returns 0=invalid, 1=wrong, 2=correct
-  // ============================================================
-  int misms_pairing_min_mlb2_lpb(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& misms_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  );
-  // ============================================================
-  // Per-branch enum: l- ↔ bbar
-  // returns 0=invalid, 1=wrong, 2=correct
-  // ============================================================
-  int misms_pairing_min_mlb2_lmbb(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& misms_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  );
-
-  // ============================================================
-  // Quantile pairing in the (l+, l-) basis
-  // ============================================================
-  RVec<int> quantile_pairing_min_mlb_by_charge(
-    const RVec<float>& jet_pt,
-    const RVec<float>& jet_eta,
-    const RVec<float>& jet_phi,
-    const RVec<float>& jet_e,
-    const RVec<float>& el_pt,
-    const RVec<float>& el_eta,
-    const RVec<float>& el_phi,
-    const RVec<float>& el_e,
-    const RVec<float>& el_charge,
-    const RVec<float>& mu_pt,
-    const RVec<float>& mu_eta,
-    const RVec<float>& mu_phi,
-    const RVec<float>& mu_e,
-    const RVec<float>& mu_charge,
-    const float& met_met,
-    const float& met_phi,
-    const int& jet_size
-  );
-
-    // Per branch
-  // ============================================================
-  // Per-branch enum: l+ ↔ b
-  // returns 0=invalid, 1=wrong, 2=correct
-  // ============================================================
-  int quantile_vs_dR_enum_lpb(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& quantile_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  );
-
-  // ============================================================
-  // Per-branch enum: l- ↔ bbar
-  // returns 0=invalid, 1=wrong, 2=correct
-  // ============================================================
-  int quantile_vs_dR_enum_lmbb(
-    const RVec<int>& truth_lp_lm, // [jet_for_lplus, jet_for_lminus]
-    const RVec<int>& quantile_lp_lm   // [jet_for_lplus, jet_for_lminus]
-  );
 
   // New attempt at detailed truths - hence new mus and sigmas needed for chi2!
   // ============================================================
@@ -524,7 +317,6 @@ namespace ttZ{
     const RVec<float>& mu_charge,
     const float& met_met,
     const float& met_phi,
-    const int& jet_size,
     // --- truth inputs (pT ordered)
     const int& event_jet_truth_idx_b,
     const int& event_jet_truth_idx_bbar,
