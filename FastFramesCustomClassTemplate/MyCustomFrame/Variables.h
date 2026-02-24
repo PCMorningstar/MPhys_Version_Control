@@ -349,4 +349,30 @@ namespace ttZ{
     const int& event_jet_truth_idx_bbar,
     const int& event_jet_truth_candidates_b,
     const int& event_jet_truth_candidates_bbar);
+
+  // ============================================================
+  // NEW Minimum Delta R Sum (MDRS)
+  // pairing in the (l+, l-) basis
+  // Minimises:  dR(l+, j1) + dR(l-, j2)
+  // ============================================================
+  int new_MDRS_pairing(
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge,
+    const int& event_jet_truth_idx_b,
+    const int& event_jet_truth_idx_bbar,
+    const int& event_jet_truth_candidates_b,
+    const int& event_jet_truth_candidates_bbar
+  );
 }

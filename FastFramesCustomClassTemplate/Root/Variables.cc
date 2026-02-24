@@ -955,13 +955,85 @@ int new_chi_indexed(
   // -----------------------------
   std::map<std::string, ObsStats> obs_map;
 
-  if (jet_size >= 2) {
-    obs_map["mlb_plus"]   = {98.24f, 30.44f};
-    obs_map["mlb_minus"]  = {98.35f, 30.51f};
-    obs_map["pTdiff"]     = {-18.14f, 60.30f};
-    obs_map["sum_deltaR"] = {3.59f, 1.46f};
-    obs_map["mllbb"]      = {303.20f, 85.88f};
-    obs_map["mT_ttbar"]   = {376.98f, 95.08f};
+  if (jet_size == 2) {
+      obs_map["mlb_plus"]   = {98.07f, 30.47f};
+      obs_map["mlb_minus"]  = {98.19f, 30.55f};
+      obs_map["pTdiff"]     = {-6.36f, 55.77f};
+      obs_map["sum_deltaR"] = {3.58f, 1.46f};
+      obs_map["mllbb"]      = {303.15f, 86.03f};
+      obs_map["mT_ttbar"]   = {378.16f, 95.16f};
+  }
+
+  if (jet_size == 3) {
+      obs_map["mlb_plus"]   = {97.10f, 31.29f};
+      obs_map["mlb_minus"]  = {97.20f, 31.37f};
+      obs_map["pTdiff"]     = {-21.58f, 71.43f};
+      obs_map["sum_deltaR"] = {3.44f, 1.43f};
+      obs_map["mllbb"]      = {306.45f, 90.23f};
+      obs_map["mT_ttbar"]   = {382.74f, 99.81f};
+  }
+
+  if (jet_size == 4) {
+      obs_map["mlb_plus"]   = {96.39f, 32.07f};
+      obs_map["mlb_minus"]  = {96.76f, 31.93f};
+      obs_map["pTdiff"]     = {-27.64f, 82.93f};
+      obs_map["sum_deltaR"] = {3.33f, 1.40f};
+      obs_map["mllbb"]      = {311.37f, 95.02f};
+      obs_map["mT_ttbar"]   = {389.53f, 105.81f};
+  }
+
+  if (jet_size == 5) {
+      obs_map["mlb_plus"]   = {96.50f, 32.43f};
+      obs_map["mlb_minus"]  = {96.59f, 32.26f};
+      obs_map["pTdiff"]     = {-36.49f, 95.90f};
+      obs_map["sum_deltaR"] = {3.23f, 1.37f};
+      obs_map["mllbb"]      = {317.44f, 100.84f};
+      obs_map["mT_ttbar"]   = {397.09f, 112.24f};
+  }
+
+  if (jet_size == 6) {
+      obs_map["mlb_plus"]   = {96.34f, 32.81f};
+      obs_map["mlb_minus"]  = {96.36f, 32.68f};
+      obs_map["pTdiff"]     = {-55.47f, 114.09f};
+      obs_map["sum_deltaR"] = {3.13f, 1.35f};
+      obs_map["mllbb"]      = {323.21f, 106.53f};
+      obs_map["mT_ttbar"]   = {405.55f, 118.76f};
+  }
+
+  if (jet_size == 7) {
+      obs_map["mlb_plus"]   = {96.65f, 32.97f};
+      obs_map["mlb_minus"]  = {96.38f, 32.94f};
+      obs_map["pTdiff"]     = {-44.87f, 118.30f};
+      obs_map["sum_deltaR"] = {3.04f, 1.35f};
+      obs_map["mllbb"]      = {329.15f, 109.28f};
+      obs_map["mT_ttbar"]   = {413.55f, 122.70f};
+  }
+
+  if (jet_size == 8) {
+      obs_map["mlb_plus"]   = {97.54f, 34.04f};
+      obs_map["mlb_minus"]  = {96.42f, 33.48f};
+      obs_map["pTdiff"]     = {-44.63f, 127.74f};
+      obs_map["sum_deltaR"] = {2.97f, 1.35f};
+      obs_map["mllbb"]      = {338.58f, 122.42f};
+      obs_map["mT_ttbar"]   = {426.09f, 132.84f};
+  }
+
+  if (jet_size == 9) {
+      obs_map["mlb_plus"]   = {97.97f, 31.54f};
+      obs_map["mlb_minus"]  = {98.15f, 34.61f};
+      obs_map["pTdiff"]     = {-89.57f, 149.82f};
+      obs_map["sum_deltaR"] = {2.90f, 1.38f};
+      obs_map["mllbb"]      = {338.33f, 117.38f};
+      obs_map["mT_ttbar"]   = {430.07f, 140.49f};
+  }
+
+  if (jet_size == 10) {
+      obs_map["mlb_plus"]   = {99.90f, 32.00f};
+      obs_map["mlb_minus"]  = {97.87f, 37.16f};
+      obs_map["pTdiff"]     = {-229.47f, 210.93f};
+      obs_map["sum_deltaR"] = {2.83f, 1.41f};
+      obs_map["mllbb"]      = {347.58f, 151.41f};
+      obs_map["mT_ttbar"]   = {440.85f, 159.60f};
   }
 
   // -----------------------------
@@ -998,37 +1070,6 @@ int new_chi_indexed(
       + ROOT::Math::VectorUtil::DeltaR(lminus, jet2)
       - obs_map["sum_deltaR"].mean)
       / obs_map["sum_deltaR"].sigma,
-        2.0
-    );
-
-    chi += std::pow(
-        (vis_tot.M() - obs_map["mllbb"].mean)
-        / obs_map["mllbb"].sigma,
-        2.0
-    );
-
-    // MET components
-    double met_px = met_met * GeV * std::cos(met_phi);
-    double met_py = met_met * GeV * std::sin(met_phi);
-
-    // Visible transverse energy (fixed std::max)
-    double Et_vis = std::sqrt(
-        std::max(
-            0.0,
-            vis_tot.M()*vis_tot.M() + vis_tot.Pt()*vis_tot.Pt()
-        )
-    );
-
-    double arg =
-        (Et_vis + met_met*GeV)*(Et_vis + met_met*GeV)
-        - (vis_tot.Px() + met_px)*(vis_tot.Px() + met_px)
-        - (vis_tot.Py() + met_py)*(vis_tot.Py() + met_py);
-
-    double mT_ttbar = (arg > 0.0) ? std::sqrt(arg) : 0.0;
-
-    chi += std::pow(
-        (mT_ttbar - obs_map["mT_ttbar"].mean)
-        / obs_map["mT_ttbar"].sigma,
         2.0
     );
 
@@ -1229,6 +1270,107 @@ int new_misms_pairing(
   return correct ? 1 : 0;
   }
 
-
+  int new_MDRS_pairing(
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge,
+    const int& event_jet_truth_idx_b,
+    const int& event_jet_truth_idx_bbar,
+    const int& event_jet_truth_candidates_b,
+    const int& event_jet_truth_candidates_bbar
+  ){
+    constexpr float GeV = 1.f / 1000.f;
+  
+    // =========================
+    // Collect leptons
+    // =========================
+    RVec<Lepton> leptons;
+  
+    for (size_t i = 0; i < el_pt.size(); ++i)
+      leptons.push_back({V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+  
+    for (size_t i = 0; i < mu_pt.size(); ++i)
+      leptons.push_back({V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
+  
+    if (leptons.size() != 2) return -1;
+    if (leptons[0].charge * leptons[1].charge >= 0) return -1;
+  
+    const V4& lplus  = (leptons[0].charge > 0) ? leptons[0].p4 : leptons[1].p4;
+    const V4& lminus = (leptons[0].charge < 0) ? leptons[0].p4 : leptons[1].p4;
+  
+    // =========================
+    // Build jets
+    // =========================
+    const size_t nJets = jet_pt.size();
+    if (nJets < 2) return -1;
+  
+    std::vector<V4> jets;
+    jets.reserve(nJets);
+  
+    for (size_t i = 0; i < nJets; ++i)
+      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+  
+    // =========================
+    // ΔR minimisation
+    // =========================
+    float min_sum = std::numeric_limits<float>::max();
+    int best_i = -1;
+    int best_j = -1;
+  
+    for (size_t i = 0; i < nJets; ++i) {
+      for (size_t j = 0; j < nJets; ++j) {
+  
+        if (i == j) continue;
+  
+        const float dR_plus  = ROOT::Math::VectorUtil::DeltaR(lplus,  jets[i]);
+        const float dR_minus = ROOT::Math::VectorUtil::DeltaR(lminus, jets[j]);
+  
+        const float sum = dR_plus + dR_minus;
+  
+        if (sum < min_sum) {
+          min_sum = sum;
+          best_i = static_cast<int>(i);
+          best_j = static_cast<int>(j);
+        }
+      }
+    }
+  
+    if (best_i < 0 || best_j < 0) return -1;
+  
+    // =========================
+    // Truth validation
+    // =========================
+    const bool validB =
+        (event_jet_truth_idx_b >= 0) &&
+        (event_jet_truth_candidates_b == 1) &&
+        (event_jet_truth_idx_b < static_cast<int>(nJets));
+  
+    const bool validBbar =
+        (event_jet_truth_idx_bbar >= 0) &&
+        (event_jet_truth_candidates_bbar == 1) &&
+        (event_jet_truth_idx_bbar < static_cast<int>(nJets));
+  
+    if (!validB || !validBbar) return -1;
+  
+    // =========================
+    // Correctness check
+    // =========================
+    const bool correct =
+        (best_i == event_jet_truth_idx_b &&
+         best_j == event_jet_truth_idx_bbar);
+  
+    return correct ? 1 : 0;
+  }
 }
  // namespace ttZ

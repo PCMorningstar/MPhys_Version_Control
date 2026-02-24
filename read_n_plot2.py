@@ -2,42 +2,55 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # -------------------------------------------------
-# Function to read a block from file
+# Function to read a CSV-style data block from a file
 # -------------------------------------------------
 def read_efficiency_block(filename, header_keyword):
+    """
+    Reads a block of efficiency data from a text file.
+    Expected format:
+    # <header_keyword>
+    nj, eff, err
+    """
     data = []
     reading = False
 
-    with open(filename) as f:
+    with open(filename, "r") as f:
         for line in f:
             line = line.strip()
-
             if not line:
                 reading = False
                 continue
 
+            # Check for header
             if line.startswith("#"):
                 reading = header_keyword.lower() in line.lower()
                 continue
 
             if reading:
+                # Convert line to floats
                 parts = [float(x.strip()) for x in line.split(",")]
-                data.append(parts)
+                if len(parts) == 3:
+                    data.append(parts)
 
-    return np.array(data)   # shape (n_rows, 3)
+    if not data:
+        raise ValueError(f"No data found for header '{header_keyword}' in {filename}")
+
+    return np.array(data)  # shape (n_rows, 3)
 
 
 # -------------------------------------------------
 # Load data
 # -------------------------------------------------
-filename = "misms_chi2_hyper_v_njets.py"   # <-- make sure this is a DATA file, not .py
+filename = "misms_chi2_hyper_v_njets.py"  # Make sure this is a plain data file, not .py
 
-chi2_data  = read_efficiency_block(filename, "chi2")
-misms_data = read_efficiency_block(filename, "MISMS")
-hyper_data = read_efficiency_block(filename, "HyPER")
+chi2_data  = read_efficiency_block(filename, "Number of Jets, NEW Reconstruction efficiency - selected terms , Error - chi2")
+mdrs_data  = read_efficiency_block(filename, "Number of Jets, NEW Reconstruction efficiency, Error - MDRS")
+misms_data = read_efficiency_block(filename, "Number of Jets, NEW Reconstruction efficiency, Error - MISMS")
+hyper_data = read_efficiency_block(filename, "Number of Jets, NEW Reconstruction efficiency, Error - HyPER")
 
 # Extract columns
 nj_chi2,  eff_chi2,  err_chi2  = chi2_data.T
+nj_mdrs,  eff_mdrs,  err_mdrs  = mdrs_data.T
 nj_misms, eff_misms, err_misms = misms_data.T
 nj_hyper, eff_hyper, err_hyper = hyper_data.T
 
@@ -47,62 +60,15 @@ nj_hyper, eff_hyper, err_hyper = hyper_data.T
 # -------------------------------------------------
 plt.figure(figsize=(8, 6))
 
-# χ2
-plt.step(
-    nj_chi2, eff_chi2,
-    where="mid",
-    color="blue",
-    linewidth=1.5,
-    label=r"$\chi^2$"
-)
+def plot_with_errorbars(nj, eff, err, color, label):
+    plt.step(nj, eff, where="mid", color=color, linewidth=1.5, label=label)
+    plt.errorbar(nj, eff, yerr=err, fmt="none", ecolor="black",
+                 elinewidth=1, capsize=4, capthick=1)
 
-plt.errorbar(
-    nj_chi2, eff_chi2,
-    yerr=err_chi2,
-    fmt="none",
-    ecolor="black",
-    elinewidth=1,
-    capsize=4,
-    capthick=1
-)
-
-# MISMS
-plt.step(
-    nj_misms, eff_misms,
-    where="mid",
-    color="red",
-    linewidth=1.5,
-    label=r"MISMS"
-)
-
-plt.errorbar(
-    nj_misms, eff_misms,
-    yerr=err_misms,
-    fmt="none",
-    ecolor="black",
-    elinewidth=1,
-    capsize=4,
-    capthick=1
-)
-
-# HyPER
-plt.step(
-    nj_hyper, eff_hyper,
-    where="mid",
-    color="orange",
-    linewidth=1.5,
-    label=r"HyPER"
-)
-
-plt.errorbar(
-    nj_hyper, eff_hyper,
-    yerr=err_hyper,
-    fmt="none",
-    ecolor="black",
-    elinewidth=1,
-    capsize=4,
-    capthick=1
-)
+plot_with_errorbars(nj_chi2, eff_chi2, err_chi2, "blue", r"$\chi^2$")
+plot_with_errorbars(nj_mdrs, eff_mdrs, err_mdrs, "purple", r"MDRS")
+plot_with_errorbars(nj_misms, eff_misms, err_misms, "red", r"MISMS")
+plot_with_errorbars(nj_hyper, eff_hyper, err_hyper, "orange", r"HyPER")
 
 # -------------------------------------------------
 # Styling

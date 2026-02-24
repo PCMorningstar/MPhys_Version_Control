@@ -6,7 +6,6 @@ from scipy.optimize import curve_fit
 # Config: regions and observables
 # --------------------------------------------------
 REGIONS = {
-    "sec_region": lambda arrays: arrays["selection_cuts_NOSYS"] == 1,
     "2jets_region": lambda arrays: (arrays["selection_cuts_NOSYS"] == 1) & (arrays["jet_size_NOSYS"] == 2),
     "3jets_region": lambda arrays: (arrays["selection_cuts_NOSYS"] == 1) & (arrays["jet_size_NOSYS"] == 3),
     "4jets_region": lambda arrays: (arrays["selection_cuts_NOSYS"] == 1) & (arrays["jet_size_NOSYS"] == 4),

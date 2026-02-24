@@ -87,6 +87,9 @@ ntuples:
     # NEW MISMS indexed
     - new_misms_indexed_jets_NOSYS
 
+    # NEW MDRS indexed
+    - new_mdrs_indexed_jets_NOSYS
+
     - weight_mc_NOSYS              # MC generator weight
     - weight_pileup_NOSYS          # pileup weight
     - weight_leptonSF_tight_NOSYS  # lepton SF

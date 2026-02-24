@@ -520,6 +520,20 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
         "bjet_new_candicate_NOSYS", "bbarjet_new_candicate_NOSYS"
       }
   );
+  // MDRS
+  LOG(INFO) << "Adding variable: new_mdrs_indexed_jets_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "new_mdrs_indexed_jets_NOSYS",
+      ttZ::new_MDRS_pairing,
+      {
+        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
+        "bjet_new_idx_NOSYS", "bbarjet_new_idx_NOSYS",
+        "bjet_new_candicate_NOSYS", "bbarjet_new_candicate_NOSYS"
+      }
+  );
   return mainNode;
 }
 
@@ -1032,6 +1046,21 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       mainNode,
       "new_misms_indexed_jets_NOSYS",
       ttZ::new_misms_pairing,
+      {
+        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
+        "bjet_new_idx_NOSYS", "bbarjet_new_idx_NOSYS",
+        "bjet_new_candicate_NOSYS", "bbarjet_new_candicate_NOSYS"
+      }
+  );
+
+  // MDRS
+  LOG(INFO) << "Adding variable: new_mdrs_indexed_jets_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "new_mdrs_indexed_jets_NOSYS",
+      ttZ::new_MDRS_pairing,
       {
         "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
         "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
