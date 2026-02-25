@@ -1047,35 +1047,39 @@ int new_chi_indexed(
 
     double chi = 0.0;
 
+    // m_lb(+)
     chi += std::pow(
         (vis_plus.M() - obs_map["mlb_plus"].mean)
         / obs_map["mlb_plus"].sigma,
         2.0
     );
 
+    // m_lb(-)
     chi += std::pow(
         (vis_minus.M() - obs_map["mlb_minus"].mean)
         / obs_map["mlb_minus"].sigma,
         2.0
     );
 
+    // pT difference between visible systems
     chi += std::pow(
-    (vis_plus.Pt() - vis_minus.Pt() - obs_map["pTdiff"].mean)
-    / obs_map["pTdiff"].sigma,
-    2.0
+        (vis_plus.Pt() - vis_minus.Pt()
+         - obs_map["pTdiff"].mean)
+        / obs_map["pTdiff"].sigma,
+        2.0
     );
 
+    // Sum ΔR
     chi += std::pow(
         (ROOT::Math::VectorUtil::DeltaR(lplus, jet1)
-      + ROOT::Math::VectorUtil::DeltaR(lminus, jet2)
-      - obs_map["sum_deltaR"].mean)
-      / obs_map["sum_deltaR"].sigma,
+       + ROOT::Math::VectorUtil::DeltaR(lminus, jet2)
+       - obs_map["sum_deltaR"].mean)
+       / obs_map["sum_deltaR"].sigma,
         2.0
     );
 
     return chi;
   };
-
 
   // =========================
   // Find best chi2 pairing
@@ -1101,7 +1105,6 @@ int new_chi_indexed(
 
   if (best_i < 0 || best_j < 0)
     return -1;
-
 
   // =========================
   // Truth extraction

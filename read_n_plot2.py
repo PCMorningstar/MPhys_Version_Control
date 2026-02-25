@@ -81,7 +81,7 @@ plt.grid(True, linestyle=":", linewidth=0.7)
 plt.legend(frameon=False)
 
 plt.xlim(0.0, max(nj_chi2) + 0.5)
-plt.ylim(0.0, 1.1)
+plt.ylim(0.0, 1.0)
 
 plt.tight_layout()
 plt.savefig("full_recon_eff_v_njets.png", dpi=300)
