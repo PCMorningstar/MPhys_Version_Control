@@ -856,7 +856,7 @@ RVec<float> new_detailed_truth(
   float mlb_plus  = (lplus  + jet_b).M();
   float mlb_minus = (lminus + jet_bbar).M();
 
-  float pTdiff = std::abs((lplus + jet_b).Pt() - (lminus + jet_bbar).Pt());
+  float pTdiff = (lplus + jet_b).Pt() - (lminus + jet_bbar).Pt();
 
   float sum_deltaR = ROOT::Math::VectorUtil::DeltaR(lplus,  jet_b)
                    + ROOT::Math::VectorUtil::DeltaR(lminus, jet_bbar);
@@ -956,18 +956,18 @@ int new_chi_indexed(
   std::map<std::string, ObsStats> obs_map;
 
   if (jet_size == 2) {
-      obs_map["mlb_plus"]   = {98.07f, 30.47f};
-      obs_map["mlb_minus"]  = {98.19f, 30.55f};
-      obs_map["pTdiff"]     = {-6.36f, 55.77f};
-      obs_map["sum_deltaR"] = {3.58f, 1.46f};
-      obs_map["mllbb"]      = {303.15f, 86.03f};
-      obs_map["mT_ttbar"]   = {378.16f, 95.16f};
+    obs_map["mlb_plus"]   = {98.07f, 30.47f};
+    obs_map["mlb_minus"]  = {98.19f, 30.55f};
+    obs_map["pTdiff"]     = {-7.21f, 56.22f};
+    obs_map["sum_deltaR"] = {3.58f, 1.46f};
+    obs_map["mllbb"]      = {303.15f, 86.03f};
+    obs_map["mT_ttbar"]   = {378.16f, 95.16f};
   }
 
   if (jet_size == 3) {
       obs_map["mlb_plus"]   = {97.10f, 31.29f};
       obs_map["mlb_minus"]  = {97.20f, 31.37f};
-      obs_map["pTdiff"]     = {-21.58f, 71.43f};
+      obs_map["pTdiff"]     = {-21.93f, 71.57f};
       obs_map["sum_deltaR"] = {3.44f, 1.43f};
       obs_map["mllbb"]      = {306.45f, 90.23f};
       obs_map["mT_ttbar"]   = {382.74f, 99.81f};
@@ -976,7 +976,7 @@ int new_chi_indexed(
   if (jet_size == 4) {
       obs_map["mlb_plus"]   = {96.39f, 32.07f};
       obs_map["mlb_minus"]  = {96.76f, 31.93f};
-      obs_map["pTdiff"]     = {-27.64f, 82.93f};
+      obs_map["pTdiff"]     = {-26.95f, 82.42f};
       obs_map["sum_deltaR"] = {3.33f, 1.40f};
       obs_map["mllbb"]      = {311.37f, 95.02f};
       obs_map["mT_ttbar"]   = {389.53f, 105.81f};
@@ -985,7 +985,7 @@ int new_chi_indexed(
   if (jet_size == 5) {
       obs_map["mlb_plus"]   = {96.50f, 32.43f};
       obs_map["mlb_minus"]  = {96.59f, 32.26f};
-      obs_map["pTdiff"]     = {-36.49f, 95.90f};
+      obs_map["pTdiff"]     = {-36.83f, 96.29f};
       obs_map["sum_deltaR"] = {3.23f, 1.37f};
       obs_map["mllbb"]      = {317.44f, 100.84f};
       obs_map["mT_ttbar"]   = {397.09f, 112.24f};
@@ -994,7 +994,7 @@ int new_chi_indexed(
   if (jet_size == 6) {
       obs_map["mlb_plus"]   = {96.34f, 32.81f};
       obs_map["mlb_minus"]  = {96.36f, 32.68f};
-      obs_map["pTdiff"]     = {-55.47f, 114.09f};
+      obs_map["pTdiff"]     = {-54.05f, 113.57f};
       obs_map["sum_deltaR"] = {3.13f, 1.35f};
       obs_map["mllbb"]      = {323.21f, 106.53f};
       obs_map["mT_ttbar"]   = {405.55f, 118.76f};
@@ -1003,7 +1003,7 @@ int new_chi_indexed(
   if (jet_size == 7) {
       obs_map["mlb_plus"]   = {96.65f, 32.97f};
       obs_map["mlb_minus"]  = {96.38f, 32.94f};
-      obs_map["pTdiff"]     = {-44.87f, 118.30f};
+      obs_map["pTdiff"]     = {-47.78f, 119.22f};
       obs_map["sum_deltaR"] = {3.04f, 1.35f};
       obs_map["mllbb"]      = {329.15f, 109.28f};
       obs_map["mT_ttbar"]   = {413.55f, 122.70f};
@@ -1012,7 +1012,7 @@ int new_chi_indexed(
   if (jet_size == 8) {
       obs_map["mlb_plus"]   = {97.54f, 34.04f};
       obs_map["mlb_minus"]  = {96.42f, 33.48f};
-      obs_map["pTdiff"]     = {-44.63f, 127.74f};
+      obs_map["pTdiff"]     = {-39.47f, 129.70f};
       obs_map["sum_deltaR"] = {2.97f, 1.35f};
       obs_map["mllbb"]      = {338.58f, 122.42f};
       obs_map["mT_ttbar"]   = {426.09f, 132.84f};
@@ -1021,7 +1021,7 @@ int new_chi_indexed(
   if (jet_size == 9) {
       obs_map["mlb_plus"]   = {97.97f, 31.54f};
       obs_map["mlb_minus"]  = {98.15f, 34.61f};
-      obs_map["pTdiff"]     = {-89.57f, 149.82f};
+      obs_map["pTdiff"]     = {-82.10f, 146.72f};
       obs_map["sum_deltaR"] = {2.90f, 1.38f};
       obs_map["mllbb"]      = {338.33f, 117.38f};
       obs_map["mT_ttbar"]   = {430.07f, 140.49f};
@@ -1030,12 +1030,11 @@ int new_chi_indexed(
   if (jet_size == 10) {
       obs_map["mlb_plus"]   = {99.90f, 32.00f};
       obs_map["mlb_minus"]  = {97.87f, 37.16f};
-      obs_map["pTdiff"]     = {-229.47f, 210.93f};
+      obs_map["pTdiff"]     = {-1086.22f, 388.54f};
       obs_map["sum_deltaR"] = {2.83f, 1.41f};
       obs_map["mllbb"]      = {347.58f, 151.41f};
       obs_map["mT_ttbar"]   = {440.85f, 159.60f};
   }
-
   // -----------------------------
   // Lambda to compute chi2
   // -----------------------------
@@ -1049,33 +1048,34 @@ int new_chi_indexed(
 
     // m_lb(+)
     chi += std::pow(
-        (vis_plus.M() - obs_map["mlb_plus"].mean)
-        / obs_map["mlb_plus"].sigma,
-        2.0
+      (vis_plus.M() - obs_map["mlb_plus"].mean)
+      / obs_map["mlb_plus"].sigma,
+      2.0
     );
 
     // m_lb(-)
     chi += std::pow(
-        (vis_minus.M() - obs_map["mlb_minus"].mean)
-        / obs_map["mlb_minus"].sigma,
-        2.0
+      (vis_minus.M() - obs_map["mlb_minus"].mean)
+      / obs_map["mlb_minus"].sigma,
+      2.0
     );
 
-    // pT difference between visible systems
+    // pTdiff  (pT(l+b) difference)
+    double ptDiff = vis_plus.Pt() - vis_minus.Pt();
+
     chi += std::pow(
-        (vis_plus.Pt() - vis_minus.Pt()
-         - obs_map["pTdiff"].mean)
-        / obs_map["pTdiff"].sigma,
-        2.0
+      (ptDiff - obs_map["pTdiff"].mean)
+      / obs_map["pTdiff"].sigma,
+      2.0
     );
 
     // Sum ΔR
     chi += std::pow(
-        (ROOT::Math::VectorUtil::DeltaR(lplus, jet1)
-       + ROOT::Math::VectorUtil::DeltaR(lminus, jet2)
-       - obs_map["sum_deltaR"].mean)
-       / obs_map["sum_deltaR"].sigma,
-        2.0
+      (ROOT::Math::VectorUtil::DeltaR(lplus, jet1)
+    + ROOT::Math::VectorUtil::DeltaR(lminus, jet2)
+    - obs_map["sum_deltaR"].mean)
+    / obs_map["sum_deltaR"].sigma,
+      2.0
     );
 
     return chi;
