@@ -28,10 +28,15 @@ def gaussian(x, A, mu, sigma):
 # --------------------------------------------------
 # Fit Gaussian robustly
 # --------------------------------------------------
-def fit_gaussian(data, bins=100):
+def fit_gaussian(data, bins=100, allow_negative=False):
     data = np.asarray(data)
     data = data[np.isfinite(data)]
-    data = data[data > 0.0]
+
+    # Keep the old behaviour for most observables,
+    # but allow negatives for pTdiff (or anything you flag).
+    if not allow_negative:
+        data = data[data > 0.0]
+
     if len(data) < 10:
         return 0.0, 0.0, None, None, None
 
@@ -59,16 +64,20 @@ def fit_gaussian(data, bins=100):
 file = uproot.open("output_ntuples/ttll_601230_mc23a_fullsim.root")
 tree = file["reco"]
 
-arrays = {branch: tree[branch].array(library="np") for branch in ["jet_size_NOSYS","selection_cuts_NOSYS"] + OBSERVABLES}
+arrays = {branch: tree[branch].array(library="np")
+          for branch in ["jet_size_NOSYS", "selection_cuts_NOSYS"] + OBSERVABLES}
 
 # --------------------------------------------------
 # Fit per region and plot for 2jets
 # --------------------------------------------------
 for region_name, region_mask_func in REGIONS.items():
     mask = region_mask_func(arrays)
+
     for obs in OBSERVABLES:
         data = arrays[obs][mask]
-        mu, sigma, counts, edges, A = fit_gaussian(data)
+
+        allow_negative = (obs == "new_truth_pTdiff_NOSYS")
+        mu, sigma, counts, edges, A = fit_gaussian(data, allow_negative=allow_negative)
 
         # Print results
         print(f"Region: {region_name}, Observable: {obs}")
@@ -76,10 +85,26 @@ for region_name, region_mask_func in REGIONS.items():
 
         # Plot histogram + Gaussian fit
         centers = 0.5 * (edges[:-1] + edges[1:])
-        plt.figure(figsize=(7,5))
-        plt.bar(centers, counts, width=(edges[1]-edges[0]), alpha=0.6, label="Data")
+        plt.figure(figsize=(7, 5))
+        plt.bar(centers, counts, width=(edges[1] - edges[0]), alpha=0.6, label="Data")
+
         x_fit = np.linspace(edges[0], edges[-1], 500)
-        plt.plot(x_fit, gaussian(x_fit, A, mu, sigma), 'r-', label=f"Gaussian fit\nmu={mu:.2f}, sigma={sigma:.2f}")
+        plt.plot(
+            x_fit,
+            gaussian(x_fit, A, mu, sigma),
+            "r-",
+            label=f"Gaussian fit\nmu={mu:.2f}, sigma={sigma:.2f}"
+        )
+
+        # Only force negative visibility for pTdiff
+        if allow_negative:
+            xmin, xmax = edges[0], edges[-1]
+            if xmin >= 0:
+                # If histogram range is still non-negative (rare), force symmetric around 0
+                xmax = max(abs(xmax), abs(xmin))
+                xmin = -xmax
+            plt.xlim(xmin, xmax)
+
         plt.xlabel(obs)
         plt.ylabel("Counts")
         plt.title(f"{region_name} - {obs}")

@@ -46,6 +46,14 @@ namespace ttZ{ //GPT aid
     return obj_pt_sorted;
   }
 
+  RVec<int> pt_order_int(const RVec<int>& comp, const RVec<float>& pt)
+  {
+    auto obj_pt_sorted = ROOT::VecOps::Take(comp,
+      ROOT::VecOps::Argsort(pt, [](float a, float b){ return a > b;}));
+
+    return obj_pt_sorted;
+  }
+
   int b_selector(const RVec<int>& comp)
   {
     int obj_pt_sorted = comp[0];
@@ -958,81 +966,73 @@ int new_chi_indexed(
   if (jet_size == 2) {
     obs_map["mlb_plus"]   = {98.07f, 30.47f};
     obs_map["mlb_minus"]  = {98.19f, 30.55f};
-    obs_map["pTdiff"]     = {-7.21f, 56.22f};
+    obs_map["pTdiff"]     = {-0.25f, 23.25f};
     obs_map["sum_deltaR"] = {3.58f, 1.46f};
-    obs_map["mllbb"]      = {303.15f, 86.03f};
-    obs_map["mT_ttbar"]   = {378.16f, 95.16f};
+    obs_map["mllbb"]      = {303.14f, 86.01f};
+    obs_map["mT_ttbar"]   = {378.16f, 95.14f};
   }
-
-  if (jet_size == 3) {
+  else if (jet_size == 3) {
       obs_map["mlb_plus"]   = {97.10f, 31.29f};
       obs_map["mlb_minus"]  = {97.20f, 31.37f};
-      obs_map["pTdiff"]     = {-21.93f, 71.57f};
+      obs_map["pTdiff"]     = {-1.99f, 34.16f};
       obs_map["sum_deltaR"] = {3.44f, 1.43f};
-      obs_map["mllbb"]      = {306.45f, 90.23f};
-      obs_map["mT_ttbar"]   = {382.74f, 99.81f};
+      obs_map["mllbb"]      = {306.45f, 90.22f};
+      obs_map["mT_ttbar"]   = {382.73f, 99.79f};
   }
-
-  if (jet_size == 4) {
+  else if (jet_size == 4) {
       obs_map["mlb_plus"]   = {96.39f, 32.07f};
       obs_map["mlb_minus"]  = {96.76f, 31.93f};
-      obs_map["pTdiff"]     = {-26.95f, 82.42f};
+      obs_map["pTdiff"]     = {-0.35f, 71.03f};
       obs_map["sum_deltaR"] = {3.33f, 1.40f};
-      obs_map["mllbb"]      = {311.37f, 95.02f};
+      obs_map["mllbb"]      = {311.36f, 95.02f};
       obs_map["mT_ttbar"]   = {389.53f, 105.81f};
   }
-
-  if (jet_size == 5) {
+  else if (jet_size == 5) {
       obs_map["mlb_plus"]   = {96.50f, 32.43f};
       obs_map["mlb_minus"]  = {96.59f, 32.26f};
-      obs_map["pTdiff"]     = {-36.83f, 96.29f};
+      obs_map["pTdiff"]     = {-0.13f, 81.53f};
       obs_map["sum_deltaR"] = {3.23f, 1.37f};
       obs_map["mllbb"]      = {317.44f, 100.84f};
       obs_map["mT_ttbar"]   = {397.09f, 112.24f};
   }
-
-  if (jet_size == 6) {
+  else if (jet_size == 6) {
       obs_map["mlb_plus"]   = {96.34f, 32.81f};
       obs_map["mlb_minus"]  = {96.36f, 32.68f};
-      obs_map["pTdiff"]     = {-54.05f, 113.57f};
+      obs_map["pTdiff"]     = {0.53f, 92.97f};
       obs_map["sum_deltaR"] = {3.13f, 1.35f};
-      obs_map["mllbb"]      = {323.21f, 106.53f};
+      obs_map["mllbb"]      = {323.20f, 106.53f};
       obs_map["mT_ttbar"]   = {405.55f, 118.76f};
   }
-
-  if (jet_size == 7) {
+  else if (jet_size == 7) {
       obs_map["mlb_plus"]   = {96.65f, 32.97f};
       obs_map["mlb_minus"]  = {96.38f, 32.94f};
-      obs_map["pTdiff"]     = {-47.78f, 119.22f};
+      obs_map["pTdiff"]     = {0.39f, 102.06f};
       obs_map["sum_deltaR"] = {3.04f, 1.35f};
       obs_map["mllbb"]      = {329.15f, 109.28f};
       obs_map["mT_ttbar"]   = {413.55f, 122.70f};
   }
-
-  if (jet_size == 8) {
+  else if (jet_size == 8) {
       obs_map["mlb_plus"]   = {97.54f, 34.04f};
       obs_map["mlb_minus"]  = {96.42f, 33.48f};
-      obs_map["pTdiff"]     = {-39.47f, 129.70f};
+      obs_map["pTdiff"]     = {-1.53f, 27.50f};
       obs_map["sum_deltaR"] = {2.97f, 1.35f};
       obs_map["mllbb"]      = {338.58f, 122.42f};
       obs_map["mT_ttbar"]   = {426.09f, 132.84f};
   }
-
-  if (jet_size == 9) {
+  else if (jet_size == 9) {
       obs_map["mlb_plus"]   = {97.97f, 31.54f};
       obs_map["mlb_minus"]  = {98.15f, 34.61f};
-      obs_map["pTdiff"]     = {-82.10f, 146.72f};
+      obs_map["pTdiff"]     = {3.28f, 36.43f};
       obs_map["sum_deltaR"] = {2.90f, 1.38f};
       obs_map["mllbb"]      = {338.33f, 117.38f};
       obs_map["mT_ttbar"]   = {430.07f, 140.49f};
   }
-
-  if (jet_size == 10) {
+  else if (jet_size == 10) {
       obs_map["mlb_plus"]   = {99.90f, 32.00f};
       obs_map["mlb_minus"]  = {97.87f, 37.16f};
-      obs_map["pTdiff"]     = {-1086.22f, 388.54f};
+      obs_map["pTdiff"]     = {3.07f, 41.18f};
       obs_map["sum_deltaR"] = {2.83f, 1.41f};
-      obs_map["mllbb"]      = {347.58f, 151.41f};
+      obs_map["mllbb"]      = {347.58f, 151.40f};
       obs_map["mT_ttbar"]   = {440.85f, 159.60f};
   }
   // -----------------------------
@@ -1077,6 +1077,19 @@ int new_chi_indexed(
     / obs_map["sum_deltaR"].sigma,
       2.0
     );
+
+    // mllbb
+    chi += std::pow(
+    (vis_tot.M() - obs_map["mllbb"].mean) / obs_map["mllbb"].sigma,
+    2.0
+    );
+
+    // mT_ttbar  (transverse mass of the (l+l-+b+bbar) system)
+    chi += std::pow(
+    (vis_tot.Mt() - obs_map["mT_ttbar"].mean) / obs_map["mT_ttbar"].sigma,
+    2.0
+    );
+
 
     return chi;
   };
@@ -1374,6 +1387,380 @@ int new_misms_pairing(
          best_j == event_jet_truth_idx_bbar);
   
     return correct ? 1 : 0;
-  }
 }
- // namespace ttZ
+
+// ============================================================
+// Raw pairing algorithms in the (l+, l-) basis
+// Returns:
+//  best_i  -> index of the best jet for l+ (for b)
+//  best_j  -> index of the best jet for l- (for bbar)
+// -1      -> no valid pairing
+// ============================================================
+RVec<int> raw_chi2_pairing(
+  const RVec<float>& jet_pt,
+  const RVec<float>& jet_eta,
+  const RVec<float>& jet_phi,
+  const RVec<float>& jet_e,
+  const RVec<float>& el_pt,
+  const RVec<float>& el_eta,
+  const RVec<float>& el_phi,
+  const RVec<float>& el_e,
+  const RVec<float>& el_charge,
+  const RVec<float>& mu_pt,
+  const RVec<float>& mu_eta,
+  const RVec<float>& mu_phi,
+  const RVec<float>& mu_e,
+  const RVec<float>& mu_charge
+){
+  constexpr float GeV = 1.f/1000.f;
+  const int jet_size = jet_pt.size();
+  // =========================
+  // Basic event selection
+  // =========================
+  RVec<Lepton> leptons;
+  for (size_t i = 0; i < el_pt.size(); ++i)
+      leptons.push_back({V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+
+  for (size_t i = 0; i < mu_pt.size(); ++i)
+      leptons.push_back({V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
+
+  if (leptons.size() != 2) return {-1, -1};
+  if (leptons[0].charge * leptons[1].charge >= 0) return {-1, -1};
+
+  const V4& lplus  = (leptons[0].charge > 0) ? leptons[0].p4 : leptons[1].p4;
+  const V4& lminus = (leptons[0].charge < 0) ? leptons[0].p4 : leptons[1].p4;
+
+  // =========================
+  // Build jets (pT ordered)
+  // =========================
+  std::vector<V4> jets;
+  for (int i = 0; i < jet_size; ++i)
+      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+
+  if (jets.size() < 2) return {-1, -1};
+
+  // -----------------------------
+  // Observable mean/sigma map
+  // -----------------------------
+  std::map<std::string, ObsStats> obs_map;
+
+  if (jet_size == 2) {
+    obs_map["mlb_plus"]   = {98.07f, 30.47f};
+    obs_map["mlb_minus"]  = {98.19f, 30.55f};
+    obs_map["pTdiff"]     = {-0.25f, 23.25f};
+    obs_map["sum_deltaR"] = {3.58f, 1.46f};
+  }
+  else if (jet_size == 3) {
+      obs_map["mlb_plus"]   = {97.10f, 31.29f};
+      obs_map["mlb_minus"]  = {97.20f, 31.37f};
+      obs_map["pTdiff"]     = {-1.99f, 34.16f};
+      obs_map["sum_deltaR"] = {3.44f, 1.43f};
+  }
+  else if (jet_size == 4) {
+      obs_map["mlb_plus"]   = {96.39f, 32.07f};
+      obs_map["mlb_minus"]  = {96.76f, 31.93f};
+      obs_map["pTdiff"]     = {-0.35f, 71.03f};
+      obs_map["sum_deltaR"] = {3.33f, 1.40f};
+  }
+  else if (jet_size == 5) {
+      obs_map["mlb_plus"]   = {96.50f, 32.43f};
+      obs_map["mlb_minus"]  = {96.59f, 32.26f};
+      obs_map["pTdiff"]     = {-0.13f, 81.53f};
+      obs_map["sum_deltaR"] = {3.23f, 1.37f};
+  }
+  else if (jet_size == 6) {
+      obs_map["mlb_plus"]   = {96.34f, 32.81f};
+      obs_map["mlb_minus"]  = {96.36f, 32.68f};
+      obs_map["pTdiff"]     = {0.53f, 92.97f};
+      obs_map["sum_deltaR"] = {3.13f, 1.35f};
+  }
+  else if (jet_size == 7) {
+      obs_map["mlb_plus"]   = {96.65f, 32.97f};
+      obs_map["mlb_minus"]  = {96.38f, 32.94f};
+      obs_map["pTdiff"]     = {0.39f, 102.06f};
+      obs_map["sum_deltaR"] = {3.04f, 1.35f};
+  }
+  else if (jet_size == 8) {
+      obs_map["mlb_plus"]   = {97.54f, 34.04f};
+      obs_map["mlb_minus"]  = {96.42f, 33.48f};
+      obs_map["pTdiff"]     = {-1.53f, 27.50f};
+      obs_map["sum_deltaR"] = {2.97f, 1.35f};
+  }
+  else if (jet_size == 9) {
+      obs_map["mlb_plus"]   = {97.97f, 31.54f};
+      obs_map["mlb_minus"]  = {98.15f, 34.61f};
+      obs_map["pTdiff"]     = {3.28f, 36.43f};
+      obs_map["sum_deltaR"] = {2.90f, 1.38f};
+  }
+  else if (jet_size == 10) {
+      obs_map["mlb_plus"]   = {99.90f, 32.00f};
+      obs_map["mlb_minus"]  = {97.87f, 37.16f};
+      obs_map["pTdiff"]     = {3.07f, 41.18f};
+      obs_map["sum_deltaR"] = {2.83f, 1.41f};
+  }
+  // -----------------------------
+  // Lambda to compute chi2
+  // -----------------------------
+  auto chi2 = [&](const V4& jet1, const V4& jet2) -> double {
+
+    V4 vis_plus  = lplus + jet1;
+    V4 vis_minus = lminus + jet2;
+    V4 vis_tot   = lplus + lminus + jet1 + jet2;
+
+    double chi = 0.0;
+
+    // m_lb(+)
+    chi += std::pow(
+      (vis_plus.M() - obs_map["mlb_plus"].mean)
+      / obs_map["mlb_plus"].sigma,
+      2.0
+    );
+
+    // m_lb(-)
+    chi += std::pow(
+      (vis_minus.M() - obs_map["mlb_minus"].mean)
+      / obs_map["mlb_minus"].sigma,
+      2.0
+    );
+
+    // pTdiff  (pT(l+b) difference)
+    double ptDiff = vis_plus.Pt() - vis_minus.Pt();
+
+    chi += std::pow(
+      (ptDiff - obs_map["pTdiff"].mean)
+      / obs_map["pTdiff"].sigma,
+      2.0
+    );
+
+    // Sum ΔR
+    chi += std::pow(
+      (ROOT::Math::VectorUtil::DeltaR(lplus, jet1)
+    + ROOT::Math::VectorUtil::DeltaR(lminus, jet2)
+    - obs_map["sum_deltaR"].mean)
+    / obs_map["sum_deltaR"].sigma,
+      2.0
+    );
+
+    return chi;
+  };
+
+  // =========================
+  // Find best chi2 pairing
+  // =========================
+  double min_chi2 = 1e12;
+  int best_i = -1;
+  int best_j = -1;
+
+  for (size_t i = 0; i < jets.size(); ++i) {
+    for (size_t j = 0; j < jets.size(); ++j) {
+
+        if (i == j) continue;
+
+        double chi_val = chi2(jets[i], jets[j]);
+
+        if (chi_val < min_chi2) {
+            min_chi2 = chi_val;
+            best_i = static_cast<int>(i);
+            best_j = static_cast<int>(j);
+        }
+    }
+  }
+
+  if (best_i < 0 || best_j < 0)
+    return {-1, -1};
+
+  return {best_i, best_j};
+}
+
+// ============================================================
+// Raw MDRS pairing in the (l+, l-) basis
+// Returns:
+//  best_i  -> index of the best jet for l+ (for b)
+//  best_j  -> index of the best jet for l- (for bbar)
+// -1      -> no valid pairing
+// ============================================================
+RVec<int> raw_MDRS_pairing(
+  const RVec<float>& jet_pt,
+  const RVec<float>& jet_eta,
+  const RVec<float>& jet_phi,
+  const RVec<float>& jet_e,
+  const RVec<float>& el_pt,
+  const RVec<float>& el_eta,
+  const RVec<float>& el_phi,
+  const RVec<float>& el_e,
+  const RVec<float>& el_charge,
+  const RVec<float>& mu_pt,
+  const RVec<float>& mu_eta,
+  const RVec<float>& mu_phi,
+  const RVec<float>& mu_e,
+  const RVec<float>& mu_charge
+){
+  constexpr float GeV = 1.f / 1000.f;
+  
+    // =========================
+    // Collect leptons
+    // =========================
+    RVec<Lepton> leptons;
+  
+    for (size_t i = 0; i < el_pt.size(); ++i)
+      leptons.push_back({V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+  
+    for (size_t i = 0; i < mu_pt.size(); ++i)
+      leptons.push_back({V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
+  
+    if (leptons.size() != 2) return {-1, -1};
+    if (leptons[0].charge * leptons[1].charge >= 0) return {-1, -1};
+  
+    const V4& lplus  = (leptons[0].charge > 0) ? leptons[0].p4 : leptons[1].p4;
+    const V4& lminus = (leptons[0].charge < 0) ? leptons[0].p4 : leptons[1].p4;
+  
+    // =========================
+    // Build jets
+    // =========================
+    const size_t nJets = jet_pt.size();
+    if (nJets < 2) return {-1, -1};
+  
+    std::vector<V4> jets;
+    jets.reserve(nJets);
+  
+    for (size_t i = 0; i < nJets; ++i)
+      jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+  
+    // =========================
+    // ΔR minimisation
+    // =========================
+    float min_sum = std::numeric_limits<float>::max();
+    int best_i = -1;
+    int best_j = -1;
+  
+    for (size_t i = 0; i < nJets; ++i) {
+      for (size_t j = 0; j < nJets; ++j) {
+  
+        if (i == j) continue;
+  
+        const float dR_plus  = ROOT::Math::VectorUtil::DeltaR(lplus,  jets[i]);
+        const float dR_minus = ROOT::Math::VectorUtil::DeltaR(lminus, jets[j]);
+  
+        const float sum = dR_plus + dR_minus;
+  
+        if (sum < min_sum) {
+          min_sum = sum;
+          best_i = static_cast<int>(i);
+          best_j = static_cast<int>(j);
+        }
+      }
+    }
+  
+    if (best_i < 0 || best_j < 0) return {-1, -1};
+
+    return {best_i, best_j};
+}
+
+// ============================================================
+// Raw MISMS pairing in the (l+, l-) basis
+// Returns:
+//  best_i  -> index of the best jet for l+ (for b)
+//  best_j  -> index of the best jet for l- (for bbar)
+// -1      -> no valid pairing
+// ============================================================
+RVec<int> raw_MISMS_pairing(
+  const RVec<float>& jet_pt,
+  const RVec<float>& jet_eta,
+  const RVec<float>& jet_phi,
+  const RVec<float>& jet_e,
+  const RVec<float>& el_pt,
+  const RVec<float>& el_eta,
+  const RVec<float>& el_phi,
+  const RVec<float>& el_e,
+  const RVec<float>& el_charge,
+  const RVec<float>& mu_pt,
+  const RVec<float>& mu_eta,
+  const RVec<float>& mu_phi,
+  const RVec<float>& mu_e,
+  const RVec<float>& mu_charge
+){
+  constexpr float GeV = 1.f/1000.f;
+  const int jet_size = jet_pt.size();
+  // -------------------------
+  // Collect leptons
+  // -------------------------
+  RVec<Lepton> leptons;
+
+  for (size_t i=0; i<el_pt.size(); ++i)
+    leptons.push_back(
+      Lepton{ V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV),
+              el_charge[i] });
+
+  for (size_t i=0; i<mu_pt.size(); ++i)
+    leptons.push_back(
+      Lepton{ V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV),
+              mu_charge[i] });
+
+  if (leptons.size() < 2) return {-1, -1};
+
+  // -------------------------
+  // Pick one l+ and one l−
+  // -------------------------
+  const V4* lplus  = nullptr;
+  const V4* lminus = nullptr;
+
+  for (const auto& lep : leptons){
+    if (lep.charge > 0.f && !lplus)  lplus  = &lep.p4;
+    if (lep.charge < 0.f && !lminus) lminus = &lep.p4;
+  }
+
+  if (!lplus || !lminus) return {-1, -1};
+
+  // -------------------------
+  // Build jets
+  // -------------------------
+  std::vector<V4> jets;
+  for (int i=0;i<jet_size;++i)
+    jets.emplace_back(
+      jet_pt[i]*GeV,
+      jet_eta[i],
+      jet_phi[i],
+      jet_e[i]*GeV
+    );
+  if (jets.size() < 2) return {-1, -1};
+
+  // -------------------------
+  // MISMS minimisation
+  // -------------------------
+  float min_sum = 1e12f;
+  int best_i = -1;
+  int best_j = -1;
+
+  for (size_t i=0; i<jets.size(); ++i){
+    for (size_t j=i+1; j<jets.size(); ++j){
+
+      // Assignment A: l+ → i, l− → j
+      float sumA =
+      std::pow((*lplus  + jets[i]).M2(), 2) +
+      std::pow((*lminus + jets[j]).M2(), 2);
+
+      // Assignment B: l+ → j, l− → i
+      float sumB =
+        std::pow((*lplus  + jets[j]).M2(), 2) +
+        std::pow((*lminus + jets[i]).M2(), 2);
+
+      if (sumA < min_sum){
+        min_sum = sumA;
+        best_i  = i;
+        best_j  = j;
+      }
+
+      if (sumB < min_sum){
+        min_sum = sumB;
+        best_i  = j;
+        best_j  = i;
+      }
+    }
+  } 
+
+  if (best_i < 0 || best_j < 0) return {-1, -1};
+
+  return {best_i, best_j};
+}
+
+} // namespace ttZ

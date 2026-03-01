@@ -28,6 +28,8 @@ namespace ttZ{
 
   RVec<char> pt_order_nonfloat(const RVec<char>& comp, const RVec<float>& pt);
 
+  RVec<int> pt_order_int(const RVec<int>& comp, const RVec<float>& pt);
+
   int b_selector(const RVec<int>& comp);
 
   int bbar_selector(const RVec<int>& comp);
@@ -375,4 +377,77 @@ namespace ttZ{
     const int& event_jet_truth_candidates_b,
     const int& event_jet_truth_candidates_bbar
   );
+
+  // ============================================================
+  // Raw pairing algorithms in the (l+, l-) basis
+  // Returns:
+  //  best_i  -> index of the best jet for l+ (for b)
+  //  best_j  -> index of the best jet for l- (for bbar)
+  // -1      -> no valid pairing
+  // ============================================================
+  RVec<int> raw_chi2_pairing(
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
+  );
+
+  // ============================================================
+  // Raw MDRS pairing in the (l+, l-) basis
+  // Returns:
+  //  best_i  -> index of the best jet for l+ (for b)
+  //  best_j  -> index of the best jet for l- (for bbar)
+  // -1      -> no valid pairing
+  // ============================================================
+  RVec<int> raw_MDRS_pairing(
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
+  );
+
+  // ============================================================
+  // Raw MISMS pairing in the (l+, l-) basis
+  // Returns:
+  //  best_i  -> index of the best jet for l+ (for b)
+  //  best_j  -> index of the best jet for l- (for bbar)
+  // -1      -> no valid pairing
+  // ============================================================
+  RVec<int> raw_MISMS_pairing(
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
+  );
+
 }

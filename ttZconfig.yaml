@@ -72,14 +72,20 @@ ntuples:
   branches:
     - jet_size_NOSYS
     - selection_cuts_NOSYS
-    
+    - ordered_jet_truth_flavour_NOSYS 
+    - ordered_jet_truth_flavour_extended_NOSYS
+    - raw_chi2_pairing_NOSYS
+    - raw_mdrs_pairing_NOSYS
+    - raw_misms_pairing_NOSYS
     # additional truth distributions - for mean and std extraction
-    - new_truth_mlpb_NOSYS
-    - new_truth_mlmbb_NOSYS
-    - new_truth_pTdiff_NOSYS
-    - new_truth_sum_deltaR_NOSYS
-    - new_truth_mllbb_NOSYS
-    - new_truth_mT_ttbar_NOSYS
+    #- new_truth_mlpb_NOSYS
+    #- new_truth_mlmbb_NOSYS
+    #- new_truth_pTdiff_NOSYS
+    #- new_truth_sum_deltaR_NOSYS
+    #- new_truth_mllbb_NOSYS
+    #- new_truth_mT_ttbar_NOSYS
+
+
 
     # NEW chi2 indexed
     - new_chi_indexed_jets_NOSYS

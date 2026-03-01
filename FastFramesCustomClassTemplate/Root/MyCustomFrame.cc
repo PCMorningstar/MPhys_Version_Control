@@ -1069,6 +1069,95 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
         "bjet_new_candicate_NOSYS", "bbarjet_new_candicate_NOSYS"
       }
   );
+
+  // ============================================================
+  // Raw pairing algorithms in the (l+, l-) basis
+  // Returns:
+  //  best_i  -> index of the best jet for l+ (for b)
+  //  best_j  -> index of the best jet for l- (for bbar)
+  // -1      -> no valid pairing
+  // ============================================================
+  LOG(INFO) << "Adding variable: raw_chi2_indexed_jets_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "raw_chi2_indexed_jets_NOSYS",
+      ttZ::raw_chi2_pairing,
+      {
+        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS"
+      }
+  );
+  LOG(INFO) << "Adding variable: raw_mdrs_indexed_jets_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "raw_mdrs_indexed_jets_NOSYS",
+      ttZ::raw_MDRS_pairing,
+      {
+        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS"
+      }
+  );
+  LOG(INFO) << "Adding variable: raw_misms_indexed_jets_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "raw_misms_indexed_jets_NOSYS",
+      ttZ::raw_MISMS_pairing,
+      {
+        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS"
+      }
+  );
+
+  // Ordered jet truth flavour vector
+  LOG(INFO) << "Adding variable: ordered_jet_truth_flavour_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "ordered_jet_truth_flavour_NOSYS",
+      ttZ::pt_order_int,
+      {"jet_TruthFlavour", "jet_pt_NOSYS"}
+  );
+
+  // Ordered jet truth flavour vector - extended
+  LOG(INFO) << "Adding variable: ordered_jet_truth_flavour_extended_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "ordered_jet_truth_flavour_extended_NOSYS",
+      ttZ::pt_order_int,
+      {"jet_TruthFlavouExtended", "jet_pt_NOSYS"}
+  );
+
+  // Raw pairing indices
+  LOG(INFO) << "Adding variable: raw_chi2_pairing_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "raw_chi2_pairing_NOSYS",
+      ttZ::raw_chi2_pairing,
+      {"jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: raw_mdrs_pairing_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "raw_mdrs_pairing_NOSYS",
+      ttZ::raw_MDRS_pairing,
+      {"jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: raw_misms_pairing_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "raw_misms_pairing_NOSYS",
+      ttZ::raw_MISMS_pairing,
+      {"jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS"}
+  );
+
   return mainNode;
 }
 

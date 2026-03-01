@@ -43,10 +43,10 @@ def read_efficiency_block(filename, header_keyword):
 # -------------------------------------------------
 filename = "purity_v_njets.py"  # Make sure this is a plain data file, not .py
 
-chi2_data  = read_efficiency_block(filename, "chi2: jets, purity, error - light jets")
-mdrs_data  = read_efficiency_block(filename, "mdrs: jets, purity, error - light jets")
+chi2_data  = read_efficiency_block(filename, "misms: jets, purity, error - b")
+mdrs_data  = read_efficiency_block(filename, "misms: jets, purity, error - c")
 misms_data = read_efficiency_block(filename, "misms: jets, purity, error - light jets")
-#hyper_data = read_efficiency_block(filename, "hyper: jets, purity, error - c")
+#hyper_data = read_efficiency_block(filename, "mdrs: jets, purity, error - tau")
 
 # Extract columns
 nj_chi2,  eff_chi2,  err_chi2  = chi2_data.T
@@ -65,25 +65,24 @@ def plot_with_errorbars(nj, eff, err, color, label):
     plt.errorbar(nj, eff, yerr=err, fmt="none", ecolor="black",
                  elinewidth=1, capsize=4, capthick=1)
 
-plot_with_errorbars(nj_chi2, eff_chi2, err_chi2, "blue", r"$\chi^2$")
-plot_with_errorbars(nj_mdrs, eff_mdrs, err_mdrs, "purple", r"MDRS")
-plot_with_errorbars(nj_misms, eff_misms, err_misms, "red", r"MISMS")
+plot_with_errorbars(nj_chi2, eff_chi2, err_chi2, "blue", r"b-Purity")
+plot_with_errorbars(nj_misms, eff_misms, err_misms, "red", r"Light-Contamination")
+plot_with_errorbars(nj_mdrs, eff_mdrs, err_mdrs, "orange", r"c-Contamination")
 #plot_with_errorbars(nj_hyper, eff_hyper, err_hyper, "orange", r"HyPER")
 
 # -------------------------------------------------
 # Styling
 # -------------------------------------------------
 plt.xlabel("Jet Multiplicity")
-plt.ylabel("Light-Flavour Contamination")
-plt.title("Light-Flavour Contamination vs. Jet Multiplicity")
+plt.ylabel("Method-Flavour Consistency")
+plt.title(r"Method-Flavour Consistency vs. Jet Multiplicity - MISMS")
 
 plt.grid(True, linestyle=":", linewidth=0.7)
-plt.legend(frameon=False)
-
+plt.legend(loc="upper left", frameon=False)
 plt.xlim(0.0, max(nj_chi2) + 0.5)
 plt.ylim(0.0, 1.0)
 
 plt.tight_layout()
-plt.savefig("light-flavour_contamination_v_njets.png", dpi=300)
+plt.savefig("method-flavour_purity_v_njets_misms.png", dpi=300)
 plt.show()
 plt.close()
