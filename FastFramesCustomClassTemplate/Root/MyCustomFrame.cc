@@ -1158,6 +1158,17 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
         "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS"}
   );
 
+  LOG(INFO) << "Adding variable: raw_chi2_minval_truthall_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "raw_chi2_minval_truthall_NOSYS",
+      ttZ::raw_chi2_minval_truthall,
+      {"jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
+        "event_jet_truth_idx", "event_jet_truth_candidates"}
+  );
+
   return mainNode;
 }
 

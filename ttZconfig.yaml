@@ -73,10 +73,7 @@ ntuples:
     - jet_size_NOSYS
     - selection_cuts_NOSYS
     - ordered_jet_truth_flavour_NOSYS 
-    - ordered_jet_truth_flavour_extended_NOSYS
-    - raw_chi2_pairing_NOSYS
-    - raw_mdrs_pairing_NOSYS
-    - raw_misms_pairing_NOSYS
+    - raw_chi2_minval_truthall_NOSYS # For chi2 correct vs. mis-correct analysis
     # additional truth distributions - for mean and std extraction
     #- new_truth_mlpb_NOSYS
     #- new_truth_mlmbb_NOSYS
@@ -100,6 +97,9 @@ ntuples:
     - weight_pileup_NOSYS          # pileup weight
     - weight_leptonSF_tight_NOSYS  # lepton SF
     - weight_jvt_effSF_NOSYS       # jet SF 
+
+    - event_jet_truth_idx
+    - event_jet_truth_candidates
 
 samples:
   - name: "data"

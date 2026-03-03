@@ -1763,4 +1763,239 @@ RVec<int> raw_MISMS_pairing(
   return {best_i, best_j};
 }
 
+// ============================================================
+// Chi2 - return minimum chi2 only
+// ============================================================
+// Returns the same *kind* of outputs as PairLeptonsToJets_Chi2TruthAll, but using
+// YOUR chi2 formula (mlb_plus, mlb_minus, pTdiff, sum_deltaR with jet-multiplicity-dependent means/sigmas).
+//
+// Output layout (RVec<float> size 9):
+// 0: jet index for l+
+// 1: jet index for l-
+// 2: m(l+, j+)
+// 3: m(l-, j-)
+// 4: chi2 of chosen assignment (min)
+// 5: correctness flag  (-1 no truth, 0 wrong, 1 correct)
+// 6: chi2 of truth (b, bbar) assignment (if available)
+// 7: delta chi2 (chosen - truth) (if truth available)
+// 8: chi2 of swapped truth (bbar, b) assignment (if available)
+//
+// Notes:
+// - Units: inputs are assumed MeV as in your original; internally we convert to GeV exactly as you do.
+// - Truth indices are assumed to be indices into the jet vectors in THIS function ordering.
+// - Correctness uses the ordered convention (l+ ↔ truth_b, l- ↔ truth_bbar). If you want order-insensitive,
+//   uncomment the swapped option near the end.
+
+RVec<float> raw_chi2_minval_truthall(
+  const RVec<float>& jet_pt,
+  const RVec<float>& jet_eta,
+  const RVec<float>& jet_phi,
+  const RVec<float>& jet_e,
+  const RVec<float>& el_pt,
+  const RVec<float>& el_eta,
+  const RVec<float>& el_phi,
+  const RVec<float>& el_e,
+  const RVec<float>& el_charge,
+  const RVec<float>& mu_pt,
+  const RVec<float>& mu_eta,
+  const RVec<float>& mu_phi,
+  const RVec<float>& mu_e,
+  const RVec<float>& mu_charge,
+  // --- truth inputs (add these as columns / branches in your RDataFrame) ---
+  const RVec<int>& event_jet_truth_idx,
+  const RVec<int>& event_jet_truth_candidates
+){
+  constexpr float GeV = 1.f/1000.f;
+
+  // Sentinel output
+  const float SENTINEL = -1.0f;
+  RVec<float> out(9, SENTINEL);
+
+  const int jet_size = static_cast<int>(jet_pt.size());
+  if (jet_size < 2) return out;
+
+  // --- Build leptons (exactly as your original) ---
+  RVec<Lepton> leptons;
+  leptons.reserve(el_pt.size() + mu_pt.size());
+  for (size_t i = 0; i < el_pt.size(); ++i)
+    leptons.push_back({V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+  for (size_t i = 0; i < mu_pt.size(); ++i)
+    leptons.push_back({V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
+
+  if (leptons.size() != 2) return out;
+  if (leptons[0].charge * leptons[1].charge >= 0) return out; // require OS
+
+  const V4& lplus  = (leptons[0].charge > 0) ? leptons[0].p4 : leptons[1].p4;
+  const V4& lminus = (leptons[0].charge < 0) ? leptons[0].p4 : leptons[1].p4;
+
+  // --- Build jets ---
+  std::vector<V4> jets;
+  jets.reserve(jet_size);
+  for (int i = 0; i < jet_size; ++i)
+    jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+
+  // --- Stats map (your values) ---
+  std::map<std::string, ObsStats> obs_map;
+  if (jet_size == 2) {
+    obs_map["mlb_plus"]   = {98.07f, 30.47f};
+    obs_map["mlb_minus"]  = {98.19f, 30.55f};
+    obs_map["pTdiff"]     = {-0.25f, 23.25f};
+    obs_map["sum_deltaR"] = {3.58f, 1.46f};
+  } else if (jet_size == 3) {
+    obs_map["mlb_plus"]   = {97.10f, 31.29f};
+    obs_map["mlb_minus"]  = {97.20f, 31.37f};
+    obs_map["pTdiff"]     = {-1.99f, 34.16f};
+    obs_map["sum_deltaR"] = {3.44f, 1.43f};
+  } else if (jet_size == 4) {
+    obs_map["mlb_plus"]   = {96.39f, 32.07f};
+    obs_map["mlb_minus"]  = {96.76f, 31.93f};
+    obs_map["pTdiff"]     = {-0.35f, 71.03f};
+    obs_map["sum_deltaR"] = {3.33f, 1.40f};
+  } else if (jet_size == 5) {
+    obs_map["mlb_plus"]   = {96.50f, 32.43f};
+    obs_map["mlb_minus"]  = {96.59f, 32.26f};
+    obs_map["pTdiff"]     = {-0.13f, 81.53f};
+    obs_map["sum_deltaR"] = {3.23f, 1.37f};
+  } else if (jet_size == 6) {
+    obs_map["mlb_plus"]   = {96.34f, 32.81f};
+    obs_map["mlb_minus"]  = {96.36f, 32.68f};
+    obs_map["pTdiff"]     = {0.53f, 92.97f};
+    obs_map["sum_deltaR"] = {3.13f, 1.35f};
+  } else if (jet_size == 7) {
+    obs_map["mlb_plus"]   = {96.65f, 32.97f};
+    obs_map["mlb_minus"]  = {96.38f, 32.94f};
+    obs_map["pTdiff"]     = {0.39f, 102.06f};
+    obs_map["sum_deltaR"] = {3.04f, 1.35f};
+  } else if (jet_size == 8) {
+    obs_map["mlb_plus"]   = {97.54f, 34.04f};
+    obs_map["mlb_minus"]  = {96.42f, 33.48f};
+    obs_map["pTdiff"]     = {-1.53f, 27.50f};
+    obs_map["sum_deltaR"] = {2.97f, 1.35f};
+  } else if (jet_size == 9) {
+    obs_map["mlb_plus"]   = {97.97f, 31.54f};
+    obs_map["mlb_minus"]  = {98.15f, 34.61f};
+    obs_map["pTdiff"]     = {3.28f, 36.43f};
+    obs_map["sum_deltaR"] = {2.90f, 1.38f};
+  } else if (jet_size == 10) {
+    obs_map["mlb_plus"]   = {99.90f, 32.00f};
+    obs_map["mlb_minus"]  = {97.87f, 37.16f};
+    obs_map["pTdiff"]     = {3.07f, 41.18f};
+    obs_map["sum_deltaR"] = {2.83f, 1.41f};
+  } else {
+    return out; // no map beyond 10
+  }
+
+  struct Chi2Terms {
+    double chi2;
+    float  mlb_plus;
+    float  mlb_minus;
+    float  pTdiff;
+    float  sum_dR;
+  
+    Chi2Terms()
+      : chi2(-1.0), mlb_plus(-1.0f), mlb_minus(-1.0f), pTdiff(-1.0f), sum_dR(-1.0f) {}
+  };
+
+  auto eval_pair = [&](size_t i_plus, size_t i_minus) -> Chi2Terms {
+    Chi2Terms t;
+
+    const V4& jplus  = jets[i_plus];
+    const V4& jminus = jets[i_minus];
+
+    const V4 vis_plus  = lplus  + jplus;
+    const V4 vis_minus = lminus + jminus;
+
+    t.mlb_plus  = vis_plus.M();
+    t.mlb_minus = vis_minus.M();
+    t.pTdiff    = vis_plus.Pt() - vis_minus.Pt();
+    t.sum_dR    = ROOT::Math::VectorUtil::DeltaR(lplus, jplus)
+                + ROOT::Math::VectorUtil::DeltaR(lminus, jminus);
+
+    const double term_mlb_plus  = (t.mlb_plus  - obs_map["mlb_plus"].mean)  / obs_map["mlb_plus"].sigma;
+    const double term_mlb_minus = (t.mlb_minus - obs_map["mlb_minus"].mean) / obs_map["mlb_minus"].sigma;
+    const double term_pTdiff    = (t.pTdiff    - obs_map["pTdiff"].mean)    / obs_map["pTdiff"].sigma;
+    const double term_sumdR     = (t.sum_dR    - obs_map["sum_deltaR"].mean)/ obs_map["sum_deltaR"].sigma;
+
+    t.chi2 = term_mlb_plus*term_mlb_plus
+           + term_mlb_minus*term_mlb_minus
+           + term_pTdiff*term_pTdiff
+           + term_sumdR*term_sumdR;
+
+    return t;
+  };
+
+  // --- Scan all ordered jet pairs, store best ---
+  double best_chi2 = std::numeric_limits<double>::infinity();
+  int best_i = -1;
+  int best_j = -1;
+  Chi2Terms best_terms;
+
+  for (size_t i = 0; i < jets.size(); ++i) {
+    for (size_t j = 0; j < jets.size(); ++j) {
+      if (i == j) continue;
+      const Chi2Terms t = eval_pair(i, j);
+      if (t.chi2 < best_chi2) {
+        best_chi2 = t.chi2;
+        best_i = static_cast<int>(i);
+        best_j = static_cast<int>(j);
+        best_terms = t;
+      }
+    }
+  }
+
+  if (best_i < 0 || best_j < 0 || !std::isfinite(best_chi2)) return out;
+
+  out[0] = static_cast<float>(best_i);
+  out[1] = static_cast<float>(best_j);
+  out[2] = best_terms.mlb_plus;   // m(l+, j_best_for_l+)
+  out[3] = best_terms.mlb_minus;  // m(l-, j_best_for_l-)
+  out[4] = static_cast<float>(best_terms.chi2);
+
+  // --- Truth handling (same idea as supervisor function) ---
+  int truth_b = -1;
+  int truth_bbar = -1;
+  bool haveTruth = false;
+
+  // Keep this logic identical to the supervisor version you showed:
+  if (event_jet_truth_idx.size() >= 4 && event_jet_truth_candidates.size() >= 4) {
+    const bool validB    = (event_jet_truth_idx[0] != -1 && event_jet_truth_candidates[0] == 1);
+    const bool validBbar = (event_jet_truth_idx[3] != -1 && event_jet_truth_candidates[3] == 1);
+    if (validB && validBbar) {
+      truth_b    = event_jet_truth_idx[0];
+      truth_bbar = event_jet_truth_idx[3];
+      if (truth_b >= 0 && truth_bbar >= 0 &&
+          truth_b < static_cast<int>(jets.size()) &&
+          truth_bbar < static_cast<int>(jets.size()) &&
+          truth_b != truth_bbar) {
+        haveTruth = true;
+      }
+    }
+  }
+
+  if (!haveTruth) {
+    // chosen assignment is filled; truth-related slots remain -1
+    return out;
+  }
+
+  const Chi2Terms truth_terms        = eval_pair(static_cast<size_t>(truth_b),
+                                                 static_cast<size_t>(truth_bbar));
+  const Chi2Terms truth_terms_swapped = eval_pair(static_cast<size_t>(truth_bbar),
+                                                  static_cast<size_t>(truth_b));
+
+  out[6] = static_cast<float>(truth_terms.chi2);
+  out[7] = static_cast<float>(best_terms.chi2 - truth_terms.chi2);
+  out[8] = static_cast<float>(truth_terms_swapped.chi2);
+
+  // Ordered correctness: (l+ ↔ b) and (l- ↔ bbar) as per your current convention.
+  bool correct = (best_i == truth_b && best_j == truth_bbar);
+
+  // If you want order-insensitive correctness, use:
+  // bool correct = ( (best_i == truth_b && best_j == truth_bbar) ||
+  //                  (best_i == truth_bbar && best_j == truth_b) );
+
+  out[5] = correct ? 1.0f : 0.0f;
+
+  return out;
+}
+
 } // namespace ttZ

@@ -43,18 +43,16 @@ def read_efficiency_block(filename, header_keyword):
 # -------------------------------------------------
 filename = "purity_v_njets.py"  # Make sure this is a plain data file, not .py
 
-chi2_data  = read_efficiency_block(filename, "chi2: jets, purity, error - light jets")
-mdrs_data  = read_efficiency_block(filename, "mdrs: jets, purity, error - light jets")
-misms_data = read_efficiency_block(filename, "misms: jets, purity, error - light jets")
-#hyper_data = read_efficiency_block(filename, "hyper: jets, purity, error - c")
+bb_data  = read_efficiency_block(filename, "chi2: jets, purity, error - bb")
+bc_data  = read_efficiency_block(filename, "chi2: jets, purity, error - b notb")
+nbb_data = read_efficiency_block(filename, "chi2: jets, purity, error - notb b")
+nbnb_data = read_efficiency_block(filename, "chi2: jets, purity, error - notb notb")
 
 # Extract columns
-nj_chi2,  eff_chi2,  err_chi2  = chi2_data.T
-nj_mdrs,  eff_mdrs,  err_mdrs  = mdrs_data.T
-nj_misms, eff_misms, err_misms = misms_data.T
-#nj_hyper, eff_hyper, err_hyper = hyper_data.T
-
-
+nj_bb,  eff_bb,  err_bb  = bb_data.T
+nj_bc,  eff_bc,  err_bc  = bc_data.T
+nj_nbb, eff_nbb, err_nbb = nbb_data.T
+nj_nbnb, eff_nbnb, err_nbnb = nbnb_data.T
 # -------------------------------------------------
 # Plot
 # -------------------------------------------------
@@ -65,25 +63,24 @@ def plot_with_errorbars(nj, eff, err, color, label):
     plt.errorbar(nj, eff, yerr=err, fmt="none", ecolor="black",
                  elinewidth=1, capsize=4, capthick=1)
 
-plot_with_errorbars(nj_chi2, eff_chi2, err_chi2, "blue", r"$\chi^2$")
-plot_with_errorbars(nj_mdrs, eff_mdrs, err_mdrs, "purple", r"MDRS")
-plot_with_errorbars(nj_misms, eff_misms, err_misms, "red", r"MISMS")
-#plot_with_errorbars(nj_hyper, eff_hyper, err_hyper, "orange", r"HyPER")
+plot_with_errorbars(nj_bb, eff_bb, err_bb, "blue", r"{b, b}")
+plot_with_errorbars(nj_bc, eff_bc, err_bc, "purple", r"{b, Not b}")
+plot_with_errorbars(nj_nbb, eff_nbb, err_nbb, "red", r"{Not b, b}")
+plot_with_errorbars(nj_nbnb, eff_nbnb, err_nbnb, "orange", r"{Not b, Not b}")
 
 # -------------------------------------------------
 # Styling
 # -------------------------------------------------
 plt.xlabel("Jet Multiplicity")
-plt.ylabel("Light-Flavour Contamination")
-plt.title("Light-Flavour Contamination vs. Jet Multiplicity")
+plt.ylabel("Probability Density")
+plt.title(r"General Flavour Composition: Probability Density vs. Jet Multiplicity - Chi2")
 
 plt.grid(True, linestyle=":", linewidth=0.7)
-plt.legend(frameon=False)
-
-plt.xlim(0.0, max(nj_chi2) + 0.5)
+plt.legend(loc="upper left", frameon=False)
+plt.xlim(0.0, 10.5)
 plt.ylim(0.0, 1.0)
 
 plt.tight_layout()
-plt.savefig("light-flavour_contamination_v_njets.png", dpi=300)
+plt.savefig("general_flavour_composition_purity_v_njets_chi2.png", dpi=300)
 plt.show()
 plt.close()

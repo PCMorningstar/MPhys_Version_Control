@@ -450,4 +450,26 @@ namespace ttZ{
     const RVec<float>& mu_charge
   );
 
+  // ============================================================
+  // Chi2 - return minimum chi2 only
+  // ============================================================
+  ROOT::VecOps::RVec<float> raw_chi2_minval_truthall(
+    const ROOT::VecOps::RVec<float>& jet_pt,
+    const ROOT::VecOps::RVec<float>& jet_eta,
+    const ROOT::VecOps::RVec<float>& jet_phi,
+    const ROOT::VecOps::RVec<float>& jet_e,
+    const ROOT::VecOps::RVec<float>& el_pt,
+    const ROOT::VecOps::RVec<float>& el_eta,
+    const ROOT::VecOps::RVec<float>& el_phi,
+    const ROOT::VecOps::RVec<float>& el_e,
+    const ROOT::VecOps::RVec<float>& el_charge,
+    const ROOT::VecOps::RVec<float>& mu_pt,
+    const ROOT::VecOps::RVec<float>& mu_eta,
+    const ROOT::VecOps::RVec<float>& mu_phi,
+    const ROOT::VecOps::RVec<float>& mu_e,
+    const ROOT::VecOps::RVec<float>& mu_charge,
+    // --- truth inputs (add these as columns / branches in your RDataFrame) ---
+    const ROOT::VecOps::RVec<int>& event_jet_truth_idx,
+    const ROOT::VecOps::RVec<int>& event_jet_truth_candidates
+  );
 }
