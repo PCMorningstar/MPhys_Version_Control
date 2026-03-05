@@ -55,6 +55,9 @@ regions:
   - name: "10jets_region"
     selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS == 10"
 
+  - name: "geq2jets_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_size_NOSYS >= 2"
+
 ntuples:
   regions:
     - sec_region
@@ -67,6 +70,7 @@ ntuples:
     - 8jets_region
     - 9jets_region
     - 10jets_region 
+    - geq2jets_region
   # If you want a selection here, use the same as the region:
   #selection: "selection_cuts_NOSYS" #&& jet_size_NOSYS == 2
   branches:
@@ -74,6 +78,7 @@ ntuples:
     - selection_cuts_NOSYS
     - ordered_jet_truth_flavour_NOSYS 
     - raw_chi2_minval_truthall_NOSYS # For chi2 correct vs. mis-correct analysis
+    - sv1_ordered_jets_NOSYS # For SV1 analysis
     # additional truth distributions - for mean and std extraction
     #- new_truth_mlpb_NOSYS
     #- new_truth_mlmbb_NOSYS
@@ -85,13 +90,13 @@ ntuples:
 
 
     # NEW chi2 indexed
-    - new_chi_indexed_jets_NOSYS
+    #- new_chi_indexed_jets_NOSYS
 
     # NEW MISMS indexed
-    - new_misms_indexed_jets_NOSYS
+    #- new_misms_indexed_jets_NOSYS
 
     # NEW MDRS indexed
-    - new_mdrs_indexed_jets_NOSYS
+    #- new_mdrs_indexed_jets_NOSYS
 
     - weight_mc_NOSYS              # MC generator weight
     - weight_pileup_NOSYS          # pileup weight

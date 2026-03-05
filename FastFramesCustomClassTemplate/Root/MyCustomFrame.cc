@@ -1158,6 +1158,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
         "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS"}
   );
 
+  // Chi2 essential outputs - algorithm analysis
   LOG(INFO) << "Adding variable: raw_chi2_minval_truthall_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
@@ -1167,8 +1168,16 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
         "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
         "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
         "event_jet_truth_idx", "event_jet_truth_candidates"}
-  );
+    );
 
+  // SV1 - ordering - pt_order_float
+  LOG(INFO) << "Adding variable: sv1_ordered_jets_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv1_ordered_jets_NOSYS",
+      ttZ::pt_order,
+      {"jet_SV1_masssvx", "jet_pt_new_NOSYS"}
+  );
   return mainNode;
 }
 

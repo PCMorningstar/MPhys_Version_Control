@@ -1763,29 +1763,22 @@ RVec<int> raw_MISMS_pairing(
   return {best_i, best_j};
 }
 
-// ============================================================
-// Chi2 - return minimum chi2 only
-// ============================================================
-// Returns the same *kind* of outputs as PairLeptonsToJets_Chi2TruthAll, but using
-// YOUR chi2 formula (mlb_plus, mlb_minus, pTdiff, sum_deltaR with jet-multiplicity-dependent means/sigmas).
+// Returns what you need for Matched vs Unmatched vs Njet, with enough truth info
+// to compute ordered/unordered/half matches downstream.
 //
-// Output layout (RVec<float> size 9):
-// 0: jet index for l+
-// 1: jet index for l-
-// 2: m(l+, j+)
-// 3: m(l-, j-)
-// 4: chi2 of chosen assignment (min)
-// 5: correctness flag  (-1 no truth, 0 wrong, 1 correct)
-// 6: chi2 of truth (b, bbar) assignment (if available)
-// 7: delta chi2 (chosen - truth) (if truth available)
-// 8: chi2 of swapped truth (bbar, b) assignment (if available)
-//
-// Notes:
-// - Units: inputs are assumed MeV as in your original; internally we convert to GeV exactly as you do.
-// - Truth indices are assumed to be indices into the jet vectors in THIS function ordering.
-// - Correctness uses the ordered convention (l+ ↔ truth_b, l- ↔ truth_bbar). If you want order-insensitive,
-//   uncomment the swapped option near the end.
-
+// Output layout (length 12):
+// 0: chosen jet index for l+
+// 1: chosen jet index for l-
+// 2: m(l+, j_l+)      [GeV]
+// 3: m(l-, j_l-)      [GeV]
+// 4: chi2(best)
+// 5: match_code       (-1 no truth, 0 none, 1 one-of-two, 2 both-unordered, 3 both-ordered)
+// 6: chi2(truth ordered: b for l+, bbar for l-), if available else -1
+// 7: delta chi2 (best - truth ordered), if available else -1
+// 8: chi2(truth swapped: bbar for l+, b for l-), if available else -1
+// 9: truth_b_idx      (index in jet collection used here), else -1
+// 10: truth_bbar_idx  (index in jet collection used here), else -1
+// 11: best_is_swapped (1 if best matches swapped truth orientation exactly, else 0; -1 if no truth)
 RVec<float> raw_chi2_minval_truthall(
   const RVec<float>& jet_pt,
   const RVec<float>& jet_eta,
@@ -1801,20 +1794,18 @@ RVec<float> raw_chi2_minval_truthall(
   const RVec<float>& mu_phi,
   const RVec<float>& mu_e,
   const RVec<float>& mu_charge,
-  // --- truth inputs (add these as columns / branches in your RDataFrame) ---
   const RVec<int>& event_jet_truth_idx,
   const RVec<int>& event_jet_truth_candidates
 ){
   constexpr float GeV = 1.f/1000.f;
 
-  // Sentinel output
   const float SENTINEL = -1.0f;
-  RVec<float> out(9, SENTINEL);
+  RVec<float> out(12, SENTINEL);
 
   const int jet_size = static_cast<int>(jet_pt.size());
   if (jet_size < 2) return out;
 
-  // --- Build leptons (exactly as your original) ---
+  // --- Build leptons ---
   RVec<Lepton> leptons;
   leptons.reserve(el_pt.size() + mu_pt.size());
   for (size_t i = 0; i < el_pt.size(); ++i)
@@ -1834,7 +1825,7 @@ RVec<float> raw_chi2_minval_truthall(
   for (int i = 0; i < jet_size; ++i)
     jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
 
-  // --- Stats map (your values) ---
+  // --- Stats map ---
   std::map<std::string, ObsStats> obs_map;
   if (jet_size == 2) {
     obs_map["mlb_plus"]   = {98.07f, 30.47f};
@@ -1891,7 +1882,6 @@ RVec<float> raw_chi2_minval_truthall(
     float  mlb_minus;
     float  pTdiff;
     float  sum_dR;
-  
     Chi2Terms()
       : chi2(-1.0), mlb_plus(-1.0f), mlb_minus(-1.0f), pTdiff(-1.0f), sum_dR(-1.0f) {}
   };
@@ -1911,10 +1901,10 @@ RVec<float> raw_chi2_minval_truthall(
     t.sum_dR    = ROOT::Math::VectorUtil::DeltaR(lplus, jplus)
                 + ROOT::Math::VectorUtil::DeltaR(lminus, jminus);
 
-    const double term_mlb_plus  = (t.mlb_plus  - obs_map["mlb_plus"].mean)  / obs_map["mlb_plus"].sigma;
-    const double term_mlb_minus = (t.mlb_minus - obs_map["mlb_minus"].mean) / obs_map["mlb_minus"].sigma;
-    const double term_pTdiff    = (t.pTdiff    - obs_map["pTdiff"].mean)    / obs_map["pTdiff"].sigma;
-    const double term_sumdR     = (t.sum_dR    - obs_map["sum_deltaR"].mean)/ obs_map["sum_deltaR"].sigma;
+    const double term_mlb_plus  = (t.mlb_plus  - obs_map["mlb_plus"].mean)   / obs_map["mlb_plus"].sigma;
+    const double term_mlb_minus = (t.mlb_minus - obs_map["mlb_minus"].mean)  / obs_map["mlb_minus"].sigma;
+    const double term_pTdiff    = (t.pTdiff    - obs_map["pTdiff"].mean)     / obs_map["pTdiff"].sigma;
+    const double term_sumdR     = (t.sum_dR    - obs_map["sum_deltaR"].mean) / obs_map["sum_deltaR"].sigma;
 
     t.chi2 = term_mlb_plus*term_mlb_plus
            + term_mlb_minus*term_mlb_minus
@@ -1926,8 +1916,8 @@ RVec<float> raw_chi2_minval_truthall(
 
   // --- Scan all ordered jet pairs, store best ---
   double best_chi2 = std::numeric_limits<double>::infinity();
-  int best_i = -1;
-  int best_j = -1;
+  int best_i = -1; // jet for l+
+  int best_j = -1; // jet for l-
   Chi2Terms best_terms;
 
   for (size_t i = 0; i < jets.size(); ++i) {
@@ -1947,16 +1937,16 @@ RVec<float> raw_chi2_minval_truthall(
 
   out[0] = static_cast<float>(best_i);
   out[1] = static_cast<float>(best_j);
-  out[2] = best_terms.mlb_plus;   // m(l+, j_best_for_l+)
-  out[3] = best_terms.mlb_minus;  // m(l-, j_best_for_l-)
+  out[2] = best_terms.mlb_plus;
+  out[3] = best_terms.mlb_minus;
   out[4] = static_cast<float>(best_terms.chi2);
 
-  // --- Truth handling (same idea as supervisor function) ---
+  // --- Truth handling ---
   int truth_b = -1;
   int truth_bbar = -1;
   bool haveTruth = false;
 
-  // Keep this logic identical to the supervisor version you showed:
+  // Same truth logic you used before
   if (event_jet_truth_idx.size() >= 4 && event_jet_truth_candidates.size() >= 4) {
     const bool validB    = (event_jet_truth_idx[0] != -1 && event_jet_truth_candidates[0] == 1);
     const bool validBbar = (event_jet_truth_idx[3] != -1 && event_jet_truth_candidates[3] == 1);
@@ -1973,12 +1963,16 @@ RVec<float> raw_chi2_minval_truthall(
   }
 
   if (!haveTruth) {
-    // chosen assignment is filled; truth-related slots remain -1
+    // keep algorithm choice; truth-related info stays sentinel
     return out;
   }
 
-  const Chi2Terms truth_terms        = eval_pair(static_cast<size_t>(truth_b),
-                                                 static_cast<size_t>(truth_bbar));
+  // record truth indices (needed for “half match / neither” offline)
+  out[9]  = static_cast<float>(truth_b);
+  out[10] = static_cast<float>(truth_bbar);
+
+  const Chi2Terms truth_terms         = eval_pair(static_cast<size_t>(truth_b),
+                                                  static_cast<size_t>(truth_bbar));
   const Chi2Terms truth_terms_swapped = eval_pair(static_cast<size_t>(truth_bbar),
                                                   static_cast<size_t>(truth_b));
 
@@ -1986,14 +1980,26 @@ RVec<float> raw_chi2_minval_truthall(
   out[7] = static_cast<float>(best_terms.chi2 - truth_terms.chi2);
   out[8] = static_cast<float>(truth_terms_swapped.chi2);
 
-  // Ordered correctness: (l+ ↔ b) and (l- ↔ bbar) as per your current convention.
-  bool correct = (best_i == truth_b && best_j == truth_bbar);
+  // --- Matching classification ---
+  const bool ordered_match   = (best_i == truth_b    && best_j == truth_bbar);
+  const bool swapped_match   = (best_i == truth_bbar && best_j == truth_b);
 
-  // If you want order-insensitive correctness, use:
-  // bool correct = ( (best_i == truth_b && best_j == truth_bbar) ||
-  //                  (best_i == truth_bbar && best_j == truth_b) );
+  const bool picked_truth_b    = (best_i == truth_b || best_j == truth_b);
+  const bool picked_truth_bbar = (best_i == truth_bbar || best_j == truth_bbar);
 
-  out[5] = correct ? 1.0f : 0.0f;
+  const bool both_unordered = (picked_truth_b && picked_truth_bbar);
+  const bool one_of_two     = (picked_truth_b ^  picked_truth_bbar); // exactly one is truth
+  const bool none           = (!picked_truth_b && !picked_truth_bbar);
+
+  // match_code: -1 no truth, 0 none, 1 one-of-two, 2 both-unordered, 3 both-ordered
+  float match_code = -1.0f;
+  if (ordered_match)      match_code = 3.0f;
+  else if (both_unordered)match_code = 2.0f;
+  else if (one_of_two)    match_code = 1.0f;
+  else if (none)          match_code = 0.0f;
+
+  out[5]  = match_code;
+  out[11] = swapped_match ? 1.0f : 0.0f;
 
   return out;
 }

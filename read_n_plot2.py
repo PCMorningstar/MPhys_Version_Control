@@ -41,18 +41,18 @@ def read_efficiency_block(filename, header_keyword):
 # -------------------------------------------------
 # Load data
 # -------------------------------------------------
-filename = "purity_v_njets.py"  # Make sure this is a plain data file, not .py
+filename = "chi2_algorithm_analysis.py"  # Make sure this is a plain data file, not .py
 
-bb_data  = read_efficiency_block(filename, "chi2: jets, purity, error - bb")
-bc_data  = read_efficiency_block(filename, "chi2: jets, purity, error - b notb")
-nbb_data = read_efficiency_block(filename, "chi2: jets, purity, error - notb b")
-nbnb_data = read_efficiency_block(filename, "chi2: jets, purity, error - notb notb")
+epsilon_both_ord_data  = read_efficiency_block(filename, "epsilon_both_ord(n)")
+epsilon_1_data  = read_efficiency_block(filename, "epsilon_1(n)")
+epsilon_0_data  = read_efficiency_block(filename, "epsilon_0(n)")
+epsilon_unord_data  = read_efficiency_block(filename, "epsilon_unord(n)")
 
 # Extract columns
-nj_bb,  eff_bb,  err_bb  = bb_data.T
-nj_bc,  eff_bc,  err_bc  = bc_data.T
-nj_nbb, eff_nbb, err_nbb = nbb_data.T
-nj_nbnb, eff_nbnb, err_nbnb = nbnb_data.T
+nj_epsilon_both_ord,  eff_epsilon_both_ord,  err_epsilon_both_ord  = epsilon_both_ord_data.T
+nj_epsilon_1,  eff_epsilon_1,  err_epsilon_1  = epsilon_1_data.T
+nj_epsilon_0, eff_epsilon_0, err_epsilon_0 = epsilon_0_data.T
+nj_epsilon_unord, eff_epsilon_unord, err_epsilon_unord = epsilon_unord_data.T
 # -------------------------------------------------
 # Plot
 # -------------------------------------------------
@@ -63,24 +63,24 @@ def plot_with_errorbars(nj, eff, err, color, label):
     plt.errorbar(nj, eff, yerr=err, fmt="none", ecolor="black",
                  elinewidth=1, capsize=4, capthick=1)
 
-plot_with_errorbars(nj_bb, eff_bb, err_bb, "blue", r"{b, b}")
-plot_with_errorbars(nj_bc, eff_bc, err_bc, "purple", r"{b, Not b}")
-plot_with_errorbars(nj_nbb, eff_nbb, err_nbb, "red", r"{Not b, b}")
-plot_with_errorbars(nj_nbnb, eff_nbnb, err_nbnb, "orange", r"{Not b, Not b}")
+plot_with_errorbars(nj_epsilon_both_ord, eff_epsilon_both_ord, err_epsilon_both_ord, "blue", r"Both Correct")
+plot_with_errorbars(nj_epsilon_1, eff_epsilon_1, err_epsilon_1, "purple", r"One Correct")
+plot_with_errorbars(nj_epsilon_0, eff_epsilon_0, err_epsilon_0, "red", r"Neither Correct")
+plot_with_errorbars(nj_epsilon_unord, eff_epsilon_unord, err_epsilon_unord, "orange", r"Swapped Order")
 
 # -------------------------------------------------
 # Styling
 # -------------------------------------------------
 plt.xlabel("Jet Multiplicity")
-plt.ylabel("Probability Density")
-plt.title(r"General Flavour Composition: Probability Density vs. Jet Multiplicity - Chi2")
+plt.ylabel("Full Algorithm Efficiency")
+plt.title(r"Full Algorithm Efficiency vs. Jet Multiplicity - Chi2")
 
 plt.grid(True, linestyle=":", linewidth=0.7)
-plt.legend(loc="upper left", frameon=False)
+plt.legend(loc="upper right", frameon=False)
 plt.xlim(0.0, 10.5)
 plt.ylim(0.0, 1.0)
 
 plt.tight_layout()
-plt.savefig("general_flavour_composition_purity_v_njets_chi2.png", dpi=300)
+plt.savefig("full_algorithm_efficiency_v_njets_chi2.png", dpi=300)
 plt.show()
 plt.close()
