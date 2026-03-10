@@ -14,9 +14,7 @@ OBSERVABLES = [
     "new_truth_mlpb_NOSYS",
     "new_truth_mlmbb_NOSYS",
     "new_truth_pTdiff_NOSYS",
-    "new_truth_sum_deltaR_NOSYS",
-    "new_truth_mllbb_NOSYS",
-    "new_truth_mT_ttbar_NOSYS"
+    "new_truth_sum_deltaR_NOSYS"
 ]
 
 # --------------------------------------------------

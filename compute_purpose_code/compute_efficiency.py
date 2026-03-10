@@ -103,9 +103,9 @@ for region_name, mask in regions.items():
 # --------------------------------------------------
 # Print weighted summary
 # --------------------------------------------------
-print(f"{'Region':<15} | {'chi2':>10} ± {'sigma':>6} | {'mdrs':>10} ± {'sigma':>6} | {'misms':>10} ± {'sigma':>6} | {'w_pass':>10} {'w_fail':>10} {'w_tot':>10}")
+print(f"{'Region':<15} | {'chi2':>10} ± {'sigma':>6} | {'mdrs':>10} ± {'sigma':>6} | {'misms':>10} ± {'sigma':>6}") # {'w_pass':>10} {'w_fail':>10} {'w_tot':>10}
 print("-"*110)
 for region_name, res in eff_results.items():
     print(f"{region_name:<15} | "
-          f"{res['chi2'][0]:10.4f} ± {res['chi2'][1]:6.4f} | ")
+          f"{res['chi2'][0]:10.4f} ± {res['chi2'][1]:6.4f} | {res['mdrs'][0]:10.4f} ± {res['mdrs'][1]:6.4f} | {res['misms'][0]:10.4f} ± {res['misms'][1]:6.4f}") # {'w_pass':>10} {'w_fail':>10} {'w_tot':>10}
 print("-"*110)

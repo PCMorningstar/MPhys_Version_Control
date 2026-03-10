@@ -79,6 +79,7 @@ ntuples:
     - ordered_jet_truth_flavour_NOSYS 
     - raw_chi2_minval_truthall_NOSYS # For chi2 correct vs. mis-correct analysis
     - sv1_ordered_jets_NOSYS # For SV1 analysis
+    - raw_chi2_pairing_NOSYS
     # additional truth distributions - for mean and std extraction
     #- new_truth_mlpb_NOSYS
     #- new_truth_mlmbb_NOSYS
