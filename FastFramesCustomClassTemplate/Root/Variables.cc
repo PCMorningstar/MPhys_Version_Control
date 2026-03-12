@@ -716,6 +716,94 @@ namespace ttZ{ //GPT aid
     );
   }
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// Selections for cut-flow /////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  bool electron_selections_paper(
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<char>&  el_tight,
+    const int& el_keep_flag
+  )
+  {
+    return (
+        cutA1_el_pt(el_pt) &&     // pT ≥ 28 GeV
+        cutA2_el_eta(el_eta) &&   // |η| < 2.47
+        cutA3_el_crack(el_eta) && // calorimeter crack veto
+        cutA4_el_tight(el_tight) && // tight identification
+        cutA9_el_clean(el_keep_flag) // electron–jet overlap removal
+    );
+  }
+  bool muon_selections_paper(
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<char>&  mu_tight,
+    const int& mu_keep_flag
+  )
+  {
+    return (
+        cutA5_mu_pt(mu_pt) &&      // pT ≥ 28 GeV
+        cutA6_mu_eta(mu_eta) &&    // |η| < 2.5
+        cutA7_mu_tight(mu_tight) && // tight identification
+        cutA10_mu_clean(mu_keep_flag) // muon–jet overlap removal
+    );
+  }
+  bool jet_selections_paper(
+    const RVec<char>& jet_jvt,
+    const RVec<int>& jet_keep_flags,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& j_pt,
+    const RVec<float>& j_eta,
+    const RVec<float>& j_phi,
+    const RVec<float>& j_e
+  )
+  {
+    // Compute minimal pairing
+    PairingResult P = compute_pairing_S6_3(
+        el_pt, el_eta, el_phi, el_e,
+        mu_pt, mu_eta, mu_phi, mu_e,
+        j_pt, j_eta, j_phi, j_e
+    );
+    // Apply classification cuts  
+    return (
+        cutA7_1_jet_jvt(jet_jvt) && // jet quality / pile-up rejection
+        cutA8_jet_clean(jet_keep_flags) && // jet–electron overlap removal
+
+        cutD31_pairing_valid(P) && // valid pairing exists
+        cutD32_mj1(P) &&           // leading pairing mass ≥ 20 GeV
+        cutD33_mj2(P)              // subleading pairing mass ≥ 20 GeV
+    );
+  }
+  bool dilepton_selections_paper(
+    const RVec<float>& el_pt,
+    const RVec<float>& mu_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& mu_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& mu_phi,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_charge
+  )
+  {
+    return (
+        cutC21_exactly2leptons(el_pt, mu_pt) && // exactly two leptons
+        cutC22_opposite_charge(el_charge, mu_charge) && // opposite sign
+        cutC23_one_el_one_mu(el_pt, mu_pt) && // one electron + one muon
+        cutC24_meemu_gt50(el_pt, mu_pt, el_eta, mu_eta, el_phi, mu_phi) // invariant mass
+    );
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// After selection cuts /////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ============================================================
 // Quantile pairing in the (l+, l-) basis
 // ============================================================

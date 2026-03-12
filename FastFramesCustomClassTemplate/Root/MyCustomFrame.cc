@@ -926,6 +926,38 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
         }
     );
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// Selections for cut-flow /////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  LOG(INFO) << "Adding variable: electron_selections_paper_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "electron_selections_paper_NOSYS",
+      ttZ::electron_selections_paper,
+      {"el_pt_new_NOSYS","el_eta_new_NOSYS","el_tight_new_NOSYS", "electron_clean_from_jets_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: muon_selections_paper_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "muon_selections_paper_NOSYS",
+      ttZ::muon_selections_paper,
+      {"mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_tight_new_NOSYS", "muon_clean_from_jets_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_selections_paper_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "jet_selections_paper_NOSYS",
+      ttZ::jet_selections_paper,
+      {"jet_jvt_new_NOSYS", "jets_clean_from_e_NOSYS", "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS",
+      "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS",
+      "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: dilepton_selections_paper_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "dilepton_selections_paper_NOSYS",
+      ttZ::dilepton_selections_paper,
+      {"el_pt_new_NOSYS","mu_pt_new_NOSYS","el_eta_new_NOSYS","mu_eta_new_NOSYS","el_phi_new_NOSYS",
+        "mu_phi_new_NOSYS","el_charge_new_NOSYS","mu_charge_new_NOSYS"}
+  );
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////
   // Matching Algorithms (Section – Truth & Reconstruction Pairing Diagnostic Tools)
   //////////////////////////////////////////////////////////////////////////////////////////////////////

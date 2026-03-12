@@ -294,6 +294,49 @@ namespace ttZ{
     const RVec<char>& jet_jvt
   );
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// Selections for cut-flow /////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  bool electron_selections_paper(
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<char>&  el_tight,
+    const int& el_keep_flag
+  );
+  bool muon_selections_paper(
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<char>&  mu_tight,
+    const int& mu_keep_flag
+  );
+  bool jet_selections_paper(
+    const RVec<char>& jet_jvt,
+    const RVec<int>& jet_keep_flags,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& j_pt,
+    const RVec<float>& j_eta,
+    const RVec<float>& j_phi,
+    const RVec<float>& j_e
+  );
+  bool dilepton_selections_paper(
+    const RVec<float>& el_pt,
+    const RVec<float>& mu_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& mu_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& mu_phi,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_charge
+  );
+
   // New attempt at detailed truths - hence new mus and sigmas needed for chi2!
   // ============================================================
   // Detailed truth observables using fixed truth jet indices

@@ -26,6 +26,8 @@ general:
 
 regions:
   # Regions for "as a function of the number of jets"
+  - name: "raw_region"
+    selection: "selection_cuts_NOSYS == 1 || selection_cuts_NOSYS == 0" # Raw selection
   - name: "sec_region"
     selection: "selection_cuts_NOSYS == 1"
   - name: "2jets_region"
@@ -96,6 +98,7 @@ regions:
 
 ntuples:
   regions:
+    - raw_region
     - sec_region
     - 2jets_region
     - 3jets_region
@@ -167,6 +170,33 @@ ntuples:
     - sv_invariant_mass_region_3point5to4_GeV_NOSYS
     - sv_invariant_mass_region_4to4point5_GeV_NOSYS
     - sv_invariant_mass_region_4point5to5_GeV_NOSYS
+
+    # Selections for cut-flow
+    - electron_selections_paper_NOSYS
+    - muon_selections_paper_NOSYS
+    - jet_selections_paper_NOSYS
+    - dilepton_selections_paper_NOSYS
+
+    - cutA1_el_pt_NOSYS
+    - cutA2_el_eta_NOSYS
+    - cutA3_el_crack_NOSYS
+    - cutA4_el_tight_NOSYS
+    - cutA5_mu_pt_NOSYS
+    - cutA6_mu_eta_NOSYS
+    - cutA7_mu_tight_NOSYS
+    - cutA7_1_jet_jvt_NOSYS
+    - cutA8_jet_clean_NOSYS
+    - cutA9_el_clean_NOSYS
+    - cutA10_mu_clean_NOSYS
+    - pairing_valid_NOSYS # cutD31_pairing_valid
+    - pairing_mj1_NOSYS # cutD32_mj1
+    - pairing_mj2_NOSYS # cutD33_mj2
+    - cutC21_exactly2leptons_NOSYS # cutC21_exactly2leptons
+    - cutC22_opposite_charge_NOSYS # cutC22_opposite_charge
+    - cutC23_one_el_one_mu_NOSYS # cutC23_one_el_one_mu
+    - cutC24_meemu_gt50_NOSYS # cutC24_meemu_gt50
+    - cutC25_exactly2jets_NOSYS # cutC25_exactly2jets
+
 
     # NEW chi2 indexed
     #- new_chi_indexed_jets_NOSYS
