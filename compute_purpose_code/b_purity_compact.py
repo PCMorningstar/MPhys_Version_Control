@@ -17,7 +17,48 @@ weights_all = (
     tree["weight_jvt_effSF_NOSYS"].array(library="np")
 )
 
-regions = {nj: (selection_cuts == 1) & (jet_size == nj) for nj in range(2, 11)}
+# --------------------------------------------------
+# pT-region flags
+# --------------------------------------------------
+jet_pt_region_0to30   = tree["jet_pt_region_0to30_GeV_NOSYS"].array(library="np")
+jet_pt_region_30to60  = tree["jet_pt_region_30to60_GeV_NOSYS"].array(library="np")
+jet_pt_region_60to90  = tree["jet_pt_region_60to90_GeV_NOSYS"].array(library="np")
+jet_pt_region_90to120 = tree["jet_pt_region_90to120_GeV_NOSYS"].array(library="np")
+jet_pt_region_120to150 = tree["jet_pt_region_120to150_GeV_NOSYS"].array(library="np")
+jet_pt_region_150to180 = tree["jet_pt_region_150to180_GeV_NOSYS"].array(library="np")
+jet_pt_region_180to210 = tree["jet_pt_region_180to210_GeV_NOSYS"].array(library="np")
+jet_pt_region_210to240 = tree["jet_pt_region_210to240_GeV_NOSYS"].array(library="np")
+jet_pt_region_240to270 = tree["jet_pt_region_240to270_GeV_NOSYS"].array(library="np")
+jet_pt_region_270to300 = tree["jet_pt_region_270to300_GeV_NOSYS"].array(library="np")
+
+# --------------------------------------------------
+# Regions: selected events, exactly 2 jets, and pT-bin flag
+# --------------------------------------------------
+regions = {
+    "jet_pt_region_0to30_GeV_region":   (selection_cuts == 1) & (jet_pt_region_0to30 == 1)   & (jet_size >= 2),
+    "jet_pt_region_30to60_GeV_region":  (selection_cuts == 1) & (jet_pt_region_30to60 == 1)  & (jet_size >= 2),
+    "jet_pt_region_60to90_GeV_region":  (selection_cuts == 1) & (jet_pt_region_60to90 == 1)  & (jet_size >= 2),
+    "jet_pt_region_90to120_GeV_region": (selection_cuts == 1) & (jet_pt_region_90to120 == 1) & (jet_size >= 2),
+    "jet_pt_region_120to150_GeV_region": (selection_cuts == 1) & (jet_pt_region_120to150 == 1) & (jet_size >= 2),
+    "jet_pt_region_150to180_GeV_region": (selection_cuts == 1) & (jet_pt_region_150to180 == 1) & (jet_size >= 2),
+    "jet_pt_region_180to210_GeV_region": (selection_cuts == 1) & (jet_pt_region_180to210 == 1) & (jet_size >= 2),
+    "jet_pt_region_210to240_GeV_region": (selection_cuts == 1) & (jet_pt_region_210to240 == 1) & (jet_size >= 2),
+    "jet_pt_region_240to270_GeV_region": (selection_cuts == 1) & (jet_pt_region_240to270 == 1) & (jet_size >= 2),
+    "jet_pt_region_270to300_GeV_region": (selection_cuts == 1) & (jet_pt_region_270to300 == 1) & (jet_size >= 2),
+}
+
+region_order = [
+    "jet_pt_region_0to30_GeV_region",
+    "jet_pt_region_30to60_GeV_region",
+    "jet_pt_region_60to90_GeV_region",
+    "jet_pt_region_90to120_GeV_region",
+    "jet_pt_region_120to150_GeV_region",
+    "jet_pt_region_150to180_GeV_region",
+    "jet_pt_region_180to210_GeV_region",
+    "jet_pt_region_210to240_GeV_region",
+    "jet_pt_region_240to270_GeV_region",
+    "jet_pt_region_270to300_GeV_region",
+]
 
 # --------------------------------------------------
 # Inputs (chi2 only)
@@ -29,9 +70,9 @@ pair_idx_chi2      = tree["raw_chi2_pairing_NOSYS"].array(library="np")
 # Helper
 # --------------------------------------------------
 def flavour_label(f, b_code=5, c_code=4, l_code=0):
-    if f == b_code:
+    if abs(f) == b_code:
         return "b"
-    elif f == c_code:
+    elif abs(f) == c_code:
         return "c"
     elif f == l_code:
         return "l"
@@ -103,8 +144,8 @@ def weighted_pair_composition(pair_indices, truth_flavs, weights,
 def print_block(title, rows, frac_key, err_key, header):
     print(title)
     print(header)
-    for nj, res in rows:
-        print(f"{nj}, {res[frac_key]:.6f}, {res[err_key]:.6f}")
+    for region_name, res in rows:
+        print(f"{region_name}, {res[frac_key]:.6f}, {res[err_key]:.6f}")
     print()
 
 
@@ -113,8 +154,8 @@ C_CODE = 4
 L_CODE = 0
 
 rows = []
-for nj in range(2, 11):
-    m = regions[nj]
+for region_name in region_order:
+    m = regions[region_name]
     res = weighted_pair_composition(
         pair_idx_chi2[m],
         ordered_truth_flav[m],
@@ -123,11 +164,47 @@ for nj in range(2, 11):
         c_code=C_CODE,
         l_code=L_CODE,
     )
-    rows.append((nj, res))
+    rows.append((region_name, res))
 
-print_block("chi2: bb over valid chi2 pairs", rows, "frac_bb", "err_bb", "njets, frac_bb, err_bb")
-print_block("chi2: bc over valid chi2 pairs", rows, "frac_bc", "err_bc", "njets, frac_bc, err_bc")
-print_block("chi2: bl over valid chi2 pairs", rows, "frac_bl", "err_bl", "njets, frac_bl, err_bl")
-print_block("chi2: cc over valid chi2 pairs", rows, "frac_cc", "err_cc", "njets, frac_cc, err_cc")
-print_block("chi2: cl over valid chi2 pairs", rows, "frac_cl", "err_cl", "njets, frac_cl, err_cl")
-print_block("chi2: ll over valid chi2 pairs", rows, "frac_ll", "err_ll", "njets, frac_ll, err_ll")
+print_block(
+    "chi2: bb over valid chi2 pairs",
+    rows,
+    "frac_bb",
+    "err_bb",
+    "region, frac_bb, err_bb"
+)
+print_block(
+    "chi2: bc over valid chi2 pairs",
+    rows,
+    "frac_bc",
+    "err_bc",
+    "region, frac_bc, err_bc"
+)
+print_block(
+    "chi2: bl over valid chi2 pairs",
+    rows,
+    "frac_bl",
+    "err_bl",
+    "region, frac_bl, err_bl"
+)
+print_block(
+    "chi2: cc over valid chi2 pairs",
+    rows,
+    "frac_cc",
+    "err_cc",
+    "region, frac_cc, err_cc"
+)
+print_block(
+    "chi2: cl over valid chi2 pairs",
+    rows,
+    "frac_cl",
+    "err_cl",
+    "region, frac_cl, err_cl"
+)
+print_block(
+    "chi2: ll over valid chi2 pairs",
+    rows,
+    "frac_ll",
+    "err_ll",
+    "region, frac_ll, err_ll"
+)

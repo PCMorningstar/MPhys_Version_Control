@@ -2,83 +2,90 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # =================================================
-# Publication-style chi2 pair flavour composition
+# Publication-style chi2 pair flavour composition vs jet pT
 # Colour-blind safe (Okabe-Ito palette)
+# geq 2j only
 # =================================================
 
 # -----------------------------
-# Hard-coded data
+# Hard-coded data: [pT centre, fraction, error]
 # -----------------------------
 bb_data = np.array([
-    [2, 0.632237, 0.000830],
-    [3, 0.377607, 0.000711],
-    [4, 0.276537, 0.000831],
-    [5, 0.210291, 0.001105],
-    [6, 0.172765, 0.001630],
-    [7, 0.148686, 0.002628],
-    [8, 0.104100, 0.003933],
-    [9, 0.105969, 0.007385],
-    [10, 0.095458, 0.013086],
+    [15,  0.312367, 0.003682],
+    [45,  0.650092, 0.002173],
+    [75,  0.786641, 0.003964],
+    [105, 0.822064, 0.007431],
+    [135, 0.853557, 0.013067],
+    [165, 0.843059, 0.021721],
+    [195, 0.871810, 0.036829],
+    [225, 0.836328, 0.053169],
+    [255, 0.819067, 0.087678],
+    [285, 0.905030, 0.150203],
 ], dtype=float)
 
 bc_data = np.array([
-    [2, 0.016645, 0.000135],
-    [3, 0.024797, 0.000182],
-    [4, 0.027431, 0.000261],
-    [5, 0.029533, 0.000412],
-    [6, 0.030127, 0.000683],
-    [7, 0.030210, 0.001172],
-    [8, 0.026998, 0.001994],
-    [9, 0.025652, 0.003561],
-    [10, 0.026620, 0.006609],
+    [15,  0.023622, 0.001015],
+    [45,  0.016313, 0.000345],
+    [75,  0.012015, 0.000489],
+    [105, 0.010380, 0.000825],
+    [135, 0.008829, 0.001381],
+    [165, 0.010777, 0.002516],
+    [195, 0.004210, 0.002435],
+    [225, 0.017780, 0.008094],
+    [255, 0.005492, 0.005492],
+    [285, 0.000000, 0.000000],
 ], dtype=float)
 
 bl_data = np.array([
-    [2, 0.321095, 0.000592],
-    [3, 0.519539, 0.000832],
-    [4, 0.544690, 0.001165],
-    [5, 0.542386, 0.001767],
-    [6, 0.528069, 0.002855],
-    [7, 0.510224, 0.004837],
-    [8, 0.464804, 0.008297],
-    [9, 0.458021, 0.015147],
-    [10, 0.450882, 0.028541],
+    [15,  0.517566, 0.004750],
+    [45,  0.304857, 0.001491],
+    [75,  0.191773, 0.001959],
+    [105, 0.161868, 0.003294],
+    [135, 0.132824, 0.005157],
+    [165, 0.143274, 0.008985],
+    [195, 0.123980, 0.014006],
+    [225, 0.145891, 0.022252],
+    [255, 0.158288, 0.036980],
+    [285, 0.094970, 0.045431],
 ], dtype=float)
 
 cc_data = np.array([
-    [2, 0.000247, 0.000017],
-    [3, 0.000499, 0.000026],
-    [4, 0.001078, 0.000051],
-    [5, 0.001561, 0.000095],
-    [6, 0.002109, 0.000179],
-    [7, 0.002377, 0.000325],
-    [8, 0.002345, 0.000575],
-    [9, 0.003035, 0.001193],
-    [10, 0.004630, 0.002830],
+    [15,  0.001176, 0.000223],
+    [45,  0.000245, 0.000045],
+    [75,  0.000070, 0.000037],
+    [105, 0.000060, 0.000060],
+    [135, 0.000000, 0.000000],
+    [165, 0.000000, 0.000000],
+    [195, 0.000000, 0.000000],
+    [225, 0.000000, 0.000000],
+    [255, 0.000000, 0.000000],
+    [285, 0.000000, 0.000000],
 ], dtype=float)
 
 cl_data = np.array([
-    [2, 0.003105, 0.000058],
-    [3, 0.007306, 0.000099],
-    [4, 0.013346, 0.000182],
-    [5, 0.020173, 0.000340],
-    [6, 0.026439, 0.000637],
-    [7, 0.030161, 0.001180],
-    [8, 0.036779, 0.002297],
-    [9, 0.048475, 0.004985],
-    [10, 0.044196, 0.008818],
+    [15,  0.012749, 0.000750],
+    [45,  0.002670, 0.000139],
+    [75,  0.001214, 0.000156],
+    [105, 0.000913, 0.000246],
+    [135, 0.000687, 0.000366],
+    [165, 0.000816, 0.000816],
+    [195, 0.000000, 0.000000],
+    [225, 0.000000, 0.000000],
+    [255, 0.000000, 0.000000],
+    [285, 0.000000, 0.000000],
 ], dtype=float)
 
 ll_data = np.array([
-    [2, 0.026671, 0.000171],
-    [3, 0.070252, 0.000306],
-    [4, 0.136918, 0.000585],
-    [5, 0.196056, 0.001064],
-    [6, 0.240492, 0.001924],
-    [7, 0.278342, 0.003574],
-    [8, 0.364975, 0.007415],
-    [9, 0.358848, 0.013520],
-    [10, 0.378214, 0.026266],
+    [15,  0.132520, 0.002418],
+    [45,  0.025824, 0.000436],
+    [75,  0.008288, 0.000408],
+    [105, 0.004715, 0.000565],
+    [135, 0.004103, 0.000890],
+    [165, 0.002074, 0.001058],
+    [195, 0.000000, 0.000000],
+    [225, 0.000000, 0.000000],
+    [255, 0.000000, 0.000000],
+    [285, 0.000000, 0.000000],
 ], dtype=float)
 
 # -----------------------------
@@ -107,12 +114,12 @@ plt.rcParams.update({
 
 # Okabe-Ito colour-blind-safe palette
 COLORS = {
-    "{b, b}": "#0072B2",   # blue
-    "{b, c}": "#56B4E9",   # sky blue
-    "{b, l}": "#E69F00",   # orange
-    "{c, c}": "#CC79A7",   # reddish purple
-    "{c, l}": "#F0E442",   # yellow
-    "{l, l}": "#000000",   # black
+    "{b, b}": "#0072B2",
+    "{b, c}": "#56B4E9",
+    "{b, l}": "#E69F00",
+    "{c, c}": "#CC79A7",
+    "{c, l}": "#F0E442",
+    "{l, l}": "#000000",
 }
 
 MARKERS = {
@@ -124,19 +131,32 @@ MARKERS = {
     "{l, l}": "x",
 }
 
+BIN_WIDTH = 30.0  # GeV
+
 # -----------------------------
 # Helpers
 # -----------------------------
 def unpack(arr):
     return arr[:, 0], arr[:, 1], arr[:, 2]
 
-def plot_with_errorbars(ax, x, y, yerr, key, label):
+def centres_to_edges(x, width=30.0):
+    x = np.asarray(x, dtype=float)
+    return np.concatenate(([x[0] - width/2], x + width/2))
+
+def plot_with_errorbars(ax, x, y, yerr, key, label, bin_width=30.0):
+    edges = centres_to_edges(x, width=bin_width)
+
+    # Step histogram spanning full bin width
     ax.step(
-        x, y, where="mid",
+        edges,
+        np.r_[y, y[-1]],
+        where="post",
         color=COLORS[key],
         linewidth=2.0,
         zorder=2
     )
+
+    # Marker + uncertainty at bin centre
     ax.errorbar(
         x, y, yerr=yerr,
         fmt=MARKERS[key],
@@ -156,42 +176,40 @@ def plot_with_errorbars(ax, x, y, yerr, key, label):
 # -----------------------------
 # Unpack
 # -----------------------------
-nj_bb, frac_bb, err_bb = unpack(bb_data)
-nj_bc, frac_bc, err_bc = unpack(bc_data)
-nj_bl, frac_bl, err_bl = unpack(bl_data)
-nj_cc, frac_cc, err_cc = unpack(cc_data)
-nj_cl, frac_cl, err_cl = unpack(cl_data)
-nj_ll, frac_ll, err_ll = unpack(ll_data)
+pt_bb, frac_bb, err_bb = unpack(bb_data)
+pt_bc, frac_bc, err_bc = unpack(bc_data)
+pt_bl, frac_bl, err_bl = unpack(bl_data)
+pt_cc, frac_cc, err_cc = unpack(cc_data)
+pt_cl, frac_cl, err_cl = unpack(cl_data)
+pt_ll, frac_ll, err_ll = unpack(ll_data)
+
+edges = centres_to_edges(pt_bb, width=BIN_WIDTH)
 
 # -----------------------------
 # Main plot
 # -----------------------------
 fig, ax = plt.subplots()
 
-plot_with_errorbars(ax, nj_bb, frac_bb, err_bb, "{b, b}", r"{b, b}")
-plot_with_errorbars(ax, nj_bc, frac_bc, err_bc, "{b, c}", r"{b, c}")
-plot_with_errorbars(ax, nj_bl, frac_bl, err_bl, "{b, l}", r"{b, l}")
-plot_with_errorbars(ax, nj_cc, frac_cc, err_cc, "{c, c}", r"{c, c}")
-plot_with_errorbars(ax, nj_cl, frac_cl, err_cl, "{c, l}", r"{c, l}")
-plot_with_errorbars(ax, nj_ll, frac_ll, err_ll, "{l, l}", r"{l, l}")
+plot_with_errorbars(ax, pt_bb, frac_bb, err_bb, "{b, b}", r"{b, b}", bin_width=BIN_WIDTH)
+plot_with_errorbars(ax, pt_bc, frac_bc, err_bc, "{b, c}", r"{b, c}", bin_width=BIN_WIDTH)
+plot_with_errorbars(ax, pt_bl, frac_bl, err_bl, "{b, l}", r"{b, l}", bin_width=BIN_WIDTH)
+plot_with_errorbars(ax, pt_cc, frac_cc, err_cc, "{c, c}", r"{c, c}", bin_width=BIN_WIDTH)
+plot_with_errorbars(ax, pt_cl, frac_cl, err_cl, "{c, l}", r"{c, l}", bin_width=BIN_WIDTH)
+plot_with_errorbars(ax, pt_ll, frac_ll, err_ll, "{l, l}", r"{l, l}", bin_width=BIN_WIDTH)
 
-# Labels and ranges
-ax.set_xlabel(r"Jet Multiplicity")
-ax.set_ylabel("Fraction Of Events")
-ax.set_title(r"$\chi^2$ Pair Flavour Composition vs. Jet Multiplicity")
+ax.set_xlabel(r"Jet $p_T$ [GeV]")
+ax.set_ylabel("Fraction of events")
+ax.set_title(r"$\chi^2$ Pair Flavour Composition vs. Jet $p_T$")
 
-ax.set_xlim(1.5, 10.5)
-ax.set_ylim(0.0, 0.70)
+ax.set_xlim(edges[0], edges[-1])
+ax.set_ylim(0.0, 1.0)
 
-# Ticks
-ax.set_xticks(np.arange(2, 11, 1))
+ax.set_xticks(edges)
 ax.minorticks_on()
 
-# Grid
 ax.grid(True, which="major", linestyle=":", linewidth=0.8, alpha=0.7)
 ax.grid(True, which="minor", linestyle=":", linewidth=0.4, alpha=0.35)
 
-# Legend
 ax.legend(
     loc="center left",
     bbox_to_anchor=(1.02, 0.5),
@@ -201,7 +219,7 @@ ax.legend(
 )
 
 plt.tight_layout()
-plt.savefig("chi2_pair_flavour_composition_vs_njets_cb_safe.png")
+plt.savefig("chi2_pair_flavour_composition_vs_jetpt_cb_safe.png")
 plt.show()
 plt.close()
 
@@ -210,7 +228,7 @@ plt.close()
 # -----------------------------
 fig, ax = plt.subplots()
 
-bottom = np.zeros_like(nj_bb, dtype=float)
+bottom = np.zeros_like(pt_bb, dtype=float)
 
 stack_order = [
     ("{b, b}", frac_bb, r"{b, b}"),
@@ -223,19 +241,27 @@ stack_order = [
 
 for key, vals, label in stack_order:
     ax.bar(
-        nj_bb, vals, bottom=bottom, width=0.72,
-        color=COLORS[key], edgecolor="white", linewidth=0.7,
+        pt_bb,
+        vals,
+        bottom=bottom,
+        width=BIN_WIDTH,
+        align="center",
+        color=COLORS[key],
+        edgecolor="white",
+        linewidth=0.7,
         label=label
     )
     bottom += vals
 
-ax.set_xlabel(r"Jet Multiplicity")
-ax.set_ylabel("Fraction Of Events")
-ax.set_title(r"$\chi^2$ Pair Flavour Composition Stacked vs. Jet Multiplicity")
+ax.set_xlabel(r"Jet $p_T$ [GeV]")
+ax.set_ylabel("Fraction of events")
+ax.set_title(r"$\chi^2$ Pair Flavour Composition vs. Jet $p_T$")
 
-ax.set_xlim(1.4, 10.6)
+ax.set_xlim(edges[0], edges[-1])
 ax.set_ylim(0.0, 1.0)
-ax.set_xticks(np.arange(2, 11, 1))
+
+# label bin edges only
+ax.set_xticks(edges)
 ax.minorticks_on()
 
 ax.grid(True, axis="y", which="major", linestyle=":", linewidth=0.8, alpha=0.7)
@@ -249,6 +275,6 @@ ax.legend(
 )
 
 plt.tight_layout()
-plt.savefig("chi2_pair_flavour_composition_stacked_cb_safe.png")
+plt.savefig("chi2_pair_flavour_composition_stacked_jetpt_cb_safe.png")
 plt.show()
 plt.close()

@@ -1178,6 +1178,156 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::pt_order,
       {"jet_SV1_masssvx", "jet_pt_new_NOSYS"}
   );
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// Jet pT selection (changed in yaml) /////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  LOG(INFO) << "Adding variable: jet_pt_region_0to30_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_0to30_GeV_NOSYS",
+      ttZ::jet_pt_region_0to30_GeV,
+      {"jet_pt_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_30to60_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_30to60_GeV_NOSYS",
+      ttZ::jet_pt_region_30to60_GeV,
+      {"jet_pt_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_60to90_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_60to90_GeV_NOSYS",
+      ttZ::jet_pt_region_60to90_GeV,
+      {"jet_pt_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_90to120_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_90to120_GeV_NOSYS",
+      ttZ::jet_pt_region_90to120_GeV,
+      {"jet_pt_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_120to150_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_120to150_GeV_NOSYS",
+      ttZ::jet_pt_region_120to150_GeV,
+      {"jet_pt_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_150to180_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_150to180_GeV_NOSYS",
+      ttZ::jet_pt_region_150to180_GeV,
+      {"jet_pt_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_180to210_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_180to210_GeV_NOSYS",
+      ttZ::jet_pt_region_180to210_GeV,
+      {"jet_pt_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_210to240_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_210to240_GeV_NOSYS",
+      ttZ::jet_pt_region_210to240_GeV,
+      {"jet_pt_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_240to270_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_240to270_GeV_NOSYS",
+      ttZ::jet_pt_region_240to270_GeV,
+      {"jet_pt_new_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_270to300_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_270to300_GeV_NOSYS",
+      ttZ::jet_pt_region_270to300_GeV,
+      {"jet_pt_new_NOSYS"}
+  );
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// SV Invariant Mass selection (changed in yaml) /////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_0to0point5_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_0to0point5_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_0to0point5_GeV,
+      {"sv1_ordered_jets_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_0point5to1_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_0point5to1_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_0point5to1_GeV,
+      {"sv1_ordered_jets_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_1to1point5_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_1to1point5_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_1to1point5_GeV,
+      {"sv1_ordered_jets_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_1point5to2_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_1point5to2_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_1point5to2_GeV,
+      {"sv1_ordered_jets_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_2to2point5_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_2to2point5_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_2to2point5_GeV,
+      {"sv1_ordered_jets_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_2point5to3_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_2point5to3_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_2point5to3_GeV,
+      {"sv1_ordered_jets_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_3to3point5_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_3to3point5_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_3to3point5_GeV,
+      {"sv1_ordered_jets_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_3point5to4_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_3point5to4_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_3point5to4_GeV,
+      {"sv1_ordered_jets_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_4to4point5_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_4to4point5_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_4to4point5_GeV,
+      {"sv1_ordered_jets_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_4point5to5_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_4point5to5_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_4point5to5_GeV,
+      {"sv1_ordered_jets_NOSYS"}
+  );
   return mainNode;
 }
 
