@@ -142,10 +142,10 @@ ntuples:
     - sv1_ordered_jets_NOSYS # For SV1 analysis
     - raw_chi2_pairing_NOSYS
     # additional truth distributions - for mean and std extraction
-    #- new_truth_mlpb_NOSYS
-    #- new_truth_mlmbb_NOSYS
-    #- new_truth_pTdiff_NOSYS
-    #- new_truth_sum_deltaR_NOSYS
+    - new_truth_mlpb_NOSYS
+    - new_truth_mlmbb_NOSYS
+    - new_truth_pTdiff_NOSYS
+    - new_truth_sum_deltaR_NOSYS
     #- new_truth_mllbb_NOSYS
     #- new_truth_mT_ttbar_NOSYS
 
@@ -199,13 +199,13 @@ ntuples:
 
 
     # NEW chi2 indexed
-    #- new_chi_indexed_jets_NOSYS
+    - new_chi_indexed_jets_NOSYS
 
     # NEW MISMS indexed
-    #- new_misms_indexed_jets_NOSYS
+    - new_misms_indexed_jets_NOSYS
 
     # NEW MDRS indexed
-    #- new_mdrs_indexed_jets_NOSYS
+    - new_mdrs_indexed_jets_NOSYS
 
     - weight_mc_NOSYS              # MC generator weight
     - weight_pileup_NOSYS          # pileup weight

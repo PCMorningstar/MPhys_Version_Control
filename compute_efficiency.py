@@ -50,10 +50,17 @@ def weighted_efficiency(values, weights):
     w_fail = np.sum(weights[fail_mask])
     w_tot  = w_pass + w_fail
 
-    eff = w_pass / w_tot if w_tot > 0 else 0.0
+    eff = w_pass / w_tot
 
-    # Weighted binomial uncertainty
-    sigma_eff = np.sqrt( np.sum((weights[pass_mask])**2) ) / w_tot if w_tot > 0 else 0.0
+    sumw2_pass = np.sum(weights[pass_mask] ** 2)
+    sumw2_fail = np.sum(weights[fail_mask] ** 2)
+
+    var_eff = (
+        ((1.0 - eff) ** 2) * sumw2_pass
+        + (eff ** 2) * sumw2_fail
+    ) / (w_tot ** 2)
+
+    sigma_eff = np.sqrt(max(var_eff, 0.0))
 
     return eff, sigma_eff, w_pass, w_fail, w_tot
 

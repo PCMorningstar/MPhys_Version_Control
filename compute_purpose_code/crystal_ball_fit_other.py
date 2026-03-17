@@ -19,11 +19,7 @@ REGIONS = {
 
 OBSERVABLES = [
     "new_truth_mlpb_NOSYS",
-    "new_truth_mlmbb_NOSYS",
-    "new_truth_pTdiff_NOSYS",
-    "new_truth_sum_deltaR_NOSYS",
-    "new_truth_mllbb_NOSYS",
-    "new_truth_mT_ttbar_NOSYS"
+    "new_truth_mlmbb_NOSYS"
 ]
 
 # --------------------------------------------------
@@ -35,63 +31,87 @@ OBSERVABLES = [
 # n = tail exponent
 # --------------------------------------------------
 def crystal_ball(x, A, mu, sigma, alpha, n):
+    x = np.asarray(x, dtype=float)
 
-    sigma = np.abs(sigma)
-    alpha = np.abs(alpha)
-    n = np.abs(n)
+    sigma = max(abs(float(sigma)), 1e-12)
+    alpha = max(abs(float(alpha)), 1e-12)
+    n = max(abs(float(n)), 1e-12)
 
     t = (x - mu) / sigma
 
-    # Gaussian region
-    gaussian = np.exp(-0.5 * t**2)
-
-    # Power-law tail
-    A_tail = (n / alpha)**n * np.exp(-0.5 * alpha**2)
+    # Precompute constants
+    A_tail = (n / alpha) ** n * np.exp(-0.5 * alpha**2)
     B_tail = n / alpha - alpha
 
-    tail = A_tail * (B_tail - t)**(-n)
+    # Allocate output
+    y = np.empty_like(t, dtype=float)
 
-    return A * np.where(t > -alpha, gaussian, tail)
+    # Gaussian core: t > -alpha
+    core_mask = t > -alpha
+    y[core_mask] = np.exp(-0.5 * t[core_mask] ** 2)
+
+    # Left tail: t <= -alpha
+    tail_mask = ~core_mask
+    if np.any(tail_mask):
+        den = B_tail - t[tail_mask]
+
+        # Numerical protection against zero/negative denominator
+        den = np.maximum(den, 1e-300)
+
+        y[tail_mask] = A_tail * den ** (-n)
+
+    return A * y
+
 
 # --------------------------------------------------
 # Fit Crystal Ball
 # --------------------------------------------------
 def fit_crystal_ball(data, bins=100):
-
-    data = np.asarray(data)
+    data = np.asarray(data, dtype=float)
     data = data[np.isfinite(data)]
     data = data[data > 0.0]  # keep if observable must be positive
 
-    if len(data) < 10:
+    if data.size < 10:
         return 0.0, 0.0
 
     counts, edges = np.histogram(data, bins=bins)
     centers = 0.5 * (edges[:-1] + edges[1:])
 
-    A0     = float(counts.max())
-    mu0    = float(np.mean(data))
-    sigma0 = max(float(np.std(data)), 1e-2)
+    # Keep only non-empty bins for the fit
+    nonzero = counts > 0
+    counts_fit = counts[nonzero]
+    centers_fit = centers[nonzero]
 
+    if counts_fit.size < 5:
+        mu0 = float(np.mean(data))
+        sigma0 = max(float(np.std(data)), 1e-2)
+        return mu0, sigma0
+
+    A0 = float(counts_fit.max())
+    mu0 = float(np.mean(data))
+    sigma0 = max(float(np.std(data)), 1e-2)
     alpha0 = 1.5
-    n0     = 5.0
+    n0 = 5.0
 
     try:
         popt, _ = curve_fit(
             crystal_ball,
-            centers,
-            counts,
+            centers_fit,
+            counts_fit,
             p0=[A0, mu0, sigma0, alpha0, n0],
             bounds=(
-                [0, -np.inf, 1e-3, 0.1, 0.1],
+                [0.0, -np.inf, 1e-3, 0.1, 0.5],
                 [np.inf, np.inf, np.inf, 10.0, 100.0]
             ),
             maxfev=50000
         )
 
-        mu, sigma = popt[1], popt[2]
+        mu = float(popt[1])
+        sigma = abs(float(popt[2]))
 
     except Exception:
-        mu, sigma = mu0, sigma0
+        mu = mu0
+        sigma = sigma0
 
     return mu, sigma
 
