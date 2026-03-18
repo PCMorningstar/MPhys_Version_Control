@@ -9,6 +9,28 @@
 9, 0.0638, 0.0060
 10, 0.0463, 0.0101
 
+# Number of Jets, NEW Reconstruction efficiency - selected terms , Error - chi2 - Double Gaussian Fitting
+2, 0.8228, 0.0005
+3, 0.4105, 0.0007
+4, 0.2549, 0.0008
+5, 0.1742, 0.0010
+6, 0.1309, 0.0015
+7, 0.0994, 0.0023
+8, 0.0768, 0.0036
+9, 0.0643, 0.0060
+10, 0.0470, 0.0101
+
+# Number of Jets, NEW Reconstruction efficiency - selected terms , Error - chi2 - Crystal Ball Fitting - constant sigma and mu
+2, 0.8228, 0.0005
+3, 0.4108, 0.0007
+4, 0.2555, 0.0008
+5, 0.1753, 0.0010
+6, 0.1313, 0.0015
+7, 0.1007, 0.0023
+8, 0.0789, 0.0037
+9, 0.0643, 0.0060
+10, 0.0435, 0.0098
+
 # Number of Jets, NEW Reconstruction efficiency - selected terms , Error - chi2 - Crystal Ball Fitting
 2, 0.8228, 0.0005
 3, 0.4105, 0.0007
@@ -20,16 +42,6 @@
 9, 0.0638, 0.0060
 10, 0.0568, 0.0110
 
-# Number of Jets, NEW Reconstruction efficiency - selected terms , Error - chi2 - Double Gaussian Fitting
-2, 0.8228, 0.0005
-3, 0.4105, 0.0007
-4, 0.2549, 0.0008
-5, 0.1742, 0.0010
-6, 0.1309, 0.0015
-7, 0.0994, 0.0023
-8, 0.0768, 0.0036
-9, 0.0643, 0.0060
-10, 0.0470, 0.0101
 
 # Number of Jets, NEW Reconstruction efficiency, Error - MISMS
 2, 0.8187, 0.0005

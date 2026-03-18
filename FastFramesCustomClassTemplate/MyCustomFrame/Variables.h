@@ -60,6 +60,8 @@ namespace ttZ{
   bool sv_invariant_mass_region_3point5to4_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair);
   bool sv_invariant_mass_region_4to4point5_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair);
   bool sv_invariant_mass_region_4point5to5_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair);
+  bool sv_invariant_mass_region_5to5point5_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair);
+  bool sv_invariant_mass_region_5point5to6_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair);
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// Order by pT /////////////////////////////////////////////////////////////////////

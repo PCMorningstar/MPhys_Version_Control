@@ -95,6 +95,10 @@ regions:
     selection: "selection_cuts_NOSYS == 1 && sv_invariant_mass_region_4to4point5_GeV_NOSYS == 1 && jet_size_NOSYS >= 2"
   - name: "sv_invariant_mass_region_4point5to5_GeV_region"
     selection: "selection_cuts_NOSYS == 1 && sv_invariant_mass_region_4point5to5_GeV_NOSYS == 1 && jet_size_NOSYS >= 2"
+  - name: "sv_invariant_mass_region_5to5point5_GeV_region"
+    selection: "selection_cuts_NOSYS == 1 && sv_invariant_mass_region_5to5point5_GeV_NOSYS == 1 && jet_size_NOSYS >= 2"
+  - name: "sv_invariant_mass_region_5point5to6_GeV_region"
+    selection: "selection_cuts_NOSYS == 1 && sv_invariant_mass_region_5point5to6_GeV_NOSYS == 1 && jet_size_NOSYS >= 2"
 
 ntuples:
   regions:
@@ -132,6 +136,8 @@ ntuples:
     - sv_invariant_mass_region_3point5to4_GeV_region
     - sv_invariant_mass_region_4to4point5_GeV_region
     - sv_invariant_mass_region_4point5to5_GeV_region
+    - sv_invariant_mass_region_5to5point5_GeV_region
+    - sv_invariant_mass_region_5point5to6_GeV_region
   # If you want a selection here, use the same as the region:
   #selection: "selection_cuts_NOSYS" #&& jet_size_NOSYS == 2
   branches:
@@ -170,6 +176,8 @@ ntuples:
     - sv_invariant_mass_region_3point5to4_GeV_NOSYS
     - sv_invariant_mass_region_4to4point5_GeV_NOSYS
     - sv_invariant_mass_region_4point5to5_GeV_NOSYS
+    - sv_invariant_mass_region_5to5point5_GeV_NOSYS
+    - sv_invariant_mass_region_5point5to6_GeV_NOSYS
 
     # Selections for cut-flow
     - electron_selections_paper_NOSYS

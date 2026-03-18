@@ -2,95 +2,83 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # =================================================
-# Publication-style Chi2 pair flavour composition vs leading SV mass
+# Publication-style Chi2 pair flavour composition vs jet multiplicity
 # Colour-blind safe (Okabe-Ito palette)
 # =================================================
 
 # -----------------------------
-# Hard-coded data: [SV mass centre, fraction, error]
+# Hard-coded data: [jet multiplicity, fraction, error]
 # -----------------------------
 bb_data = np.array([
-    [0.25, 0.107227, 0.000445],
-    [0.75, 0.314186, 0.001114],
-    [1.25, 0.404732, 0.000985],
-    [1.75, 0.482451, 0.000902],
-    [2.25, 0.544438, 0.000880],
-    [2.75, 0.586810, 0.000907],
-    [3.25, 0.613845, 0.001022],
-    [3.75, 0.628167, 0.001262],
-    [4.25, 0.632816, 0.001697],
-    [4.75, 0.625111, 0.002474],
-    [5.25, 0.594450, 0.003792],
+    [2, 0.632237, 0.000503],
+    [3, 0.380404, 0.000561],
+    [4, 0.261405, 0.000694],
+    [5, 0.193209, 0.000950],
+    [6, 0.154787, 0.001420],
+    [7, 0.124613, 0.002246],
+    [8, 0.102189, 0.003705],
+    [9, 0.086662, 0.006293],
+    [10, 0.080650, 0.011592],
 ], dtype=float)
 
 bc_data = np.array([
-    [0.25, 0.018961, 0.000196],
-    [0.75, 0.032454, 0.000424],
-    [1.25, 0.030328, 0.000342],
-    [1.75, 0.026748, 0.000291],
-    [2.25, 0.022326, 0.000261],
-    [2.75, 0.019936, 0.000257],
-    [3.25, 0.018354, 0.000281],
-    [3.75, 0.018024, 0.000346],
-    [4.25, 0.018094, 0.000470],
-    [4.75, 0.019885, 0.000715],
-    [5.25, 0.019786, 0.001056],
+    [2, 0.016645, 0.000133],
+    [3, 0.024719, 0.000179],
+    [4, 0.027798, 0.000259],
+    [5, 0.029951, 0.000409],
+    [6, 0.030518, 0.000677],
+    [7, 0.028275, 0.001125],
+    [8, 0.030139, 0.002088],
+    [9, 0.030959, 0.003900],
+    [10, 0.038840, 0.008072],
 ], dtype=float)
 
 bl_data = np.array([
-    [0.25, 0.486618, 0.000718],
-    [0.75, 0.607593, 0.001172],
-    [1.25, 0.546260, 0.000999],
-    [1.75, 0.481584, 0.000902],
-    [2.25, 0.427982, 0.000874],
-    [2.75, 0.389276, 0.000898],
-    [3.25, 0.364608, 0.001010],
-    [3.75, 0.350638, 0.001246],
-    [4.25, 0.346544, 0.001675],
-    [4.75, 0.352028, 0.002441],
-    [5.25, 0.382754, 0.003755],
+    [2, 0.321095, 0.000487],
+    [3, 0.524116, 0.000577],
+    [4, 0.562633, 0.000783],
+    [5, 0.556167, 0.001193],
+    [6, 0.534101, 0.001958],
+    [7, 0.508007, 0.003389],
+    [8, 0.485846, 0.006097],
+    [9, 0.476740, 0.011236],
+    [10, 0.471477, 0.021203],
 ], dtype=float)
 
 cc_data = np.array([
-    [0.25, 0.001718, 0.000059],
-    [0.75, 0.001476, 0.000093],
-    [1.25, 0.000905, 0.000060],
-    [1.75, 0.000414, 0.000037],
-    [2.25, 0.000119, 0.000019],
-    [2.75, 0.000061, 0.000014],
-    [3.25, 0.000048, 0.000014],
-    [3.75, 0.000035, 0.000016],
-    [4.25, 0.000000, 0.000000],
-    [4.75, 0.000042, 0.000032],
-    [5.25, 0.000110, 0.000078],
+    [2, 0.000247, 0.000017],
+    [3, 0.000502, 0.000026],
+    [4, 0.001086, 0.000052],
+    [5, 0.001564, 0.000095],
+    [6, 0.002124, 0.000178],
+    [7, 0.002241, 0.000319],
+    [8, 0.002019, 0.000522],
+    [9, 0.004370, 0.001465],
+    [10, 0.005030, 0.002921],
 ], dtype=float)
 
 cl_data = np.array([
-    [0.25, 0.028752, 0.000240],
-    [0.75, 0.012159, 0.000263],
-    [1.25, 0.006144, 0.000156],
-    [1.75, 0.002840, 0.000095],
-    [2.25, 0.000979, 0.000055],
-    [2.75, 0.000668, 0.000047],
-    [3.25, 0.000504, 0.000047],
-    [3.75, 0.000458, 0.000055],
-    [4.25, 0.000528, 0.000080],
-    [4.75, 0.000853, 0.000148],
-    [5.25, 0.000917, 0.000226],
+    [2, 0.003105, 0.000058],
+    [3, 0.006553, 0.000093],
+    [4, 0.013161, 0.000180],
+    [5, 0.019848, 0.000334],
+    [6, 0.027065, 0.000637],
+    [7, 0.031147, 0.001175],
+    [8, 0.036895, 0.002277],
+    [9, 0.040330, 0.004474],
+    [10, 0.035910, 0.007766],
 ], dtype=float)
 
 ll_data = np.array([
-    [0.25, 0.356360, 0.000688],
-    [0.75, 0.031965, 0.000422],
-    [1.25, 0.011543, 0.000213],
-    [1.75, 0.005857, 0.000137],
-    [2.25, 0.004070, 0.000112],
-    [2.75, 0.003135, 0.000102],
-    [3.25, 0.002545, 0.000104],
-    [3.75, 0.002554, 0.000131],
-    [4.25, 0.001932, 0.000154],
-    [4.75, 0.002081, 0.000232],
-    [5.25, 0.001928, 0.000345],
+    [2, 0.026671, 0.000169],
+    [3, 0.063706, 0.000282],
+    [4, 0.133917, 0.000538],
+    [5, 0.199262, 0.000959],
+    [6, 0.251404, 0.001700],
+    [7, 0.305718, 0.003122],
+    [8, 0.342911, 0.005802],
+    [9, 0.360939, 0.010776],
+    [10, 0.368093, 0.020552],
 ], dtype=float)
 
 # -----------------------------
@@ -135,7 +123,7 @@ MARKERS = {
     "{l, l}": "x",
 }
 
-BIN_WIDTH = 0.5
+BIN_WIDTH = 1.0
 
 # -----------------------------
 # Helpers
@@ -143,7 +131,7 @@ BIN_WIDTH = 0.5
 def unpack(arr):
     return arr[:, 0], arr[:, 1], arr[:, 2]
 
-def centres_to_edges(x, width=0.5):
+def centres_to_edges(x, width=1.0):
     x = np.asarray(x, dtype=float)
     return np.concatenate(([x[0] - width / 2.0], x + width / 2.0))
 
@@ -178,39 +166,37 @@ def plot_with_errorbars(ax, x, y, yerr, key, label):
 # -----------------------------
 # Unpack
 # -----------------------------
-sv_bb, f_bb, e_bb = unpack(bb_data)
-sv_bc, f_bc, e_bc = unpack(bc_data)
-sv_bl, f_bl, e_bl = unpack(bl_data)
-sv_cc, f_cc, e_cc = unpack(cc_data)
-sv_cl, f_cl, e_cl = unpack(cl_data)
-sv_ll, f_ll, e_ll = unpack(ll_data)
+jet_bb, f_bb, e_bb = unpack(bb_data)
+jet_bc, f_bc, e_bc = unpack(bc_data)
+jet_bl, f_bl, e_bl = unpack(bl_data)
+jet_cc, f_cc, e_cc = unpack(cc_data)
+jet_cl, f_cl, e_cl = unpack(cl_data)
+jet_ll, f_ll, e_ll = unpack(ll_data)
 
-edges = centres_to_edges(sv_bb, BIN_WIDTH)
+plot_edges = centres_to_edges(jet_bb, BIN_WIDTH)
 
 # -----------------------------
 # Main plot
 # -----------------------------
 fig, ax = plt.subplots()
 
-plot_with_errorbars(ax, sv_bb, f_bb, e_bb, "{b, b}", "{b, b}")
-plot_with_errorbars(ax, sv_bc, f_bc, e_bc, "{b, c}", "{b, c}")
-plot_with_errorbars(ax, sv_bl, f_bl, e_bl, "{b, l}", "{b, l}")
-plot_with_errorbars(ax, sv_cc, f_cc, e_cc, "{c, c}", "{c, c}")
-plot_with_errorbars(ax, sv_cl, f_cl, e_cl, "{c, l}", "{c, l}")
-plot_with_errorbars(ax, sv_ll, f_ll, e_ll, "{l, l}", "{l, l}")
+plot_with_errorbars(ax, jet_bb, f_bb, e_bb, "{b, b}", "{b, b}")
+plot_with_errorbars(ax, jet_bc, f_bc, e_bc, "{b, c}", "{b, c}")
+plot_with_errorbars(ax, jet_bl, f_bl, e_bl, "{b, l}", "{b, l}")
+plot_with_errorbars(ax, jet_cc, f_cc, e_cc, "{c, c}", "{c, c}")
+plot_with_errorbars(ax, jet_cl, f_cl, e_cl, "{c, l}", "{c, l}")
+plot_with_errorbars(ax, jet_ll, f_ll, e_ll, "{l, l}", "{l, l}")
 
-ax.set_xlabel("Leading SV Mass [GeV]")
+ax.set_xlabel("Jet Multiplicity")
 ax.set_ylabel("Fraction Of Events")
-ax.set_title(r"$\chi^2$ Pair Flavour Composition vs Leading SV Mass")
+ax.set_title(r"$\chi^2$ Pair Flavour Composition vs Jet Multiplicity")
 
-ax.set_xlim(edges[0], edges[-1])
+ax.set_xlim(plot_edges[0], plot_edges[-1])
 ax.set_ylim(0.0, 1.05)
 
-# Define bin edges explicitly
-edges = np.arange(0.0, 5.5 + 0.5, 0.5)  # 0 → 5.5 in steps of 0.5
-
-ax.set_xticks(edges)
-ax.set_xticklabels([f"{e:.1f}" for e in edges])
+# Label centres with the jet multiplicity values
+ax.set_xticks(jet_bb)
+ax.set_xticklabels([str(int(x)) for x in jet_bb])
 ax.minorticks_on()
 
 ax.grid(True, which="major", linestyle=":", linewidth=0.8, alpha=0.7)
@@ -225,7 +211,7 @@ ax.legend(
 )
 
 plt.tight_layout()
-plt.savefig("chi2_pair_flavour_vs_sv_mass.png")
+plt.savefig("chi2_pair_flavour_vs_jet_multiplicity.png")
 plt.show()
 plt.close()
 
@@ -234,7 +220,7 @@ plt.close()
 # -----------------------------
 fig, ax = plt.subplots()
 
-bottom = np.zeros_like(sv_bb, dtype=float)
+bottom = np.zeros_like(jet_bb, dtype=float)
 
 stack_order = [
     ("{b, b}", f_bb, "{b, b}"),
@@ -247,7 +233,7 @@ stack_order = [
 
 for key, vals, label in stack_order:
     ax.bar(
-        sv_bb,
+        jet_bb,
         vals,
         bottom=bottom,
         width=BIN_WIDTH,
@@ -259,18 +245,16 @@ for key, vals, label in stack_order:
     )
     bottom += vals
 
-ax.set_xlabel("Leading SV Mass [GeV]")
+ax.set_xlabel("Jet Multiplicity")
 ax.set_ylabel("Fraction Of Events")
-ax.set_title(r"$\chi^2$ Pair Flavour Composition vs Leading SV Mass")
+ax.set_title(r"$\chi^2$ Pair Flavour Composition vs Jet Multiplicity")
 
-ax.set_xlim(edges[0], edges[-1])
+ax.set_xlim(plot_edges[0], plot_edges[-1])
 ax.set_ylim(0.0, 1.0)
 
-# Define bin edges explicitly
-edges = np.arange(0.0, 5.5 + 0.5, 0.5)  # 0 → 5.5 in steps of 0.5
-
-ax.set_xticks(edges)
-ax.set_xticklabels([f"{e:.1f}" for e in edges])
+# Label centres with the jet multiplicity values
+ax.set_xticks(jet_bb)
+ax.set_xticklabels([str(int(x)) for x in jet_bb])
 ax.minorticks_on()
 
 ax.grid(True, axis="y", which="major", linestyle=":", linewidth=0.8, alpha=0.7)
@@ -284,6 +268,6 @@ ax.legend(
 )
 
 plt.tight_layout()
-plt.savefig("chi2_pair_flavour_stacked_vs_sv_mass.png")
+plt.savefig("chi2_pair_flavour_stacked_vs_jet_multiplicity.png")
 plt.show()
 plt.close()

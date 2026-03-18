@@ -1360,6 +1360,20 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::sv_invariant_mass_region_4point5to5_GeV,
       {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
   );
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_5to5point5_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_5to5point5_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_5to5point5_GeV,
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_5point5to6_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_5point5to6_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_5point5to6_GeV,
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
   return mainNode;
 }
 

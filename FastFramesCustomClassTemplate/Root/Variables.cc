@@ -400,6 +400,28 @@ namespace ttZ{ //GPT aid
 
     return (m_pair >= 4500 && m_pair < 5000);
   }
+  bool sv_invariant_mass_region_5to5point5_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair) {
+    if (chi_pair.size() < 2) return false;
+    int i = chi_pair[0];
+    int j = chi_pair[1];
+    if (i < 0 || j < 0) return false;
+    if (i >= static_cast<int>(sv_mass.size()) || j >= static_cast<int>(sv_mass.size())) return false;
+    float m_i = sv_mass[i];
+    float m_j = sv_mass[j];
+    float m_pair = std::max(m_i, m_j);  // common choice
+    return (m_pair >= 5000 && m_pair < 5500);
+  }
+  bool sv_invariant_mass_region_5point5to6_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair) {
+    if (chi_pair.size() < 2) return false;
+    int i = chi_pair[0];
+    int j = chi_pair[1];
+    if (i < 0 || j < 0) return false;
+    if (i >= static_cast<int>(sv_mass.size()) || j >= static_cast<int>(sv_mass.size())) return false;
+    float m_i = sv_mass[i];
+    float m_j = sv_mass[j];
+    float m_pair = std::max(m_i, m_j);  // common choice
+    return (m_pair >= 5500 && m_pair < 6000);
+  }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// Order by pT /////////////////////////////////////////////////////////////////////
@@ -1427,7 +1449,7 @@ int new_chi_indexed(
   // -----------------------------
   std::map<std::string, ObsStats> obs_map;
 
-  if (jet_size == 2) {
+  if (jet_size >= 2) {
     obs_map["mlb_plus"]  = {98.07f, 30.47f};
     obs_map["mlb_minus"] = {98.19f, 30.55f};
   }
@@ -2224,51 +2246,41 @@ RVec<float> raw_chi2_minval_truthall(
 
   // --- Stats map ---
   std::map<std::string, ObsStats> obs_map;
-  if (jet_size == 2) {
-    obs_map["mlb_plus"]   = {98.07f, 30.47f};
-    obs_map["mlb_minus"]  = {98.19f, 30.55f};
-    obs_map["pTdiff"]     = {-0.25f, 23.25f};
-    obs_map["sum_deltaR"] = {3.58f, 1.46f};
-  } else if (jet_size == 3) {
-    obs_map["mlb_plus"]   = {97.10f, 31.29f};
-    obs_map["mlb_minus"]  = {97.20f, 31.37f};
-    obs_map["pTdiff"]     = {-1.99f, 34.16f};
-    obs_map["sum_deltaR"] = {3.44f, 1.43f};
-  } else if (jet_size == 4) {
-    obs_map["mlb_plus"]   = {96.39f, 32.07f};
-    obs_map["mlb_minus"]  = {96.76f, 31.93f};
-    obs_map["pTdiff"]     = {-0.35f, 71.03f};
-    obs_map["sum_deltaR"] = {3.33f, 1.40f};
-  } else if (jet_size == 5) {
-    obs_map["mlb_plus"]   = {96.50f, 32.43f};
-    obs_map["mlb_minus"]  = {96.59f, 32.26f};
-    obs_map["pTdiff"]     = {-0.13f, 81.53f};
-    obs_map["sum_deltaR"] = {3.23f, 1.37f};
-  } else if (jet_size == 6) {
-    obs_map["mlb_plus"]   = {96.34f, 32.81f};
-    obs_map["mlb_minus"]  = {96.36f, 32.68f};
-    obs_map["pTdiff"]     = {0.53f, 92.97f};
-    obs_map["sum_deltaR"] = {3.13f, 1.35f};
-  } else if (jet_size == 7) {
-    obs_map["mlb_plus"]   = {96.65f, 32.97f};
-    obs_map["mlb_minus"]  = {96.38f, 32.94f};
-    obs_map["pTdiff"]     = {0.39f, 102.06f};
-    obs_map["sum_deltaR"] = {3.04f, 1.35f};
-  } else if (jet_size == 8) {
-    obs_map["mlb_plus"]   = {97.54f, 34.04f};
-    obs_map["mlb_minus"]  = {96.42f, 33.48f};
-    obs_map["pTdiff"]     = {-1.53f, 27.50f};
-    obs_map["sum_deltaR"] = {2.97f, 1.35f};
-  } else if (jet_size == 9) {
-    obs_map["mlb_plus"]   = {97.97f, 31.54f};
-    obs_map["mlb_minus"]  = {98.15f, 34.61f};
-    obs_map["pTdiff"]     = {3.28f, 36.43f};
-    obs_map["sum_deltaR"] = {2.90f, 1.38f};
-  } else if (jet_size == 10) {
-    obs_map["mlb_plus"]   = {99.90f, 32.00f};
-    obs_map["mlb_minus"]  = {97.87f, 37.16f};
-    obs_map["pTdiff"]     = {3.07f, 41.18f};
-    obs_map["sum_deltaR"] = {2.83f, 1.41f};
+  if (jet_size >= 2) {
+    obs_map["mlb_plus"]  = {98.07f, 30.47f};
+    obs_map["mlb_minus"] = {98.19f, 30.55f};
+  }
+  else if (jet_size == 3) {
+      obs_map["mlb_plus"]  = {97.10f, 23.72f};
+      obs_map["mlb_minus"] = {97.20f, 23.77f};
+  }
+  else if (jet_size == 4) {
+      obs_map["mlb_plus"]  = {96.39f, 32.09f};
+      obs_map["mlb_minus"] = {96.76f, 31.97f};
+  }
+  else if (jet_size == 5) {
+      obs_map["mlb_plus"]  = {96.50f, 32.45f};
+      obs_map["mlb_minus"] = {96.59f, 32.28f};
+  }
+  else if (jet_size == 6) {
+      obs_map["mlb_plus"]  = {96.34f, 32.81f};
+      obs_map["mlb_minus"] = {96.36f, 32.68f};
+  }
+  else if (jet_size == 7) {
+      obs_map["mlb_plus"]  = {96.66f, 42.04f};
+      obs_map["mlb_minus"] = {96.38f, 32.94f};
+  }
+  else if (jet_size == 8) {
+      obs_map["mlb_plus"]  = {97.54f, 45.52f};
+      obs_map["mlb_minus"] = {96.41f, 44.01f};
+  }
+  else if (jet_size == 9) {
+      obs_map["mlb_plus"]  = {98.06f, 52.27f};
+      obs_map["mlb_minus"] = {98.17f, 53.45f};
+  }
+  else if (jet_size == 10) {
+      obs_map["mlb_plus"]  = {100.18f, 73.14f};
+      obs_map["mlb_minus"] = {97.84f, 150.02f};
   } else {
     return out; // no map beyond 10
   }
@@ -2277,10 +2289,9 @@ RVec<float> raw_chi2_minval_truthall(
     double chi2;
     float  mlb_plus;
     float  mlb_minus;
-    float  pTdiff;
-    float  sum_dR;
+
     Chi2Terms()
-      : chi2(-1.0), mlb_plus(-1.0f), mlb_minus(-1.0f), pTdiff(-1.0f), sum_dR(-1.0f) {}
+      : chi2(-1.0), mlb_plus(-1.0f), mlb_minus(-1.0f) {}
   };
 
   auto eval_pair = [&](size_t i_plus, size_t i_minus) -> Chi2Terms {
@@ -2294,19 +2305,12 @@ RVec<float> raw_chi2_minval_truthall(
 
     t.mlb_plus  = vis_plus.M();
     t.mlb_minus = vis_minus.M();
-    t.pTdiff    = vis_plus.Pt() - vis_minus.Pt();
-    t.sum_dR    = ROOT::Math::VectorUtil::DeltaR(lplus, jplus)
-                + ROOT::Math::VectorUtil::DeltaR(lminus, jminus);
 
     const double term_mlb_plus  = (t.mlb_plus  - obs_map["mlb_plus"].mean)   / obs_map["mlb_plus"].sigma;
     const double term_mlb_minus = (t.mlb_minus - obs_map["mlb_minus"].mean)  / obs_map["mlb_minus"].sigma;
-    const double term_pTdiff    = (t.pTdiff    - obs_map["pTdiff"].mean)     / obs_map["pTdiff"].sigma;
-    const double term_sumdR     = (t.sum_dR    - obs_map["sum_deltaR"].mean) / obs_map["sum_deltaR"].sigma;
 
     t.chi2 = term_mlb_plus*term_mlb_plus
-           + term_mlb_minus*term_mlb_minus
-           + term_pTdiff*term_pTdiff
-           + term_sumdR*term_sumdR;
+           + term_mlb_minus*term_mlb_minus;
 
     return t;
   };
