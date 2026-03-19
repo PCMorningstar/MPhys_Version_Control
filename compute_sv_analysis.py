@@ -85,7 +85,7 @@ with uproot.open(fname) as f:
 # -------------------------------------------------
 base_mask = (
     (arr["selection_cuts_NOSYS"] == 1) &
-    (arr["jet_size_NOSYS"] >= 2)
+    (arr["jet_size_NOSYS"] == 2)
 )
 
 truth = arr["ordered_jet_truth_flavour_NOSYS"][base_mask]
