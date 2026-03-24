@@ -19,6 +19,26 @@ pt_regions = [
     ("210to240", "jet_pt_region_210to240_GeV_NOSYS"),
     ("240to270", "jet_pt_region_240to270_GeV_NOSYS"),
     ("270to300", "jet_pt_region_270to300_GeV_NOSYS"),
+    ("300to330", "jet_pt_region_300to330_GeV_NOSYS"),
+    ("330to360", "jet_pt_region_330to360_GeV_NOSYS"),
+    ("360to390", "jet_pt_region_360to390_GeV_NOSYS"),
+    ("390to420", "jet_pt_region_390to420_GeV_NOSYS"),
+    ("420to450", "jet_pt_region_420to450_GeV_NOSYS"),
+    ("450to480", "jet_pt_region_450to480_GeV_NOSYS"),
+    ("480to510", "jet_pt_region_480to510_GeV_NOSYS"),
+    ("510to540", "jet_pt_region_510to540_GeV_NOSYS"),
+    ("540to570", "jet_pt_region_540to570_GeV_NOSYS"),
+    ("570to600", "jet_pt_region_570to600_GeV_NOSYS"),
+    ("600to630", "jet_pt_region_600to630_GeV_NOSYS"),
+    ("630to660", "jet_pt_region_630to660_GeV_NOSYS"),
+    ("660to690", "jet_pt_region_660to690_GeV_NOSYS"),
+    ("690to720", "jet_pt_region_690to720_GeV_NOSYS"),
+    ("720to750", "jet_pt_region_720to750_GeV_NOSYS"),
+    ("750to780", "jet_pt_region_750to780_GeV_NOSYS"),
+    ("780to810", "jet_pt_region_780to810_GeV_NOSYS"),
+    ("810to840", "jet_pt_region_810to840_GeV_NOSYS"),
+    ("840to870", "jet_pt_region_840to870_GeV_NOSYS"),
+    ("870to900", "jet_pt_region_870to900_GeV_NOSYS")
 ]
 
 # -------------------------------------------------
@@ -42,7 +62,10 @@ def weighted_fraction_and_error(sumw_cat, sumw2_cat, sumw_tot, sumw2_tot):
     Weighted fraction and uncertainty for an exclusive category:
         p = sumw_cat / sumw_tot
 
-    Uses the standard variance expression for a weighted binomial-like fraction.
+    Variance used:
+        var(p) = [ (1-p)^2 * sumw2_cat + p^2 * (sumw2_tot - sumw2_cat) ] / (sumw_tot^2)
+
+    This is the same weighted binomial-like expression you were already using.
     """
     if sumw_tot <= 0.0:
         return 0.0, 0.0
@@ -58,6 +81,19 @@ def weighted_fraction_and_error(sumw_cat, sumw2_cat, sumw_tot, sumw2_tot):
         var = 0.0
 
     return frac, np.sqrt(var)
+
+def weighted_yield_and_error(w):
+    """
+    Weighted event yield and uncertainty:
+        N = sum w
+        sigma_N = sqrt(sum w^2)
+
+    This is the standard weighted counting uncertainty.
+    """
+    sumw = np.sum(w)
+    sumw2 = np.sum(w ** 2)
+    err = np.sqrt(sumw2)
+    return sumw, err
 
 # -------------------------------------------------
 # Load branches
@@ -77,11 +113,11 @@ with uproot.open(fname) as f:
     arr = f[tree].arrays(branches, library="ak")
 
 # -------------------------------------------------
-# Base event selection
+# Base event selection: NOW 2 JETS
 # -------------------------------------------------
 base_mask = (
     (arr["selection_cuts_NOSYS"] == 1)
-    & (arr["jet_size_NOSYS"] == 3)
+    & (arr["jet_size_NOSYS"] == 2)
 )
 
 truth = arr["ordered_jet_truth_flavour_NOSYS"][base_mask]
@@ -100,7 +136,8 @@ region_flags = {
 }
 
 # -------------------------------------------------
-# Extract χ2-selected pair
+# Extract chi2-selected pair
+# Assumes chi[:,0] and chi[:,1] are the selected jet indices
 # -------------------------------------------------
 chi_i = ak.to_numpy(ak.values_astype(chi[:, 0], int))
 chi_j = ak.to_numpy(ak.values_astype(chi[:, 1], int))
@@ -125,7 +162,7 @@ truth_i = ak.to_numpy(truth[idx, chi_i])
 truth_j = ak.to_numpy(truth[idx, chi_j])
 
 # -------------------------------------------------
-# Extract flavours separately
+# Extract flavours separately for Top1 and Top2
 # -------------------------------------------------
 flav_i = np.array([single_flavour_label(f) for f in truth_i], dtype=object)
 flav_j = np.array([single_flavour_label(f) for f in truth_j], dtype=object)
@@ -144,18 +181,24 @@ region_flags_i = {k: v[valid_i] for k, v in region_flags.items()}
 region_flags_j = {k: v[valid_j] for k, v in region_flags.items()}
 
 # -------------------------------------------------
-# Output: Top1 (χ² index 0)
+# Lists to store results
 # -------------------------------------------------
-print("\n" + "=" * 90)
-print("Top1 (chi2 index 0): leading_jet_pt_bin, flavour, fraction, error")
-print("=" * 90)
+top1_fraction_list = []
+top1_yield_list = []
 
+top2_fraction_list = []
+top2_yield_list = []
+
+# -------------------------------------------------
+# Top1 (chi2 index 0)
+# -------------------------------------------------
 for label, _ in pt_regions:
     bin_mask = (region_flags_i[label] == 1)
 
     if not np.any(bin_mask):
         for f in single_flavours:
-            print(f"{label}, {f}, 0.000000, 0.000000")
+            top1_fraction_list.append((label, f, 0.0, 0.0))
+            top1_yield_list.append((label, f, 0.0, 0.0))
         continue
 
     w_bin = w_i[bin_mask]
@@ -171,28 +214,28 @@ for label, _ in pt_regions:
         sumw_cat = np.sum(w_cat)
         sumw2_cat = np.sum(w_cat ** 2)
 
-        frac, err = weighted_fraction_and_error(
+        frac, err_frac = weighted_fraction_and_error(
             sumw_cat=sumw_cat,
             sumw2_cat=sumw2_cat,
             sumw_tot=sumw_tot,
             sumw2_tot=sumw2_tot,
         )
 
-        print(f"{label}, {f}, {frac:.6f}, {err:.6f}")
+        yield_val, err_yield = weighted_yield_and_error(w_cat)
+
+        top1_fraction_list.append((label, f, frac, err_frac))
+        top1_yield_list.append((label, f, yield_val, err_yield))
 
 # -------------------------------------------------
-# Output: Top2 (χ² index 1)
+# Top2 (chi2 index 1)
 # -------------------------------------------------
-print("\n" + "=" * 90)
-print("Top2 (chi2 index 1): leading_jet_pt_bin, flavour, fraction, error")
-print("=" * 90)
-
 for label, _ in pt_regions:
     bin_mask = (region_flags_j[label] == 1)
 
     if not np.any(bin_mask):
         for f in single_flavours:
-            print(f"{label}, {f}, 0.000000, 0.000000")
+            top2_fraction_list.append((label, f, 0.0, 0.0))
+            top2_yield_list.append((label, f, 0.0, 0.0))
         continue
 
     w_bin = w_j[bin_mask]
@@ -208,16 +251,79 @@ for label, _ in pt_regions:
         sumw_cat = np.sum(w_cat)
         sumw2_cat = np.sum(w_cat ** 2)
 
-        frac, err = weighted_fraction_and_error(
+        frac, err_frac = weighted_fraction_and_error(
             sumw_cat=sumw_cat,
             sumw2_cat=sumw2_cat,
             sumw_tot=sumw_tot,
             sumw2_tot=sumw2_tot,
         )
 
-        print(f"{label}, {f}, {frac:.6f}, {err:.6f}")
+        yield_val, err_yield = weighted_yield_and_error(w_cat)
 
-print("=" * 90)
+        top2_fraction_list.append((label, f, frac, err_frac))
+        top2_yield_list.append((label, f, yield_val, err_yield))
+
+# -------------------------------------------------
+# Print results
+# -------------------------------------------------
+print("\n" + "=" * 110)
+print("ERROR FORMULAE USED")
+print("=" * 110)
+print("Weighted fraction p = sumw_cat / sumw_tot")
+print("Variance on fraction:")
+print("  var(p) = [ (1-p)^2 * sumw2_cat + p^2 * (sumw2_tot - sumw2_cat) ] / (sumw_tot^2)")
+print("  sigma_p = sqrt(var(p))")
+print("")
+print("Weighted event yield N = sumw")
+print("Uncertainty on yield:")
+print("  sigma_N = sqrt(sumw2) = sqrt(sum(w^2))")
+print("=" * 110)
+
+# -------------------------------------------------
+# Top1 fractions
+# -------------------------------------------------
+print("\n" + "=" * 110)
+print("Top1 (chi2 index 0): weighted event FRACTIONS")
+print("Format: leading_jet_pt_bin, flavour, fraction, error")
+print("=" * 110)
+
+for row in top1_fraction_list:
+    print(f"{row[0]}, {row[1]}, {row[2]:.6f}, {row[3]:.6f}")
+
+# -------------------------------------------------
+# Top1 yields
+# -------------------------------------------------
+print("\n" + "=" * 110)
+print("Top1 (chi2 index 0): weighted NUMBER OF EVENTS")
+print("Format: leading_jet_pt_bin, flavour, yield(sumw), error(sqrt(sumw2))")
+print("=" * 110)
+
+for row in top1_yield_list:
+    print(f"{row[0]}, {row[1]}, {row[2]:.6f}, {row[3]:.6f}")
+
+# -------------------------------------------------
+# Top2 fractions
+# -------------------------------------------------
+print("\n" + "=" * 110)
+print("Top2 (chi2 index 1): weighted event FRACTIONS")
+print("Format: leading_jet_pt_bin, flavour, fraction, error")
+print("=" * 110)
+
+for row in top2_fraction_list:
+    print(f"{row[0]}, {row[1]}, {row[2]:.6f}, {row[3]:.6f}")
+
+# -------------------------------------------------
+# Top2 yields
+# -------------------------------------------------
+print("\n" + "=" * 110)
+print("Top2 (chi2 index 1): weighted NUMBER OF EVENTS")
+print("Format: leading_jet_pt_bin, flavour, yield(sumw), error(sqrt(sumw2))")
+print("=" * 110)
+
+for row in top2_yield_list:
+    print(f"{row[0]}, {row[1]}, {row[2]:.6f}, {row[3]:.6f}")
+
+print("=" * 110)
 
 # -------------------------------------------------
 # Diagnostics
@@ -237,3 +343,30 @@ for label, _ in pt_regions:
     sumw = np.sum(w_j[bin_mask]) if count > 0 else 0.0
     sumw2 = np.sum(w_j[bin_mask] ** 2) if count > 0 else 0.0
     print(f"{label}: count={count}, sumw={sumw:.6f}, sumw2={sumw2:.6f}")
+
+# -------------------------------------------------
+# Optional: arrays only, for easy storage/copying
+# -------------------------------------------------
+print("\n" + "=" * 110)
+print("PYTHON LISTS FOR EASY STORAGE")
+print("=" * 110)
+
+print("\ntop1_fraction_list = [")
+for row in top1_fraction_list:
+    print(f'    ("{row[0]}", "{row[1]}", {row[2]:.10f}, {row[3]:.10f}),')
+print("]")
+
+print("\ntop1_yield_list = [")
+for row in top1_yield_list:
+    print(f'    ("{row[0]}", "{row[1]}", {row[2]:.10f}, {row[3]:.10f}),')
+print("]")
+
+print("\ntop2_fraction_list = [")
+for row in top2_fraction_list:
+    print(f'    ("{row[0]}", "{row[1]}", {row[2]:.10f}, {row[3]:.10f}),')
+print("]")
+
+print("\ntop2_yield_list = [")
+for row in top2_yield_list:
+    print(f'    ("{row[0]}", "{row[1]}", {row[2]:.10f}, {row[3]:.10f}),')
+print("]")
