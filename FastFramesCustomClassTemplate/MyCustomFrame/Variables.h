@@ -45,6 +45,46 @@ namespace ttZ{
     const RVec<float>& chi_pair);
   bool jet_pt_region_270to300_GeV(const RVec<float>& jet_pt,
     const RVec<float>& chi_pair);
+  bool jet_pt_region_300to330_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_330to360_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_360to390_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_390to420_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_420to450_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_450to480_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_480to510_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_510to540_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_540to570_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_570to600_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_600to630_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_630to660_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_660to690_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_690to720_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_720to750_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_750to780_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_780to810_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_810to840_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_840to870_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
+  bool jet_pt_region_870to900_GeV(const RVec<float>& jet_pt,
+    const RVec<float>& chi_pair);
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// SV Invariant Mass selection (changed in yaml) /////////////////////////////////////////////////////////////////////
@@ -557,4 +597,5 @@ namespace ttZ{
     const RVec<int>& event_jet_truth_idx,
     const RVec<int>& event_jet_truth_candidates
   );
+
 }

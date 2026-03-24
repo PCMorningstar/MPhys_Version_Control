@@ -534,6 +534,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariables(ROOT::RDF::RNode mainNode,
         "bjet_new_candicate_NOSYS", "bbarjet_new_candicate_NOSYS"
       }
   );
+
   return mainNode;
 }
 
@@ -1283,6 +1284,146 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       mainNode,
       "jet_pt_region_270to300_GeV_NOSYS",
       ttZ::jet_pt_region_270to300_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_300to330_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_300to330_GeV_NOSYS",
+      ttZ::jet_pt_region_300to330_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_330to360_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_330to360_GeV_NOSYS",
+      ttZ::jet_pt_region_330to360_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_360to390_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_360to390_GeV_NOSYS",
+      ttZ::jet_pt_region_360to390_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_390to420_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_390to420_GeV_NOSYS",
+      ttZ::jet_pt_region_390to420_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_420to450_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_420to450_GeV_NOSYS",
+      ttZ::jet_pt_region_420to450_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_450to480_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_450to480_GeV_NOSYS",
+      ttZ::jet_pt_region_450to480_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_480to510_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_480to510_GeV_NOSYS",
+      ttZ::jet_pt_region_480to510_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_510to540_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_510to540_GeV_NOSYS",
+      ttZ::jet_pt_region_510to540_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_540to570_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_540to570_GeV_NOSYS",
+      ttZ::jet_pt_region_540to570_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_570to600_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_570to600_GeV_NOSYS",
+      ttZ::jet_pt_region_570to600_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_600to630_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_600to630_GeV_NOSYS",
+      ttZ::jet_pt_region_600to630_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_630to660_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_630to660_GeV_NOSYS",
+      ttZ::jet_pt_region_630to660_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_660to690_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_660to690_GeV_NOSYS",
+      ttZ::jet_pt_region_660to690_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_690to720_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_690to720_GeV_NOSYS",
+      ttZ::jet_pt_region_690to720_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_720to750_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_720to750_GeV_NOSYS",
+      ttZ::jet_pt_region_720to750_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_750to780_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_750to780_GeV_NOSYS",
+      ttZ::jet_pt_region_750to780_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_780to810_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_780to810_GeV_NOSYS",
+      ttZ::jet_pt_region_780to810_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_810to840_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_810to840_GeV_NOSYS",
+      ttZ::jet_pt_region_810to840_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_840to870_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_840to870_GeV_NOSYS",
+      ttZ::jet_pt_region_840to870_GeV,
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
+  LOG(INFO) << "Adding variable: jet_pt_region_870to900_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "jet_pt_region_870to900_GeV_NOSYS",
+      ttZ::jet_pt_region_870to900_GeV,
       {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
   );
 
