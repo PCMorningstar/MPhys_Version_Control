@@ -29,7 +29,16 @@ pt_regions = [
     ("510to540", "jet_pt_region_510to540_GeV_NOSYS"),
     ("540to570", "jet_pt_region_540to570_GeV_NOSYS"),
     ("570to600", "jet_pt_region_570to600_GeV_NOSYS"),
-
+    ("600to630", "jet_pt_region_600to630_GeV_NOSYS"),
+    ("630to660", "jet_pt_region_630to660_GeV_NOSYS"),
+    ("660to690", "jet_pt_region_660to690_GeV_NOSYS"),
+    ("690to720", "jet_pt_region_690to720_GeV_NOSYS"),
+    ("720to750", "jet_pt_region_720to750_GeV_NOSYS"),
+    ("750to780", "jet_pt_region_750to780_GeV_NOSYS"),
+    ("780to810", "jet_pt_region_780to810_GeV_NOSYS"),
+    ("810to840", "jet_pt_region_810to840_GeV_NOSYS"),
+    ("840to870", "jet_pt_region_840to870_GeV_NOSYS"),
+    ("870to900", "jet_pt_region_870to900_GeV_NOSYS"),
 ]
 
 # -------------------------------------------------
@@ -71,7 +80,10 @@ branches = [
     "jet_size_NOSYS",
     "ordered_jet_truth_flavour_NOSYS",
     "raw_chi2_minval_truthall_NOSYS",
+    "jet_select_GN2v01_FixedCutBEff_70_NOSYS",
     "jet_select_GN2v01_FixedCutBEff_77_NOSYS",
+    "jet_select_GN2v01_FixedCutBEff_85_NOSYS",
+    "jet_select_GN2v01_FixedCutBEff_90_NOSYS",
     "weight_mc_NOSYS",
     "weight_pileup_NOSYS",
     "weight_leptonSF_tight_NOSYS",
@@ -91,7 +103,7 @@ base_mask = (
 
 truth = arr["ordered_jet_truth_flavour_NOSYS"][base_mask]
 chi   = arr["raw_chi2_minval_truthall_NOSYS"][base_mask]
-wp77  = arr["jet_select_GN2v01_FixedCutBEff_77_NOSYS"][base_mask]
+wp77  = arr["jet_select_GN2v01_FixedCutBEff_90_NOSYS"][base_mask]
 
 w_event = (
     arr["weight_mc_NOSYS"]
