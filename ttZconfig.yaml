@@ -300,6 +300,13 @@ ntuples:
     - weight_leptonSF_tight_NOSYS  # lepton SF
     - weight_jvt_effSF_NOSYS       # jet SF 
 
+    # Working point percentages
+    - jet_select_GN2v01_FixedCutBEff_65_NOSYS
+    - jet_select_GN2v01_FixedCutBEff_70_NOSYS
+    - jet_select_GN2v01_FixedCutBEff_77_NOSYS
+    - jet_select_GN2v01_FixedCutBEff_85_NOSYS
+    - jet_select_GN2v01_FixedCutBEff_90_NOSYS
+
     - event_jet_truth_idx
     - event_jet_truth_candidates
 

@@ -121,8 +121,8 @@ edges = centres_to_edges(jet_chi_const_sigma_mu, BIN_WIDTH)
 # -----------------------------
 fig, ax = plt.subplots()
 
-plot_with_errorbars(ax, jet_chi_crystal_ball, eff_chi_crystal_ball, err_chi_crystal_ball, r"Non-Constant", r"$\mu, \sigma \notin \mathbb{C}$")
-plot_with_errorbars(ax, jet_chi_const_sigma_mu, eff_chi_const_sigma_mu, err_chi_const_sigma_mu, r"Constant", r"$\mu, \sigma \in \mathbb{C}$")
+plot_with_errorbars(ax, jet_chi_crystal_ball, eff_chi_crystal_ball, err_chi_crystal_ball, r"Non-Constant", r"Non-Constant")
+plot_with_errorbars(ax, jet_chi_const_sigma_mu, eff_chi_const_sigma_mu, err_chi_const_sigma_mu, r"Constant", r"Constant")
 
 
 ax.set_xlabel("Jet Multiplicity")
