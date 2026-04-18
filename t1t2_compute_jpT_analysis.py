@@ -19,26 +19,8 @@ pt_regions = [
     ("210to240", "jet_pt_region_210to240_GeV_NOSYS"),
     ("240to270", "jet_pt_region_240to270_GeV_NOSYS"),
     ("270to300", "jet_pt_region_270to300_GeV_NOSYS"),
-    ("300to330", "jet_pt_region_300to330_GeV_NOSYS"),
-    ("330to360", "jet_pt_region_330to360_GeV_NOSYS"),
-    ("360to390", "jet_pt_region_360to390_GeV_NOSYS"),
-    ("390to420", "jet_pt_region_390to420_GeV_NOSYS"),
-    ("420to450", "jet_pt_region_420to450_GeV_NOSYS"),
-    ("450to480", "jet_pt_region_450to480_GeV_NOSYS"),
-    ("480to510", "jet_pt_region_480to510_GeV_NOSYS"),
-    ("510to540", "jet_pt_region_510to540_GeV_NOSYS"),
-    ("540to570", "jet_pt_region_540to570_GeV_NOSYS"),
-    ("570to600", "jet_pt_region_570to600_GeV_NOSYS"),
-    ("600to630", "jet_pt_region_600to630_GeV_NOSYS"),
-    ("630to660", "jet_pt_region_630to660_GeV_NOSYS"),
-    ("660to690", "jet_pt_region_660to690_GeV_NOSYS"),
-    ("690to720", "jet_pt_region_690to720_GeV_NOSYS"),
-    ("720to750", "jet_pt_region_720to750_GeV_NOSYS"),
-    ("750to780", "jet_pt_region_750to780_GeV_NOSYS"),
-    ("780to810", "jet_pt_region_780to810_GeV_NOSYS"),
-    ("810to840", "jet_pt_region_810to840_GeV_NOSYS"),
-    ("840to870", "jet_pt_region_840to870_GeV_NOSYS"),
-    ("870to900", "jet_pt_region_870to900_GeV_NOSYS")
+    ("300to360", "jet_pt_region_300to360_GeV_NOSYS"),
+    ("360to900", "jet_pt_region_360to900_GeV_NOSYS"),
 ]
 
 # -------------------------------------------------

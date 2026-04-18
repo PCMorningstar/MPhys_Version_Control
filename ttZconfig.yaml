@@ -72,46 +72,10 @@ regions:
     selection: "selection_cuts_NOSYS == 1 && jet_pt_region_240to270_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
   - name: "jet_pt_region_270to300_GeV_region"
     selection: "selection_cuts_NOSYS == 1 && jet_pt_region_270to300_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_300to330_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_300to330_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_330to360_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_330to360_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_360to390_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_360to390_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_390to420_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_390to420_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_420to450_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_420to450_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_450to480_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_450to480_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_480to510_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_480to510_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_510to540_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_510to540_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_540to570_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_540to570_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_570to600_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_570to600_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_600to630_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_600to630_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_630to660_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_630to660_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_660to690_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_660to690_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_690to720_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_690to720_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_720to750_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_720to750_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_750to780_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_750to780_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_780to810_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_780to810_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_810to840_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_810to840_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_840to870_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_840to870_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
-  - name: "jet_pt_region_870to900_GeV_region"
-    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_870to900_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
+  - name: "jet_pt_region_300to360_GeV_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_300to360_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
+  - name: "jet_pt_region_360to900_GeV_region"
+    selection: "selection_cuts_NOSYS == 1 && jet_pt_region_360to900_GeV_NOSYS == 1 && jet_size_NOSYS == 2"
 
 
   # Regions for "as a function of SV Invariant Mass"
@@ -165,26 +129,8 @@ ntuples:
     - jet_pt_region_210to240_GeV_region
     - jet_pt_region_240to270_GeV_region
     - jet_pt_region_270to300_GeV_region
-    - jet_pt_region_300to330_GeV_region
-    - jet_pt_region_330to360_GeV_region
-    - jet_pt_region_360to390_GeV_region
-    - jet_pt_region_390to420_GeV_region
-    - jet_pt_region_420to450_GeV_region
-    - jet_pt_region_450to480_GeV_region
-    - jet_pt_region_480to510_GeV_region
-    - jet_pt_region_510to540_GeV_region
-    - jet_pt_region_540to570_GeV_region
-    - jet_pt_region_570to600_GeV_region
-    - jet_pt_region_600to630_GeV_region
-    - jet_pt_region_630to660_GeV_region
-    - jet_pt_region_660to690_GeV_region
-    - jet_pt_region_690to720_GeV_region
-    - jet_pt_region_720to750_GeV_region
-    - jet_pt_region_750to780_GeV_region
-    - jet_pt_region_780to810_GeV_region
-    - jet_pt_region_810to840_GeV_region
-    - jet_pt_region_840to870_GeV_region
-    - jet_pt_region_870to900_GeV_region
+    - jet_pt_region_300to360_GeV_region
+    - jet_pt_region_360to900_GeV_region
 
     - sv_invariant_mass_region_0to0point5_GeV_region
     - sv_invariant_mass_region_0point5to1_GeV_region
@@ -225,26 +171,8 @@ ntuples:
     - jet_pt_region_210to240_GeV_NOSYS
     - jet_pt_region_240to270_GeV_NOSYS
     - jet_pt_region_270to300_GeV_NOSYS
-    - jet_pt_region_300to330_GeV_NOSYS
-    - jet_pt_region_330to360_GeV_NOSYS
-    - jet_pt_region_360to390_GeV_NOSYS
-    - jet_pt_region_390to420_GeV_NOSYS
-    - jet_pt_region_420to450_GeV_NOSYS
-    - jet_pt_region_450to480_GeV_NOSYS
-    - jet_pt_region_480to510_GeV_NOSYS
-    - jet_pt_region_510to540_GeV_NOSYS
-    - jet_pt_region_540to570_GeV_NOSYS
-    - jet_pt_region_570to600_GeV_NOSYS
-    - jet_pt_region_600to630_GeV_NOSYS
-    - jet_pt_region_630to660_GeV_NOSYS
-    - jet_pt_region_660to690_GeV_NOSYS
-    - jet_pt_region_690to720_GeV_NOSYS
-    - jet_pt_region_720to750_GeV_NOSYS
-    - jet_pt_region_750to780_GeV_NOSYS
-    - jet_pt_region_780to810_GeV_NOSYS
-    - jet_pt_region_810to840_GeV_NOSYS
-    - jet_pt_region_840to870_GeV_NOSYS
-    - jet_pt_region_870to900_GeV_NOSYS
+    - jet_pt_region_300to360_GeV_NOSYS
+    - jet_pt_region_360to900_GeV_NOSYS
 
     - sv_invariant_mass_region_0to0point5_GeV_NOSYS
     - sv_invariant_mass_region_0point5to1_GeV_NOSYS

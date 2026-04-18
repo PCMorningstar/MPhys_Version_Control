@@ -195,7 +195,7 @@ namespace ttZ{ //GPT aid
     float pt_lead = std::max(pt_i, pt_j);
     return (pt_lead >= 270000 && pt_lead < 300000);   // MeV
   }
-  bool jet_pt_region_300to330_GeV(const RVec<float>& jet_pt,
+  bool jet_pt_region_300to360_GeV(const RVec<float>& jet_pt,
     const RVec<float>& chi_pair) {
     if (chi_pair.size() < 2) return false;
     int i = chi_pair[0];
@@ -205,9 +205,9 @@ namespace ttZ{ //GPT aid
     float pt_i = jet_pt[i];
     float pt_j = jet_pt[j];
     float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 300000 && pt_lead < 330000);   // MeV
+    return (pt_lead >= 300000 && pt_lead < 360000);   // MeV
   }
-  bool jet_pt_region_330to360_GeV(const RVec<float>& jet_pt,
+  bool jet_pt_region_360to900_GeV(const RVec<float>& jet_pt,
     const RVec<float>& chi_pair) {
     if (chi_pair.size() < 2) return false;
     int i = chi_pair[0];
@@ -217,224 +217,7 @@ namespace ttZ{ //GPT aid
     float pt_i = jet_pt[i];
     float pt_j = jet_pt[j];
     float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 330000 && pt_lead < 360000);   // MeV
-  }
-  bool jet_pt_region_360to390_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 360000 && pt_lead < 390000);   // MeV
-  }
-  bool jet_pt_region_390to420_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 390000 && pt_lead < 420000);   // MeV
-  }
-  bool jet_pt_region_420to450_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 420000 && pt_lead < 450000);   // MeV
-  }
-  bool jet_pt_region_450to480_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 450000 && pt_lead < 480000);   // MeV
-  }
-  bool jet_pt_region_480to510_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 480000 && pt_lead < 510000);   // MeV
-  }
-  bool jet_pt_region_510to540_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 510000 && pt_lead < 540000);   // MeV
-  }
-  bool jet_pt_region_540to570_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 540000 && pt_lead < 570000);   // MeV
-  }
-  bool jet_pt_region_570to600_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 570000 && pt_lead < 600000);   // MeV
-  }
-  bool jet_pt_region_600to630_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 600000 && pt_lead < 630000);   // MeV
-  }
-  bool jet_pt_region_630to660_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 630000 && pt_lead < 660000);   // MeV
-  }
-  bool jet_pt_region_660to690_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 660000 && pt_lead < 690000);   // MeV
-  }
-  bool jet_pt_region_690to720_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 690000 && pt_lead < 720000);   // MeV
-  }
-  bool jet_pt_region_720to750_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 720000 && pt_lead < 750000);   // MeV
-  }
-  bool jet_pt_region_750to780_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 750000 && pt_lead < 780000);   // MeV
-  }
-  bool jet_pt_region_780to810_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 780000 && pt_lead < 810000);   // MeV
-  }
-  bool jet_pt_region_810to840_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 810000 && pt_lead < 840000);   // MeV
-  }
-  bool jet_pt_region_840to870_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 840000 && pt_lead < 870000);   // MeV
-  }
-  bool jet_pt_region_870to900_GeV(const RVec<float>& jet_pt,
-    const RVec<float>& chi_pair) {
-    if (chi_pair.size() < 2) return false;
-    int i = chi_pair[0];
-    int j = chi_pair[1];
-    if (i < 0 || j < 0) return false;
-    if (i >= static_cast<int>(jet_pt.size()) || j >= static_cast<int>(jet_pt.size())) return false;
-    float pt_i = jet_pt[i];
-    float pt_j = jet_pt[j];
-    float pt_lead = std::max(pt_i, pt_j);
-    return (pt_lead >= 870000 && pt_lead < 900000);   // MeV
+    return (pt_lead >= 360000 && pt_lead < 900000);   // MeV
   }
   ////////////////////////////////////////////////////////////// SV Invariant Mass selection (changed in yaml) /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
