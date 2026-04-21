@@ -1305,6 +1305,13 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
   ////////////////////////////////////////////////////////////// SV Invariant Mass selection (changed in yaml) /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  LOG(INFO) << "Adding variable: sv_invariant_mass_region_neg0point5upto0_GeV_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "sv_invariant_mass_region_neg0point5upto0_GeV_NOSYS",
+      ttZ::sv_invariant_mass_region_neg0point5upto0_GeV,
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+  );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_0to0point5_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,

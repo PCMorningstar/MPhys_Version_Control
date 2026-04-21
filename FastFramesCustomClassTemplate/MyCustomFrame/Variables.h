@@ -54,6 +54,7 @@ namespace ttZ{
   ////////////////////////////////////////////////////////////// SV Invariant Mass selection (changed in yaml) /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  bool sv_invariant_mass_region_neg0point5upto0_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair);
   bool sv_invariant_mass_region_0to0point5_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair);
   bool sv_invariant_mass_region_0point5to1_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair);
   bool sv_invariant_mass_region_1to1point5_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair);

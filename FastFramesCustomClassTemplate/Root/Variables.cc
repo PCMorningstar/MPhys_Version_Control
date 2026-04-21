@@ -222,6 +222,24 @@ namespace ttZ{ //GPT aid
   ////////////////////////////////////////////////////////////// SV Invariant Mass selection (changed in yaml) /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  bool sv_invariant_mass_region_neg0point5upto0_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair) {
+    if (chi_pair.size() < 2) return false;
+
+    int i = chi_pair[0];
+    int j = chi_pair[1];
+
+    if (i < 0 || j < 0) return false;
+
+    if (i >= static_cast<int>(sv_mass.size()) || j >= static_cast<int>(sv_mass.size())) return false;
+
+    float m_i = sv_mass[i];
+    float m_j = sv_mass[j];
+
+    // choose one SV mass definition for the pair
+    float m_pair = std::max(m_i, m_j);  // common choice
+
+    return (m_pair > -500 && m_pair <= 0);
+  }
   bool sv_invariant_mass_region_0to0point5_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair) {
     if (chi_pair.size() < 2) return false;
 
@@ -240,7 +258,7 @@ namespace ttZ{ //GPT aid
     // choose one SV mass definition for the pair
     float m_pair = std::max(m_i, m_j);  // common choice
 
-    return (m_pair >= 0 && m_pair < 500);
+    return (m_pair > 0 && m_pair < 500);
   }
   bool sv_invariant_mass_region_0point5to1_GeV(const RVec<float>& sv_mass, const RVec<float>& chi_pair) {
     if (chi_pair.size() < 2) return false;

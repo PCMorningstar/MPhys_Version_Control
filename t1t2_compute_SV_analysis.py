@@ -9,6 +9,7 @@ tree  = "reco"
 # YAML-defined SV invariant mass regions
 # -------------------------------------------------
 sv_regions = [
+    ("sv_invariant_mass_region_neg0point5upto0_GeV_region",   "sv_invariant_mass_region_neg0point5upto0_GeV_NOSYS"),
     ("sv_invariant_mass_region_0to0point5_GeV_region",   "sv_invariant_mass_region_0to0point5_GeV_NOSYS"),
     ("sv_invariant_mass_region_0point5to1_GeV_region",   "sv_invariant_mass_region_0point5to1_GeV_NOSYS"),
     ("sv_invariant_mass_region_1to1point5_GeV_region",   "sv_invariant_mass_region_1to1point5_GeV_NOSYS"),
@@ -20,7 +21,6 @@ sv_regions = [
     ("sv_invariant_mass_region_4to4point5_GeV_region",   "sv_invariant_mass_region_4to4point5_GeV_NOSYS"),
     ("sv_invariant_mass_region_4point5to5_GeV_region",   "sv_invariant_mass_region_4point5to5_GeV_NOSYS"),
     ("sv_invariant_mass_region_5to5point5_GeV_region",   "sv_invariant_mass_region_5to5point5_GeV_NOSYS"),
-    ("sv_invariant_mass_region_5point5to6_GeV_region",   "sv_invariant_mass_region_5point5to6_GeV_NOSYS"),
 ]
 
 # -------------------------------------------------
