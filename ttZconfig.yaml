@@ -150,6 +150,7 @@ ntuples:
   # If you want a selection here, use the same as the region:
   #selection: "selection_cuts_NOSYS" #&& jet_size_NOSYS == 2
   branches:
+    - jet_pt_new_NOSYS
     - jet_size_NOSYS
     - selection_cuts_NOSYS
     - ordered_jet_truth_flavour_NOSYS 

@@ -7,9 +7,7 @@ tree  = "reco"
 
 # -------------------------------------------------
 # Stored leading-jet pT region flags from ntuple
-# NOTE:
-# These are still leading-jet pT bins, not probe-jet pT bins.
-# Keep only if this is intentionally what you want.
+# These are event-level flags based on the leading jet pT
 # -------------------------------------------------
 pt_regions = [
     ("0to30",    "jet_pt_region_0to30_GeV_NOSYS"),
@@ -50,6 +48,28 @@ def efficiency_and_error(sumw_num, sumw2_num, sumw_den, sumw2_den):
 
     return eff, np.sqrt(var)
 
+def to_event_scalar(x, default=0):
+    """
+    Convert a branch to one scalar per event.
+    If already flat, return as numpy.
+    If jagged, take first entry per event and fill missing with default.
+    """
+    t = str(ak.type(x))
+    if "var *" not in t:
+        return ak.to_numpy(x)
+    return ak.to_numpy(ak.fill_none(ak.firsts(x), default))
+
+def to_event_weight(x, default=1.0):
+    """
+    Convert a weight branch to one scalar per event.
+    If flat, return as awkward/numpy-compatible.
+    If jagged, multiply entries per event.
+    """
+    t = str(ak.type(x))
+    if "var *" not in t:
+        return x
+    return ak.fill_none(ak.prod(x, axis=1), default)
+
 # -------------------------------------------------
 # Load branches
 # -------------------------------------------------
@@ -57,7 +77,7 @@ branches = [
     "selection_cuts_NOSYS",
     "jet_size_NOSYS",
     "ordered_jet_truth_flavour_NOSYS",
-    "raw_chi2_minval_truthall_NOSYS",
+    "jet_pt_new_NOSYS",
     "jet_select_GN2v01_FixedCutBEff_65_NOSYS",
     "jet_select_GN2v01_FixedCutBEff_70_NOSYS",
     "jet_select_GN2v01_FixedCutBEff_77_NOSYS",
@@ -73,70 +93,93 @@ with uproot.open(fname) as f:
     arr = f[tree].arrays(branches, library="ak")
 
 # -------------------------------------------------
-# Base event selection
+# Event-level mask
 # -------------------------------------------------
+selection_cuts = to_event_scalar(arr["selection_cuts_NOSYS"], default=0)
+jet_size       = to_event_scalar(arr["jet_size_NOSYS"], default=-1)
+
 base_mask = (
-    (arr["selection_cuts_NOSYS"] == 1)
-    & (arr["jet_size_NOSYS"] == 2)
+    (selection_cuts == 1)
+    & (jet_size == 2)
 )
 
-truth = arr["ordered_jet_truth_flavour_NOSYS"][base_mask]
-chi   = arr["raw_chi2_minval_truthall_NOSYS"][base_mask]
+# -------------------------------------------------
+# Object branches after event selection
+# -------------------------------------------------
+truth  = arr["ordered_jet_truth_flavour_NOSYS"][base_mask]
+jet_pt = arr["jet_pt_new_NOSYS"][base_mask]
 
 # Choose the WP branch you actually want here
-wp_probe = arr["jet_select_GN2v01_FixedCutBEff_65_NOSYS"][base_mask]
+wp_probe = arr["jet_select_GN2v01_FixedCutBEff_90_NOSYS"][base_mask]
 
-w_event = (
-    arr["weight_mc_NOSYS"]
-    * arr["weight_pileup_NOSYS"]
-    * arr["weight_leptonSF_tight_NOSYS"]
-    * arr["weight_jvt_effSF_NOSYS"]
-)[base_mask]
+# -------------------------------------------------
+# Event weights
+# -------------------------------------------------
+w_mc     = to_event_weight(arr["weight_mc_NOSYS"])[base_mask]
+w_pileup = to_event_weight(arr["weight_pileup_NOSYS"])[base_mask]
+w_lepSF  = to_event_weight(arr["weight_leptonSF_tight_NOSYS"])[base_mask]
+w_jvtSF  = to_event_weight(arr["weight_jvt_effSF_NOSYS"])[base_mask]
 
+w_event = ak.to_numpy(w_mc * w_pileup * w_lepSF * w_jvtSF)
+
+# -------------------------------------------------
+# Region flags after event selection
+# -------------------------------------------------
 region_flags = {
-    label: arr[branch][base_mask]
+    label: to_event_scalar(arr[branch], default=0)[base_mask]
     for label, branch in pt_regions
 }
 
 # -------------------------------------------------
-# Extract chi2-selected pair
-# Convention:
-#   chi[:, 0] -> Top1
-#   chi[:, 1] -> Top2 = PROBE
+# Require exactly 2 jets in the selected branches as well
 # -------------------------------------------------
-chi_top1 = ak.to_numpy(ak.values_astype(chi[:, 0], int))
-chi_top2 = ak.to_numpy(ak.values_astype(chi[:, 1], int))
-n_jets   = ak.to_numpy(ak.num(truth, axis=1))
+n_truth = ak.to_numpy(ak.num(truth, axis=1))
+n_pt    = ak.to_numpy(ak.num(jet_pt, axis=1))
+n_wp    = ak.to_numpy(ak.num(wp_probe, axis=1))
 
 valid = (
-    (chi_top1 >= 0) & (chi_top2 >= 0)
-    & (chi_top1 < n_jets) & (chi_top2 < n_jets)
-    & (chi_top1 != chi_top2)
+    (n_truth == 2)
+    & (n_pt == 2)
+    & (n_wp == 2)
 )
 
 truth    = truth[valid]
+jet_pt   = jet_pt[valid]
 wp_probe = wp_probe[valid]
-w_event  = ak.to_numpy(w_event[valid])
-chi_top1 = chi_top1[valid]
-chi_top2 = chi_top2[valid]
+w_event  = w_event[valid]
 
 for label in region_flags:
-    region_flags[label] = ak.to_numpy(region_flags[label][valid])
+    region_flags[label] = region_flags[label][valid]
 
+# -------------------------------------------------
+# Separate jets into leading and subleading by pT
+# -------------------------------------------------
 idx = np.arange(len(truth))
 
-# Top1 = probe jet
-probe_truth = ak.to_numpy(truth[idx, chi_top1])
-probe_wp    = ak.to_numpy(ak.values_astype(wp_probe[idx, chi_top1], np.int32))
+pt0 = ak.to_numpy(jet_pt[:, 0])
+pt1 = ak.to_numpy(jet_pt[:, 1])
+
+lead_idx    = np.where(pt0 >= pt1, 0, 1)
+sublead_idx = np.where(pt0 >= pt1, 1, 0)
+
+# Leading jet = probe jet
+probe_truth = ak.to_numpy(truth[idx, sublead_idx])
+probe_wp    = ak.to_numpy(ak.values_astype(wp_probe[idx, sublead_idx], np.int32))
+probe_pt    = ak.to_numpy(jet_pt[idx, sublead_idx])
+
+# Optional diagnostics
+sublead_truth = ak.to_numpy(truth[idx, lead_idx])
+sublead_wp    = ak.to_numpy(ak.values_astype(wp_probe[idx, lead_idx], np.int32))
+sublead_pt    = ak.to_numpy(jet_pt[idx, lead_idx])
 
 probe_is_b = np.array([is_b_flavour(x) for x in probe_truth], dtype=bool)
 probe_pass = (probe_wp == 1)
 
 # -------------------------------------------------
-# Compute probe-jet tagging efficiency by region
+# Compute leading-jet probe tagging efficiency by region
 # -------------------------------------------------
 print("\n" + "=" * 90)
-print("leading_jet_pt_bin, numerator_sumw, denominator_sumw, efficiency, error")
+print("subleading_jet_pt_bin, numerator_sumw, denominator_sumw, efficiency, error")
 print("=" * 90)
 
 for label, _ in pt_regions:
@@ -150,10 +193,7 @@ for label, _ in pt_regions:
     probe_is_b_bin = probe_is_b[bin_mask]
     probe_pass_bin = probe_pass[bin_mask]
 
-    # Denominator: true b probe jets only
     den_weights = w_bin[probe_is_b_bin]
-
-    # Numerator: true b probe jets passing the chosen WP
     num_weights = w_bin[probe_is_b_bin & probe_pass_bin]
 
     sumw_den  = np.sum(den_weights)
@@ -176,10 +216,3 @@ print("=" * 90)
 # -------------------------------------------------
 # Diagnostics
 # -------------------------------------------------
-print("\nDiagnostics:")
-for label, _ in pt_regions:
-    bin_mask = (region_flags[label] == 1)
-    count = np.count_nonzero(bin_mask)
-    sumw  = np.sum(w_event[bin_mask]) if count > 0 else 0.0
-    n_b_probe = np.count_nonzero(probe_is_b[bin_mask]) if count > 0 else 0
-    print(f"{label}: events={count}, event_sumw={sumw:.6f}, true_b_probes={n_b_probe}")
