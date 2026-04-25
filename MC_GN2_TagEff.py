@@ -110,7 +110,8 @@ truth  = arr["ordered_jet_truth_flavour_NOSYS"][base_mask]
 jet_pt = arr["jet_pt_new_NOSYS"][base_mask]
 
 # Choose the WP branch you actually want here
-wp_probe = arr["jet_select_GN2v01_FixedCutBEff_90_NOSYS"][base_mask]
+wp_probe65 = arr["jet_select_GN2v01_FixedCutBEff_65_NOSYS"][base_mask]
+wp_tag77   = arr["jet_select_GN2v01_FixedCutBEff_77_NOSYS"][base_mask]
 
 # -------------------------------------------------
 # Event weights
@@ -135,12 +136,14 @@ region_flags = {
 # -------------------------------------------------
 n_truth = ak.to_numpy(ak.num(truth, axis=1))
 n_pt    = ak.to_numpy(ak.num(jet_pt, axis=1))
-n_wp    = ak.to_numpy(ak.num(wp_probe, axis=1))
+n_wp_probe65 = ak.to_numpy(ak.num(wp_probe65, axis=1))
+n_wp_tag77   = ak.to_numpy(ak.num(wp_tag77, axis=1))
 
 valid = (
     (n_truth == 2)
     & (n_pt == 2)
-    & (n_wp == 2)
+    & (n_wp_probe65 == 2)
+    & (n_wp_tag77 == 2)
 )
 
 truth    = truth[valid]
@@ -162,39 +165,48 @@ pt1 = ak.to_numpy(jet_pt[:, 1])
 lead_idx    = np.where(pt0 >= pt1, 0, 1)
 sublead_idx = np.where(pt0 >= pt1, 1, 0)
 
-# Leading jet = probe jet
-probe_truth = ak.to_numpy(truth[idx, sublead_idx])
-probe_wp    = ak.to_numpy(ak.values_astype(wp_probe[idx, sublead_idx], np.int32))
-probe_pt    = ak.to_numpy(jet_pt[idx, sublead_idx])
+# -------------------------------------------------
+# Define probe and tag jets
+# Probe = leading jet
+# Tag   = subleading jet
+# -------------------------------------------------
+probe_idx = lead_idx
+tag_idx   = sublead_idx
 
-# Optional diagnostics
-sublead_truth = ak.to_numpy(truth[idx, lead_idx])
-sublead_wp    = ak.to_numpy(ak.values_astype(wp_probe[idx, lead_idx], np.int32))
-sublead_pt    = ak.to_numpy(jet_pt[idx, lead_idx])
+probe_truth = ak.to_numpy(truth[idx, probe_idx])
+probe_pt    = ak.to_numpy(jet_pt[idx, probe_idx])
+probe_wp65  = ak.to_numpy(ak.values_astype(wp_probe65[idx, probe_idx], np.int32))
+
+tag_pt      = ak.to_numpy(jet_pt[idx, tag_idx])
+tag_wp77    = ak.to_numpy(ak.values_astype(wp_tag77[idx, tag_idx], np.int32))
 
 probe_is_b = np.array([is_b_flavour(x) for x in probe_truth], dtype=bool)
-probe_pass = (probe_wp == 1)
+
+tag_pass    = tag_wp77 == 1
+probe_pass  = probe_wp65 == 1
 
 # -------------------------------------------------
 # Compute leading-jet probe tagging efficiency by region
 # -------------------------------------------------
 print("\n" + "=" * 90)
-print("subleading_jet_pt_bin, numerator_sumw, denominator_sumw, efficiency, error")
+print("probe_jet_pt_bin, numerator_sumw, denominator_sumw, efficiency, error")
 print("=" * 90)
 
 for label, _ in pt_regions:
-    bin_mask = (region_flags[label] == 1)
+    bin_mask = region_flags[label] == 1
 
     if not np.any(bin_mask):
         print(f"{label}, 0.000000, 0.000000, 0.000000, 0.000000")
         continue
 
-    w_bin          = w_event[bin_mask]
+    w_bin = w_event[bin_mask]
+
     probe_is_b_bin = probe_is_b[bin_mask]
     probe_pass_bin = probe_pass[bin_mask]
+    tag_pass_bin   = tag_pass[bin_mask]
 
-    den_weights = w_bin[probe_is_b_bin]
-    num_weights = w_bin[probe_is_b_bin & probe_pass_bin]
+    den_weights = w_bin[tag_pass_bin & probe_is_b_bin]
+    num_weights = w_bin[tag_pass_bin & probe_is_b_bin & probe_pass_bin]
 
     sumw_den  = np.sum(den_weights)
     sumw2_den = np.sum(den_weights ** 2)
@@ -212,7 +224,3 @@ for label, _ in pt_regions:
     print(f"{label}, {sumw_num:.6f}, {sumw_den:.6f}, {eff:.6f}, {err:.6f}")
 
 print("=" * 90)
-
-# -------------------------------------------------
-# Diagnostics
-# -------------------------------------------------

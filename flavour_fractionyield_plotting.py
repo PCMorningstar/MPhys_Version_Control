@@ -1,6 +1,3 @@
-import numpy as np
-import matplotlib.pyplot as plt
-
 # =================================================
 # Publication-style b-flavour fraction vs leading vs subleading jet pT
 # Colour-blind safe (Okabe-Ito palette)
