@@ -154,20 +154,53 @@ ax = fig.add_subplot(gs[0])
 rax = fig.add_subplot(gs[1], sharex=ax)
 
 # =================================================
-# Top: yields
+# Top: stacked yields
 # =================================================
-plot_with_errorbars(ax, pt, b, b_err, "b", "b")
-plot_with_errorbars(ax, pt, nb, nb_err, "nb", "non-b")
+total = b + nb
+total_err = np.sqrt(b_err**2 + nb_err**2)
+
+# b (stacked on top of non-b)
+ax.fill_between(
+    plot_edges,
+    np.r_[nb, nb[-1]],
+    np.r_[total, total[-1]],
+    step="post",
+    color=COLORS["b"],
+    alpha=0.7,
+    label="b",
+)
+
+# non-b (bottom)
+ax.fill_between(
+    plot_edges,
+    0,
+    np.r_[nb, nb[-1]],
+    step="post",
+    color=COLORS["nb"],
+    alpha=0.7,
+    label="non-b",
+)
+
+
 
 ax.set_ylabel("Events")
 ax.set_title(r"Probe-Jet Flavour Composition - GN2 WP 65%")
 ax.set_xlim(plot_edges[0], plot_edges[-1])
+ax.set_ylim(1e0, 1e8)
+ax.set_yscale("log", base=10)
 ax.tick_params(labelbottom=False)
 
 ax.grid(True, which="major", linestyle=":", linewidth=0.8, alpha=0.7)
 ax.grid(True, which="minor", linestyle=":", linewidth=0.4, alpha=0.35)
 ax.minorticks_on()
-ax.legend(loc="upper right", frameon=False)
+# ax.legend(loc="upper right", frameon=False)
+
+ax.legend(
+    loc="center left",
+    bbox_to_anchor=(1.02, 0.5),
+    borderaxespad=0.0,
+    frameon=False
+)
 
 # =================================================
 # Bottom: b/non-b ratio
@@ -200,7 +233,8 @@ rax.errorbar(
 
 rax.set_ylabel("b/non-b")
 rax.set_xlabel(r"SV mass [GeV]")
-rax.set_ylim(-1000.0, 10000.0)
+rax.set_ylim(1e0, 1e6)
+rax.set_yscale("log", base=10)
 rax.set_xlim(plot_edges[0], plot_edges[-1])
 
 rax.set_xticks(major_ticks)
