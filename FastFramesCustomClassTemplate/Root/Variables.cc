@@ -2445,5 +2445,148 @@ RVec<float> raw_chi2_minval_truthall(
   return out;
 }
 
+// Raw Chi2 index outputs for region definitions - NECESSARY FOR REAL DATA ANALYSIS
+
+RVec<float> raw_chi2_minval_notruth(
+  const RVec<float>& jet_pt,
+  const RVec<float>& jet_eta,
+  const RVec<float>& jet_phi,
+  const RVec<float>& jet_e,
+  const RVec<float>& el_pt,
+  const RVec<float>& el_eta,
+  const RVec<float>& el_phi,
+  const RVec<float>& el_e,
+  const RVec<float>& el_charge,
+  const RVec<float>& mu_pt,
+  const RVec<float>& mu_eta,
+  const RVec<float>& mu_phi,
+  const RVec<float>& mu_e,
+  const RVec<float>& mu_charge
+){
+  constexpr float GeV = 1.f/1000.f;
+
+  const float SENTINEL = -1.0f;
+  RVec<float> out(12, SENTINEL);
+
+  const int jet_size = static_cast<int>(jet_pt.size());
+  if (jet_size < 2) return out;
+
+  // --- Build leptons ---
+  RVec<Lepton> leptons;
+  leptons.reserve(el_pt.size() + mu_pt.size());
+  for (size_t i = 0; i < el_pt.size(); ++i)
+    leptons.push_back({V4(el_pt[i]*GeV, el_eta[i], el_phi[i], el_e[i]*GeV), el_charge[i]});
+  for (size_t i = 0; i < mu_pt.size(); ++i)
+    leptons.push_back({V4(mu_pt[i]*GeV, mu_eta[i], mu_phi[i], mu_e[i]*GeV), mu_charge[i]});
+
+  if (leptons.size() != 2) return out;
+  if (leptons[0].charge * leptons[1].charge >= 0) return out; // require OS
+
+  const V4& lplus  = (leptons[0].charge > 0) ? leptons[0].p4 : leptons[1].p4;
+  const V4& lminus = (leptons[0].charge < 0) ? leptons[0].p4 : leptons[1].p4;
+
+  // --- Build jets ---
+  std::vector<V4> jets;
+  jets.reserve(jet_size);
+  for (int i = 0; i < jet_size; ++i)
+    jets.emplace_back(jet_pt[i]*GeV, jet_eta[i], jet_phi[i], jet_e[i]*GeV);
+
+  // --- Stats map ---
+  std::map<std::string, ObsStats> obs_map;
+  if (jet_size == 2) {
+    obs_map["mlb_plus"]  = {98.07f, 30.47f};
+    obs_map["mlb_minus"] = {98.19f, 30.55f};
+  }
+  else if (jet_size == 3) {
+      obs_map["mlb_plus"]  = {97.10f, 23.72f};
+      obs_map["mlb_minus"] = {97.20f, 23.77f};
+  }
+  else if (jet_size == 4) {
+      obs_map["mlb_plus"]  = {96.39f, 32.09f};
+      obs_map["mlb_minus"] = {96.76f, 31.97f};
+  }
+  else if (jet_size == 5) {
+      obs_map["mlb_plus"]  = {96.50f, 32.45f};
+      obs_map["mlb_minus"] = {96.59f, 32.28f};
+  }
+  else if (jet_size == 6) {
+      obs_map["mlb_plus"]  = {96.34f, 32.81f};
+      obs_map["mlb_minus"] = {96.36f, 32.68f};
+  }
+  else if (jet_size == 7) {
+      obs_map["mlb_plus"]  = {96.66f, 42.04f};
+      obs_map["mlb_minus"] = {96.38f, 32.94f};
+  }
+  else if (jet_size == 8) {
+      obs_map["mlb_plus"]  = {97.54f, 45.52f};
+      obs_map["mlb_minus"] = {96.41f, 44.01f};
+  }
+  else if (jet_size == 9) {
+      obs_map["mlb_plus"]  = {98.06f, 52.27f};
+      obs_map["mlb_minus"] = {98.17f, 53.45f};
+  }
+  else if (jet_size == 10) {
+      obs_map["mlb_plus"]  = {100.18f, 73.14f};
+      obs_map["mlb_minus"] = {97.84f, 150.02f};
+  } else {
+    return out; // no map beyond 10
+  }
+
+  struct Chi2Terms {
+    double chi2;
+    float  mlb_plus;
+    float  mlb_minus;
+
+    Chi2Terms()
+      : chi2(-1.0), mlb_plus(-1.0f), mlb_minus(-1.0f) {}
+  };
+
+  auto eval_pair = [&](size_t i_plus, size_t i_minus) -> Chi2Terms {
+    Chi2Terms t;
+
+    const V4& jplus  = jets[i_plus];
+    const V4& jminus = jets[i_minus];
+
+    const V4 vis_plus  = lplus  + jplus;
+    const V4 vis_minus = lminus + jminus;
+
+    t.mlb_plus  = vis_plus.M();
+    t.mlb_minus = vis_minus.M();
+
+    const double term_mlb_plus  = (t.mlb_plus  - obs_map["mlb_plus"].mean)   / obs_map["mlb_plus"].sigma;
+    const double term_mlb_minus = (t.mlb_minus - obs_map["mlb_minus"].mean)  / obs_map["mlb_minus"].sigma;
+
+    t.chi2 = term_mlb_plus*term_mlb_plus
+           + term_mlb_minus*term_mlb_minus;
+
+    return t;
+  };
+
+  // --- Scan all ordered jet pairs, store best ---
+  double best_chi2 = std::numeric_limits<double>::infinity();
+  int best_i = -1; // jet for l+
+  int best_j = -1; // jet for l-
+  Chi2Terms best_terms;
+
+  for (size_t i = 0; i < jets.size(); ++i) {
+    for (size_t j = 0; j < jets.size(); ++j) {
+      if (i == j) continue;
+      const Chi2Terms t = eval_pair(i, j);
+      if (t.chi2 < best_chi2) {
+        best_chi2 = t.chi2;
+        best_i = static_cast<int>(i);
+        best_j = static_cast<int>(j);
+        best_terms = t;
+      }
+    }
+  }
+
+  if (best_i < 0 || best_j < 0 || !std::isfinite(best_chi2)) return out;
+
+  out[0] = static_cast<float>(best_i);
+  out[1] = static_cast<float>(best_j);
+
+  return out;
+ } // raw_chi2_minval_notruth
 
 } // namespace ttZ

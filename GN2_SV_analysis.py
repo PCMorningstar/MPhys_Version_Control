@@ -1,3 +1,4 @@
+# Must change MyCustomFrame.cc for the real data SV regions
 import uproot
 import awkward as ak
 import numpy as np
@@ -68,11 +69,11 @@ with uproot.open(fname) as f:
 # -------------------------------------------------
 base_mask = (
     (arr["selection_cuts_NOSYS"] == 1)
-    & (arr["jet_size_NOSYS"] >= 2)
+    & (arr["jet_size_NOSYS"] == 2)
 )
 
-truth = arr["ordered_jet_truth_flavour_NOSYS"][base_mask]
-jet_pt = arr["jet_pt_new_NOSYS"][base_mask]
+truth = arr["ordered_jet_truth_flavour_NOSYS"][base_mask] # flavour of the jets
+jet_pt = arr["jet_pt_new_NOSYS"][base_mask] # pT ordered jets
 
 wp65 = arr["jet_select_GN2v01_FixedCutBEff_65_NOSYS"][base_mask]
 wp77 = arr["jet_select_GN2v01_FixedCutBEff_77_NOSYS"][base_mask]
@@ -197,3 +198,4 @@ for row in mc_sv_template_list:
         f'{row[3]:.10f}, {row[4]:.10f}),'
     )
 print("]")
+

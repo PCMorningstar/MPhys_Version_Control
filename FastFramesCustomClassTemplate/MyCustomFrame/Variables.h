@@ -563,4 +563,24 @@ namespace ttZ{
     const RVec<int>& event_jet_truth_candidates
   );
 
+  // ============================================================
+  // Raw Chi2 index outputs for region definitions - NECESSARY FOR REAL DATA ANALYSIS
+  // ============================================================
+  RVec<float> raw_chi2_minval_notruth(
+    const RVec<float>& jet_pt,
+    const RVec<float>& jet_eta,
+    const RVec<float>& jet_phi,
+    const RVec<float>& jet_e,
+    const RVec<float>& el_pt,
+    const RVec<float>& el_eta,
+    const RVec<float>& el_phi,
+    const RVec<float>& el_e,
+    const RVec<float>& el_charge,
+    const RVec<float>& mu_pt,
+    const RVec<float>& mu_eta,
+    const RVec<float>& mu_phi,
+    const RVec<float>& mu_e,
+    const RVec<float>& mu_charge
+  );
+
 }

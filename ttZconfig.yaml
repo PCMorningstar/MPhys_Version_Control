@@ -1,7 +1,7 @@
 general:
   debug_level: INFO
-  input_filelist_path: "../metadata/filelist.txt"
-  input_sumweights_path: "../metadata/sum_of_weights.txt"
+  input_filelist_path: "../fastframes/metadata/filelist.txt" # needs /fastframes/.. for the real data
+  input_sumweights_path: "../fastframes/metadata/sum_of_weights.txt"
   output_path_histograms: "../output_histograms/"
   output_path_ntuples: "../output_ntuples/"
   default_sumweights: "NOSYS"
@@ -153,17 +153,12 @@ ntuples:
     - jet_pt_new_NOSYS
     - jet_size_NOSYS
     - selection_cuts_NOSYS
-    - ordered_jet_truth_flavour_NOSYS 
-    - raw_chi2_minval_truthall_NOSYS # For chi2 correct vs. mis-correct analysis
+    #- ordered_jet_truth_flavour_NOSYS 
+    #- raw_chi2_minval_truthall_NOSYS # For MC data SV analysis
     - sv1_ordered_jets_NOSYS # For SV1 analysis
-    - raw_chi2_pairing_NOSYS
-    # additional truth distributions - for mean and std extraction
-    - new_truth_mlpb_NOSYS
-    - new_truth_mlmbb_NOSYS
-    #- new_truth_pTdiff_NOSYS
-    #- new_truth_sum_deltaR_NOSYS
-    #- new_truth_mllbb_NOSYS
-    #- new_truth_mT_ttbar_NOSYS
+    #- raw_chi2_pairing_NOSYS
+    - raw_chi2_minval_notruth_NOSYS # For real data SV analysis
+
 
     - jet_pt_region_0to30_GeV_NOSYS
     - jet_pt_region_30to60_GeV_NOSYS
@@ -193,10 +188,10 @@ ntuples:
     - sv_invariant_mass_region_5point5to6_GeV_NOSYS
 
     # Selections for cut-flow
-    - electron_selections_paper_NOSYS
-    - muon_selections_paper_NOSYS
-    - jet_selections_paper_NOSYS
-    - dilepton_selections_paper_NOSYS
+    #- electron_selections_paper_NOSYS
+    #- muon_selections_paper_NOSYS
+    #- jet_selections_paper_NOSYS
+    #- dilepton_selections_paper_NOSYS
 
     - cutA1_el_pt_NOSYS
     - cutA2_el_eta_NOSYS
@@ -220,18 +215,18 @@ ntuples:
 
 
     # NEW chi2 indexed
-    - new_chi_indexed_jets_NOSYS
+    #- new_chi_indexed_jets_NOSYS
 
     # NEW MISMS indexed
-    - new_misms_indexed_jets_NOSYS
+    #- new_misms_indexed_jets_NOSYS
 
     # NEW MDRS indexed
-    - new_mdrs_indexed_jets_NOSYS
+    #- new_mdrs_indexed_jets_NOSYS
 
-    - weight_mc_NOSYS              # MC generator weight
-    - weight_pileup_NOSYS          # pileup weight
-    - weight_leptonSF_tight_NOSYS  # lepton SF
-    - weight_jvt_effSF_NOSYS       # jet SF 
+    #- weight_mc_NOSYS              # MC generator weight
+    #- weight_pileup_NOSYS          # pileup weight
+    #- weight_leptonSF_tight_NOSYS  # lepton SF
+    #- weight_jvt_effSF_NOSYS       # jet SF 
 
     # Working point percentages
     - jet_select_GN2v01_FixedCutBEff_65_NOSYS
@@ -240,8 +235,8 @@ ntuples:
     - jet_select_GN2v01_FixedCutBEff_85_NOSYS
     - jet_select_GN2v01_FixedCutBEff_90_NOSYS
 
-    - event_jet_truth_idx
-    - event_jet_truth_candidates
+    #- event_jet_truth_idx
+    #- event_jet_truth_candidates
 
 samples:
   - name: "data"

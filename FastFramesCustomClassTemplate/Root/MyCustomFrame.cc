@@ -1,3 +1,5 @@
+
+
 #include "MyCustomFrame/MyCustomFrame.h"
 #include "MyCustomFrame/Variables.h"
 #include "FastFrames/DefineHelpers.h"
@@ -976,132 +978,8 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
   );
   
 
-  // New attempt at Chi2 analysis (no external dR func idx needed BUT means and stand devs!)
-  // Ordering truth jet idx & candidates
-  // b-jet
-  LOG(INFO) << "Adding variable: bjet_new_idx_NOSYS" << std::endl;
-  mainNode = MainFrame::systematicDefine(mainNode,
-      "bjet_new_idx_NOSYS",
-      ttZ::b_selector,
-      {"event_jet_truth_idx"} 
-  );
-  LOG(INFO) << "Adding variable: bjet_new_candicate_NOSYS" << std::endl; 
-  mainNode = MainFrame::systematicDefine(mainNode,
-      "bjet_new_candicate_NOSYS",
-      ttZ::b_selector,
-      {"event_jet_truth_candidates"}
-  );
-  // bb-jet
-  LOG(INFO) << "Adding variable: bbarjet_new_idx_NOSYS" << std::endl;
-  mainNode = MainFrame::systematicDefine(mainNode,
-      "bbarjet_new_idx_NOSYS",
-      ttZ::bbar_selector,
-      {"event_jet_truth_idx"} 
-  );
-  LOG(INFO) << "Adding variable: bbarjet_new_candicate_NOSYS" << std::endl; 
-  mainNode = MainFrame::systematicDefine(mainNode,
-      "bbarjet_new_candicate_NOSYS",
-      ttZ::bbar_selector,
-      {"event_jet_truth_candidates"}
-  );
-
-  // New detailed truth distributions
-  // 2 jets
-  LOG(INFO) << "Adding variable: new_detailed_truth_NOSYS" << std::endl;
-  mainNode = MainFrame::systematicDefine(
-      mainNode,
-      "new_detailed_truth_NOSYS",
-      ttZ::new_detailed_truth,
-      {
-        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
-        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
-        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
-        "met_met_NOSYS", "met_phi_NOSYS", "bjet_new_idx_NOSYS", "bbarjet_new_idx_NOSYS"
-      }
-  );
-
-  // truth distribution extraction
-  LOG(INFO) << "Adding variable: new_truth_mlpb_NOSYS" << std::endl; 
-  mainNode = MainFrame::systematicDefine(mainNode,
-      "new_truth_mlpb_NOSYS",
-      ttZ::new_truth_mlpb,
-      {"new_detailed_truth_NOSYS"}
-  );
-  LOG(INFO) << "Adding variable: new_truth_mlmbb_NOSYS" << std::endl; 
-  mainNode = MainFrame::systematicDefine(mainNode,
-      "new_truth_mlmbb_NOSYS",
-      ttZ::new_truth_mlmbb,
-      {"new_detailed_truth_NOSYS"}
-  );
-  LOG(INFO) << "Adding variable: new_truth_pTdiff_NOSYS" << std::endl; 
-  mainNode = MainFrame::systematicDefine(mainNode,
-      "new_truth_pTdiff_NOSYS",
-      ttZ::new_truth_pTdiff,
-      {"new_detailed_truth_NOSYS"}
-  );
-  LOG(INFO) << "Adding variable: new_truth_sum_deltaR_NOSYS" << std::endl; 
-  mainNode = MainFrame::systematicDefine(mainNode,
-      "new_truth_sum_deltaR_NOSYS",
-      ttZ::new_truth_sum_deltaR,
-      {"new_detailed_truth_NOSYS"}
-  );
-  LOG(INFO) << "Adding variable: new_truth_mllbb_NOSYS" << std::endl; 
-  mainNode = MainFrame::systematicDefine(mainNode,
-      "new_truth_mllbb_NOSYS",
-      ttZ::new_truth_mllbb,
-      {"new_detailed_truth_NOSYS"}
-  );
-  LOG(INFO) << "Adding variable: new_truth_mT_ttbar_NOSYS" << std::endl; 
-  mainNode = MainFrame::systematicDefine(mainNode,
-      "new_truth_mT_ttbar_NOSYS",
-      ttZ::new_truth_mT_ttbar,
-      {"new_detailed_truth_NOSYS"}
-  );
 
   
-  // Chi2 
-  LOG(INFO) << "Adding variable: new_chi_indexed_jets_NOSYS" << std::endl;
-  mainNode = MainFrame::systematicDefine(
-      mainNode,
-      "new_chi_indexed_jets_NOSYS",
-      ttZ::new_chi_indexed,
-      {
-        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
-        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
-        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
-        "met_met_NOSYS", "met_phi_NOSYS", "bjet_new_idx_NOSYS", "bbarjet_new_idx_NOSYS",
-        "bjet_new_candicate_NOSYS", "bbarjet_new_candicate_NOSYS"
-      }
-  );
-  // MISMS
-  LOG(INFO) << "Adding variable: new_misms_indexed_jets_NOSYS" << std::endl;
-  mainNode = MainFrame::systematicDefine(
-      mainNode,
-      "new_misms_indexed_jets_NOSYS",
-      ttZ::new_misms_pairing,
-      {
-        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
-        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
-        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
-        "bjet_new_idx_NOSYS", "bbarjet_new_idx_NOSYS",
-        "bjet_new_candicate_NOSYS", "bbarjet_new_candicate_NOSYS"
-      }
-  );
-
-  // MDRS
-  LOG(INFO) << "Adding variable: new_mdrs_indexed_jets_NOSYS" << std::endl;
-  mainNode = MainFrame::systematicDefine(
-      mainNode,
-      "new_mdrs_indexed_jets_NOSYS",
-      ttZ::new_MDRS_pairing,
-      {
-        "jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
-        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
-        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
-        "bjet_new_idx_NOSYS", "bbarjet_new_idx_NOSYS",
-        "bjet_new_candicate_NOSYS", "bbarjet_new_candicate_NOSYS"
-      }
-  );
 
   // ============================================================
   // Raw pairing algorithms in the (l+, l-) basis
@@ -1144,23 +1022,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       }
   );
 
-  // Ordered jet truth flavour vector
-  LOG(INFO) << "Adding variable: ordered_jet_truth_flavour_NOSYS" << std::endl;
-  mainNode = MainFrame::systematicDefine(
-      mainNode,
-      "ordered_jet_truth_flavour_NOSYS",
-      ttZ::pt_order_int,
-      {"jet_TruthFlavour", "jet_pt_NOSYS"}
-  );
-
-  // Ordered jet truth flavour vector - extended
-  LOG(INFO) << "Adding variable: ordered_jet_truth_flavour_extended_NOSYS" << std::endl;
-  mainNode = MainFrame::systematicDefine(
-      mainNode,
-      "ordered_jet_truth_flavour_extended_NOSYS",
-      ttZ::pt_order_int,
-      {"jet_TruthFlavouExtended", "jet_pt_NOSYS"}
-  );
+  
 
   // Raw pairing indices
   LOG(INFO) << "Adding variable: raw_chi2_pairing_NOSYS" << std::endl;
@@ -1191,17 +1053,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
         "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS"}
   );
 
-  // Chi2 essential outputs - algorithm analysis
-  LOG(INFO) << "Adding variable: raw_chi2_minval_truthall_NOSYS" << std::endl;
-  mainNode = MainFrame::systematicDefine(
-      mainNode,
-      "raw_chi2_minval_truthall_NOSYS",
-      ttZ::raw_chi2_minval_truthall,
-      {"jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
-        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
-        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS",
-        "event_jet_truth_idx", "event_jet_truth_candidates"}
-    );
+
 
   // SV1 - ordering - pt_order_float
   LOG(INFO) << "Adding variable: sv1_ordered_jets_NOSYS" << std::endl;
@@ -1212,6 +1064,16 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       {"jet_SV1_masssvx", "jet_pt_new_NOSYS"}
   );
 
+  LOG(INFO) << "Adding variable: raw_chi2_minval_notruth_NOSYS" << std::endl;
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "raw_chi2_minval_notruth_NOSYS",
+      ttZ::raw_chi2_minval_notruth,
+      {"jet_pt_new_NOSYS","jet_eta_new_NOSYS","jet_phi_new_NOSYS","jet_e_new_NOSYS",
+        "el_pt_new_NOSYS","el_eta_new_NOSYS","el_phi_new_NOSYS","el_e_new_NOSYS","el_charge_new_NOSYS",
+        "mu_pt_new_NOSYS","mu_eta_new_NOSYS","mu_phi_new_NOSYS","mu_e_new_NOSYS","mu_charge_new_NOSYS"}
+    );
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////// Jet pT selection (changed in yaml) /////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1221,84 +1083,84 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       mainNode,
       "jet_pt_region_0to30_GeV_NOSYS",
       ttZ::jet_pt_region_0to30_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: jet_pt_region_30to60_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "jet_pt_region_30to60_GeV_NOSYS",
       ttZ::jet_pt_region_30to60_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: jet_pt_region_60to90_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "jet_pt_region_60to90_GeV_NOSYS",
       ttZ::jet_pt_region_60to90_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: jet_pt_region_90to120_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "jet_pt_region_90to120_GeV_NOSYS",
       ttZ::jet_pt_region_90to120_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: jet_pt_region_120to150_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "jet_pt_region_120to150_GeV_NOSYS",
       ttZ::jet_pt_region_120to150_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: jet_pt_region_150to180_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "jet_pt_region_150to180_GeV_NOSYS",
       ttZ::jet_pt_region_150to180_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: jet_pt_region_180to210_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "jet_pt_region_180to210_GeV_NOSYS",
       ttZ::jet_pt_region_180to210_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: jet_pt_region_210to240_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "jet_pt_region_210to240_GeV_NOSYS",
       ttZ::jet_pt_region_210to240_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: jet_pt_region_240to270_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "jet_pt_region_240to270_GeV_NOSYS",
       ttZ::jet_pt_region_240to270_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: jet_pt_region_270to300_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "jet_pt_region_270to300_GeV_NOSYS",
       ttZ::jet_pt_region_270to300_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: jet_pt_region_300to360_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(   
       mainNode,
       "jet_pt_region_300to360_GeV_NOSYS",
       ttZ::jet_pt_region_300to360_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: jet_pt_region_360to900_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "jet_pt_region_360to900_GeV_NOSYS",
       ttZ::jet_pt_region_360to900_GeV,
-      {"jet_pt_new_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"jet_pt_new_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1310,91 +1172,91 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       mainNode,
       "sv_invariant_mass_region_neg0point5upto0_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_neg0point5upto0_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_0to0point5_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_0to0point5_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_0to0point5_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_0point5to1_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_0point5to1_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_0point5to1_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_1to1point5_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_1to1point5_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_1to1point5_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_1point5to2_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_1point5to2_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_1point5to2_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_2to2point5_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_2to2point5_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_2to2point5_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_2point5to3_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_2point5to3_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_2point5to3_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_3to3point5_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_3to3point5_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_3to3point5_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_3point5to4_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_3point5to4_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_3point5to4_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_4to4point5_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_4to4point5_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_4to4point5_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_4point5to5_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_4point5to5_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_4point5to5_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_5to5point5_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_5to5point5_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_5to5point5_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   LOG(INFO) << "Adding variable: sv_invariant_mass_region_5point5to6_GeV_NOSYS" << std::endl;
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "sv_invariant_mass_region_5point5to6_GeV_NOSYS",
       ttZ::sv_invariant_mass_region_5point5to6_GeV,
-      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_truthall_NOSYS"}
+      {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
   return mainNode;
 }
