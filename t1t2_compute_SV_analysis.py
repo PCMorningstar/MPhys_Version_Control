@@ -9,18 +9,18 @@ tree  = "reco"
 # Stored leading-jet pT region flags from ntuple
 # -------------------------------------------------
 pt_regions = [
-    ("0to30",    "jet_pt_region_0to30_GeV_NOSYS"),
-    ("30to60",   "jet_pt_region_30to60_GeV_NOSYS"),
-    ("60to90",   "jet_pt_region_60to90_GeV_NOSYS"),
-    ("90to120",  "jet_pt_region_90to120_GeV_NOSYS"),
-    ("120to150", "jet_pt_region_120to150_GeV_NOSYS"),
-    ("150to180", "jet_pt_region_150to180_GeV_NOSYS"),
-    ("180to210", "jet_pt_region_180to210_GeV_NOSYS"),
-    ("210to240", "jet_pt_region_210to240_GeV_NOSYS"),
-    ("240to270", "jet_pt_region_240to270_GeV_NOSYS"),
-    ("270to300", "jet_pt_region_270to300_GeV_NOSYS"),
-    ("300to360", "jet_pt_region_300to360_GeV_NOSYS"),
-    ("360to900", "jet_pt_region_360to900_GeV_NOSYS"),
+    ("neg0point5upto0",    "sv_invariant_mass_region_neg0point5upto0_GeV_NOSYS"),
+    ("0to0point5",   "sv_invariant_mass_region_0to0point5_GeV_NOSYS"),
+    ("0point5to1",   "sv_invariant_mass_region_0point5to1_GeV_NOSYS"),
+    ("1to1point5",   "sv_invariant_mass_region_1to1point5_GeV_NOSYS"),
+    ("1point5to2",   "sv_invariant_mass_region_1point5to2_GeV_NOSYS"),
+    ("2to2point5",   "sv_invariant_mass_region_2to2point5_GeV_NOSYS"),
+    ("2point5to3",   "sv_invariant_mass_region_2point5to3_GeV_NOSYS"),
+    ("3to3point5",   "sv_invariant_mass_region_3to3point5_GeV_NOSYS"),
+    ("3point5to4",   "sv_invariant_mass_region_3point5to4_GeV_NOSYS"),
+    ("4to4point5",   "sv_invariant_mass_region_4to4point5_GeV_NOSYS"),
+    ("4point5to5",   "sv_invariant_mass_region_4point5to5_GeV_NOSYS"),
+    ("5to5point5",   "sv_invariant_mass_region_5to5point5_GeV_NOSYS"),
 ]
 
 # -------------------------------------------------
@@ -266,7 +266,7 @@ print("=" * 110)
 # -------------------------------------------------
 print("\n" + "=" * 110)
 print("Top1 (chi2 index 0): weighted event FRACTIONS")
-print("Format: leading_jet_pt_bin, flavour, fraction, error")
+print("Format: sv_invariant_mass_region, flavour, fraction, error")
 print("=" * 110)
 
 for row in top1_fraction_list:
@@ -277,7 +277,7 @@ for row in top1_fraction_list:
 # -------------------------------------------------
 print("\n" + "=" * 110)
 print("Top1 (chi2 index 0): weighted NUMBER OF EVENTS")
-print("Format: leading_jet_pt_bin, flavour, yield(sumw), error(sqrt(sumw2))")
+print("Format: sv_invariant_mass_region, flavour, yield(sumw), error(sqrt(sumw2))")
 print("=" * 110)
 
 for row in top1_yield_list:
@@ -288,7 +288,7 @@ for row in top1_yield_list:
 # -------------------------------------------------
 print("\n" + "=" * 110)
 print("Top2 (chi2 index 1): weighted event FRACTIONS")
-print("Format: leading_jet_pt_bin, flavour, fraction, error")
+print("Format: sv_invariant_mass_region, flavour, fraction, error")
 print("=" * 110)
 
 for row in top2_fraction_list:
@@ -299,56 +299,10 @@ for row in top2_fraction_list:
 # -------------------------------------------------
 print("\n" + "=" * 110)
 print("Top2 (chi2 index 1): weighted NUMBER OF EVENTS")
-print("Format: leading_jet_pt_bin, flavour, yield(sumw), error(sqrt(sumw2))")
+print("Format: sv_invariant_mass_region, flavour, yield(sumw), error(sqrt(sumw2))")
 print("=" * 110)
 
 for row in top2_yield_list:
     print(f"{row[0]}, {row[1]}, {row[2]:.6f}, {row[3]:.6f}")
 
 print("=" * 110)
-
-# -------------------------------------------------
-# Diagnostics
-# -------------------------------------------------
-print("\nDiagnostics Top1:")
-for label, _ in pt_regions:
-    bin_mask = (region_flags_i[label] == 1)
-    count = np.count_nonzero(bin_mask)
-    sumw = np.sum(w_i[bin_mask]) if count > 0 else 0.0
-    sumw2 = np.sum(w_i[bin_mask] ** 2) if count > 0 else 0.0
-    print(f"{label}: count={count}, sumw={sumw:.6f}, sumw2={sumw2:.6f}")
-
-print("\nDiagnostics Top2:")
-for label, _ in pt_regions:
-    bin_mask = (region_flags_j[label] == 1)
-    count = np.count_nonzero(bin_mask)
-    sumw = np.sum(w_j[bin_mask]) if count > 0 else 0.0
-    sumw2 = np.sum(w_j[bin_mask] ** 2) if count > 0 else 0.0
-    print(f"{label}: count={count}, sumw={sumw:.6f}, sumw2={sumw2:.6f}")
-
-# -------------------------------------------------
-# Optional: arrays only, for easy storage/copying
-# -------------------------------------------------
-print("\n" + "=" * 110)
-print("PYTHON LISTS FOR EASY STORAGE")
-print("=" * 110)
-
-print("\ntop1_fraction_list = [")
-for row in top1_fraction_list:
-    print(f'    ("{row[0]}", "{row[1]}", {row[2]:.10f}, {row[3]:.10f}),')
-print("]")
-
-print("\ntop1_yield_list = [")
-for row in top1_yield_list:
-    print(f'    ("{row[0]}", "{row[1]}", {row[2]:.10f}, {row[3]:.10f}),')
-print("]")
-
-print("\ntop2_fraction_list = [")
-for row in top2_fraction_list:
-    print(f'    ("{row[0]}", "{row[1]}", {row[2]:.10f}, {row[3]:.10f}),')
-print("]")
-
-print("\ntop2_yield_list = [")
-for row in top2_yield_list:
-    print(f'    ("{row[0]}", "{row[1]}", {row[2]:.10f}, {row[3]:.10f}),')
-print("]")

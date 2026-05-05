@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 # Format: [step_index, yield, error]
 # =================================================
 cutflow_data = np.array([
-    [0, 500113664.0, 211947.328125],  # Raw
-    [1, 336482720.0, 173903.171875],  # Electron
-    [2, 229222096.0, 142321.890625],  # Muon
-    [3, 228803616.0, 142192.812500],  # Jet
-    [4, 208120864.0, 135615.656250],  # Dilepton
+    [0, 500100928.000000, 211944.640625],  # Raw
+    [1, 351685376.000000, 177950.421875],  # Electron
+    [2, 237343216.000000, 144821.171875],  # Muon
+    [3, 236864448.000000, 144676.343750],  # Jet
+    [4, 214369248.000000, 137643.031250],  # Dilepton
 ], dtype=float)
 
 labels = ["Raw", "Electron", "Muon", "Jet", "Dilepton"]
@@ -97,9 +97,9 @@ fig, ax = plt.subplots()
 
 plot_with_errorbars(ax, x, y, yerr, "Cutflow Yield", bin_width=BIN_WIDTH)
 
-ax.set_xlabel("Selection Section Step")
+ax.set_xlabel("Selection Step")
 ax.set_ylabel("Weighted Events")
-ax.set_title("Selection Cutflow - Specific Sections")
+ax.set_title("Selection Cutflow - Specific Steps")
 
 ax.set_xlim(edges[0], edges[-1])
 ax.set_xticks(x)

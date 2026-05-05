@@ -508,13 +508,13 @@ namespace ttZ{ //GPT aid
   // Invariant mass calculator
 
   // Settings changer - for HyPER comparison ////////////////////////
-  // Number of jets /////////////////////////////////////////////////
+  // Number of jets ///////////////////////////////////////////////// - First ever trialed cut
   // -----------------------------------------------------------------------------
   // C2.5 — Exactly two reconstructed jets -changed from 1 to 13
   // -----------------------------------------------------------------------------
   bool cutC25_exactly2jets(const RVec<float>& j_pt)
   {
-    return (j_pt.size() >= 0); // CHANGED ACCORDING TO THE NEW REQUIREMENT
+    return (j_pt.size() >= 2); 
   }
 
   int jet_size(const RVec<float>& j_pt)
@@ -577,11 +577,11 @@ namespace ttZ{ //GPT aid
         for (size_t j = 0; j < jet_eta.size(); ++j) {
             float dR_val = deltaR(eta_val, phi_val, jet_eta[j], jet_phi[j]);
             if (dR_val < 0.4) {
-                return 0;  // reject: this muon is too close to a jet
+                return 0;  // reject this electron is too close to a jet
             }
         }
     }
-    return 1;  // all muons are clean
+    return 1;  // all electrons are clean
   }
 
   // Reject muons if ΔR(μ, jet) < 0.4
@@ -601,7 +601,7 @@ namespace ttZ{ //GPT aid
         for (size_t j = 0; j < jet_eta.size(); ++j) {
             float dR_val = deltaR(m_eta, m_phi, jet_eta[j], jet_phi[j]);
             if (dR_val < 0.4) {
-                return 0;  // reject: this muon is too close to a jet
+                return 0;  // reject this muon is too close to a jet
             }
         }
     }
@@ -626,7 +626,7 @@ namespace ttZ{ //GPT aid
   // A1 — Electron transverse momentum requirement
   // Requirement: pT(e) ≥ 28 GeV
   // -----------------------------------------------------------------------------
-  bool cutA1_el_pt(const RVec<float>& el_pt) {
+  bool cutA1_el_et(const RVec<float>& el_pt) {
     if (el_pt.empty()) return false;  // fail if no electrons
     for (float pt : el_pt) {
         if (pt < 28000) return false;  // fail if any electron below threshold
@@ -901,7 +901,7 @@ namespace ttZ{ //GPT aid
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   bool section_6_1(
-    const RVec<float>& el_pt,
+    const RVec<float>& el_e,
     const RVec<float>& el_eta,
     const RVec<char>&  el_tight,
     const RVec<float>& mu_pt,
@@ -911,7 +911,7 @@ namespace ttZ{ //GPT aid
   )
   {
       return (
-        cutA1_el_pt(el_pt)     &&
+        cutA1_el_et(el_e)     &&
         cutA2_el_eta(el_eta)   &&
         cutA3_el_crack(el_eta) &&
         cutA4_el_tight(el_tight) &&
@@ -934,7 +934,7 @@ namespace ttZ{ //GPT aid
   )
   {
     return (
-      cutC21_exactly2leptons(el_pt, mu_pt) &&
+      // cutC21_exactly2leptons(el_pt, mu_pt) &&
       cutC22_opposite_charge(el_charge, mu_charge) &&
       cutC23_one_el_one_mu(el_pt, mu_pt) &&
       cutC24_meemu_gt50(el_pt, mu_pt, el_eta, mu_eta, el_phi, mu_phi) &&
@@ -994,7 +994,7 @@ namespace ttZ{ //GPT aid
   )
   {
     return (
-      section_6_1(el_pt, el_eta, el_tight, mu_pt, mu_eta, mu_tight, jet_jvt) &&
+      section_6_1(el_e, el_eta, el_tight, mu_pt, mu_eta, mu_tight, jet_jvt) &&
       section_6_2(el_pt, mu_pt, el_eta, mu_eta, el_phi, mu_phi, el_charge, mu_charge, j_pt) &&
       section_6_3(el_pt, el_eta, el_phi, el_e, mu_pt, mu_eta, mu_phi, mu_e, j_pt, j_eta, j_phi, j_e) &&
 
@@ -1009,14 +1009,14 @@ namespace ttZ{ //GPT aid
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   bool electron_selections_paper(
-    const RVec<float>& el_pt,
+    const RVec<float>& el_e,
     const RVec<float>& el_eta,
     const RVec<char>&  el_tight,
     const int& el_keep_flag
   )
   {
     return (
-        cutA1_el_pt(el_pt) &&     // pT ≥ 28 GeV
+        cutA1_el_et(el_e) &&     // E_T ≥ 28 GeV
         cutA2_el_eta(el_eta) &&   // |η| < 2.47
         cutA3_el_crack(el_eta) && // calorimeter crack veto
         cutA4_el_tight(el_tight) && // tight identification
@@ -1489,41 +1489,41 @@ int new_chi_indexed(
   // -----------------------------
   std::map<std::string, ObsStats> obs_map;
 
-  if (jet_size >= 2) {
-    obs_map["mlb_plus"]  = {98.07f, 30.47f};
-    obs_map["mlb_minus"] = {98.19f, 30.55f};
+  if (jet_size == 2) {
+    obs_map["mlb_plus"]  = {97.73f, 30.63f};
+    obs_map["mlb_minus"] = {97.85f, 30.70f};
   }
   else if (jet_size == 3) {
-      obs_map["mlb_plus"]  = {97.10f, 23.72f};
-      obs_map["mlb_minus"] = {97.20f, 23.77f};
+      obs_map["mlb_plus"]  = {96.78f, 31.45f};
+      obs_map["mlb_minus"] = {96.90f, 31.51f};
   }
   else if (jet_size == 4) {
-      obs_map["mlb_plus"]  = {96.39f, 32.09f};
-      obs_map["mlb_minus"] = {96.76f, 31.97f};
+      obs_map["mlb_plus"]  = {96.10f, 32.20f};
+      obs_map["mlb_minus"] = {96.46f, 32.05f};
   }
   else if (jet_size == 5) {
-      obs_map["mlb_plus"]  = {96.50f, 32.45f};
-      obs_map["mlb_minus"] = {96.59f, 32.28f};
+      obs_map["mlb_plus"]  = {96.23f, 32.55f};
+      obs_map["mlb_minus"] = {96.30f, 32.37f};
   }
   else if (jet_size == 6) {
-      obs_map["mlb_plus"]  = {96.34f, 32.81f};
-      obs_map["mlb_minus"] = {96.36f, 32.68f};
+      obs_map["mlb_plus"]  = {96.10f, 32.92f};
+      obs_map["mlb_minus"] = {96.11f, 32.76f};
   }
   else if (jet_size == 7) {
-      obs_map["mlb_plus"]  = {96.66f, 42.04f};
-      obs_map["mlb_minus"] = {96.38f, 32.94f};
+      obs_map["mlb_plus"]  = {96.42f, 33.12f};
+      obs_map["mlb_minus"] = {96.11f, 33.04f};
   }
   else if (jet_size == 8) {
-      obs_map["mlb_plus"]  = {97.54f, 45.52f};
-      obs_map["mlb_minus"] = {96.41f, 44.01f};
+      obs_map["mlb_plus"]  = {97.31f, 34.02f};
+      obs_map["mlb_minus"] = {96.08f, 33.71f};
   }
   else if (jet_size == 9) {
-      obs_map["mlb_plus"]  = {98.06f, 52.27f};
-      obs_map["mlb_minus"] = {98.17f, 53.45f};
+      obs_map["mlb_plus"]  = {97.56f, 31.75f};
+      obs_map["mlb_minus"] = {98.02f, 34.61f};
   }
   else if (jet_size == 10) {
-      obs_map["mlb_plus"]  = {100.18f, 73.14f};
-      obs_map["mlb_minus"] = {97.84f, 150.02f};
+      obs_map["mlb_plus"]  = {103.79f, 27.13f};
+      obs_map["mlb_minus"] = {98.15f, 36.67f};
   }
   // -----------------------------
   // Lambda to compute chi2
@@ -1904,58 +1904,40 @@ RVec<int> raw_chi2_pairing(
   std::map<std::string, ObsStats> obs_map;
 
   if (jet_size == 2) {
-    obs_map["mlb_plus"]   = {98.07f, 30.47f};
-    obs_map["mlb_minus"]  = {98.19f, 30.55f};
-    obs_map["pTdiff"]     = {-0.25f, 23.25f};
-    obs_map["sum_deltaR"] = {3.58f, 1.46f};
+    obs_map["mlb_plus"]  = {97.73f, 30.63f};
+    obs_map["mlb_minus"] = {97.85f, 30.70f};
   }
   else if (jet_size == 3) {
-      obs_map["mlb_plus"]   = {97.10f, 31.29f};
-      obs_map["mlb_minus"]  = {97.20f, 31.37f};
-      obs_map["pTdiff"]     = {-1.99f, 34.16f};
-      obs_map["sum_deltaR"] = {3.44f, 1.43f};
+      obs_map["mlb_plus"]  = {96.78f, 31.45f};
+      obs_map["mlb_minus"] = {96.90f, 31.51f};
   }
   else if (jet_size == 4) {
-      obs_map["mlb_plus"]   = {96.39f, 32.07f};
-      obs_map["mlb_minus"]  = {96.76f, 31.93f};
-      obs_map["pTdiff"]     = {-0.35f, 71.03f};
-      obs_map["sum_deltaR"] = {3.33f, 1.40f};
+      obs_map["mlb_plus"]  = {96.10f, 32.20f};
+      obs_map["mlb_minus"] = {96.46f, 32.05f};
   }
   else if (jet_size == 5) {
-      obs_map["mlb_plus"]   = {96.50f, 32.43f};
-      obs_map["mlb_minus"]  = {96.59f, 32.26f};
-      obs_map["pTdiff"]     = {-0.13f, 81.53f};
-      obs_map["sum_deltaR"] = {3.23f, 1.37f};
+      obs_map["mlb_plus"]  = {96.23f, 32.55f};
+      obs_map["mlb_minus"] = {96.30f, 32.37f};
   }
   else if (jet_size == 6) {
-      obs_map["mlb_plus"]   = {96.34f, 32.81f};
-      obs_map["mlb_minus"]  = {96.36f, 32.68f};
-      obs_map["pTdiff"]     = {0.53f, 92.97f};
-      obs_map["sum_deltaR"] = {3.13f, 1.35f};
+      obs_map["mlb_plus"]  = {96.10f, 32.92f};
+      obs_map["mlb_minus"] = {96.11f, 32.76f};
   }
   else if (jet_size == 7) {
-      obs_map["mlb_plus"]   = {96.65f, 32.97f};
-      obs_map["mlb_minus"]  = {96.38f, 32.94f};
-      obs_map["pTdiff"]     = {0.39f, 102.06f};
-      obs_map["sum_deltaR"] = {3.04f, 1.35f};
+      obs_map["mlb_plus"]  = {96.42f, 33.12f};
+      obs_map["mlb_minus"] = {96.11f, 33.04f};
   }
   else if (jet_size == 8) {
-      obs_map["mlb_plus"]   = {97.54f, 34.04f};
-      obs_map["mlb_minus"]  = {96.42f, 33.48f};
-      obs_map["pTdiff"]     = {-1.53f, 27.50f};
-      obs_map["sum_deltaR"] = {2.97f, 1.35f};
+      obs_map["mlb_plus"]  = {97.31f, 34.02f};
+      obs_map["mlb_minus"] = {96.08f, 33.71f};
   }
   else if (jet_size == 9) {
-      obs_map["mlb_plus"]   = {97.97f, 31.54f};
-      obs_map["mlb_minus"]  = {98.15f, 34.61f};
-      obs_map["pTdiff"]     = {3.28f, 36.43f};
-      obs_map["sum_deltaR"] = {2.90f, 1.38f};
+      obs_map["mlb_plus"]  = {97.56f, 31.75f};
+      obs_map["mlb_minus"] = {98.02f, 34.61f};
   }
   else if (jet_size == 10) {
-      obs_map["mlb_plus"]   = {99.90f, 32.00f};
-      obs_map["mlb_minus"]  = {97.87f, 37.16f};
-      obs_map["pTdiff"]     = {3.07f, 41.18f};
-      obs_map["sum_deltaR"] = {2.83f, 1.41f};
+      obs_map["mlb_plus"]  = {103.79f, 27.13f};
+      obs_map["mlb_minus"] = {98.15f, 36.67f};
   }
   // -----------------------------
   // Lambda to compute chi2
@@ -1979,24 +1961,6 @@ RVec<int> raw_chi2_pairing(
     chi += std::pow(
       (vis_minus.M() - obs_map["mlb_minus"].mean)
       / obs_map["mlb_minus"].sigma,
-      2.0
-    );
-
-    // pTdiff  (pT(l+b) difference)
-    double ptDiff = vis_plus.Pt() - vis_minus.Pt();
-
-    chi += std::pow(
-      (ptDiff - obs_map["pTdiff"].mean)
-      / obs_map["pTdiff"].sigma,
-      2.0
-    );
-
-    // Sum ΔR
-    chi += std::pow(
-      (ROOT::Math::VectorUtil::DeltaR(lplus, jet1)
-    + ROOT::Math::VectorUtil::DeltaR(lminus, jet2)
-    - obs_map["sum_deltaR"].mean)
-    / obs_map["sum_deltaR"].sigma,
       2.0
     );
 
@@ -2287,42 +2251,40 @@ RVec<float> raw_chi2_minval_truthall(
   // --- Stats map ---
   std::map<std::string, ObsStats> obs_map;
   if (jet_size == 2) {
-    obs_map["mlb_plus"]  = {98.07f, 30.47f};
-    obs_map["mlb_minus"] = {98.19f, 30.55f};
+    obs_map["mlb_plus"]  = {97.73f, 30.63f};
+    obs_map["mlb_minus"] = {97.85f, 30.70f};
   }
   else if (jet_size == 3) {
-      obs_map["mlb_plus"]  = {97.10f, 23.72f};
-      obs_map["mlb_minus"] = {97.20f, 23.77f};
+      obs_map["mlb_plus"]  = {96.78f, 31.45f};
+      obs_map["mlb_minus"] = {96.90f, 31.51f};
   }
   else if (jet_size == 4) {
-      obs_map["mlb_plus"]  = {96.39f, 32.09f};
-      obs_map["mlb_minus"] = {96.76f, 31.97f};
+      obs_map["mlb_plus"]  = {96.10f, 32.20f};
+      obs_map["mlb_minus"] = {96.46f, 32.05f};
   }
   else if (jet_size == 5) {
-      obs_map["mlb_plus"]  = {96.50f, 32.45f};
-      obs_map["mlb_minus"] = {96.59f, 32.28f};
+      obs_map["mlb_plus"]  = {96.23f, 32.55f};
+      obs_map["mlb_minus"] = {96.30f, 32.37f};
   }
   else if (jet_size == 6) {
-      obs_map["mlb_plus"]  = {96.34f, 32.81f};
-      obs_map["mlb_minus"] = {96.36f, 32.68f};
+      obs_map["mlb_plus"]  = {96.10f, 32.92f};
+      obs_map["mlb_minus"] = {96.11f, 32.76f};
   }
   else if (jet_size == 7) {
-      obs_map["mlb_plus"]  = {96.66f, 42.04f};
-      obs_map["mlb_minus"] = {96.38f, 32.94f};
+      obs_map["mlb_plus"]  = {96.42f, 33.12f};
+      obs_map["mlb_minus"] = {96.11f, 33.04f};
   }
   else if (jet_size == 8) {
-      obs_map["mlb_plus"]  = {97.54f, 45.52f};
-      obs_map["mlb_minus"] = {96.41f, 44.01f};
+      obs_map["mlb_plus"]  = {97.31f, 34.02f};
+      obs_map["mlb_minus"] = {96.08f, 33.71f};
   }
   else if (jet_size == 9) {
-      obs_map["mlb_plus"]  = {98.06f, 52.27f};
-      obs_map["mlb_minus"] = {98.17f, 53.45f};
+      obs_map["mlb_plus"]  = {97.56f, 31.75f};
+      obs_map["mlb_minus"] = {98.02f, 34.61f};
   }
   else if (jet_size == 10) {
-      obs_map["mlb_plus"]  = {100.18f, 73.14f};
-      obs_map["mlb_minus"] = {97.84f, 150.02f};
-  } else {
-    return out; // no map beyond 10
+      obs_map["mlb_plus"]  = {103.79f, 27.13f};
+      obs_map["mlb_minus"] = {98.15f, 36.67f};
   }
 
   struct Chi2Terms {
@@ -2494,42 +2456,40 @@ RVec<float> raw_chi2_minval_notruth(
   // --- Stats map ---
   std::map<std::string, ObsStats> obs_map;
   if (jet_size == 2) {
-    obs_map["mlb_plus"]  = {98.07f, 30.47f};
-    obs_map["mlb_minus"] = {98.19f, 30.55f};
+    obs_map["mlb_plus"]  = {97.73f, 30.63f};
+    obs_map["mlb_minus"] = {97.85f, 30.70f};
   }
   else if (jet_size == 3) {
-      obs_map["mlb_plus"]  = {97.10f, 23.72f};
-      obs_map["mlb_minus"] = {97.20f, 23.77f};
+      obs_map["mlb_plus"]  = {96.78f, 31.45f};
+      obs_map["mlb_minus"] = {96.90f, 31.51f};
   }
   else if (jet_size == 4) {
-      obs_map["mlb_plus"]  = {96.39f, 32.09f};
-      obs_map["mlb_minus"] = {96.76f, 31.97f};
+      obs_map["mlb_plus"]  = {96.10f, 32.20f};
+      obs_map["mlb_minus"] = {96.46f, 32.05f};
   }
   else if (jet_size == 5) {
-      obs_map["mlb_plus"]  = {96.50f, 32.45f};
-      obs_map["mlb_minus"] = {96.59f, 32.28f};
+      obs_map["mlb_plus"]  = {96.23f, 32.55f};
+      obs_map["mlb_minus"] = {96.30f, 32.37f};
   }
   else if (jet_size == 6) {
-      obs_map["mlb_plus"]  = {96.34f, 32.81f};
-      obs_map["mlb_minus"] = {96.36f, 32.68f};
+      obs_map["mlb_plus"]  = {96.10f, 32.92f};
+      obs_map["mlb_minus"] = {96.11f, 32.76f};
   }
   else if (jet_size == 7) {
-      obs_map["mlb_plus"]  = {96.66f, 42.04f};
-      obs_map["mlb_minus"] = {96.38f, 32.94f};
+      obs_map["mlb_plus"]  = {96.42f, 33.12f};
+      obs_map["mlb_minus"] = {96.11f, 33.04f};
   }
   else if (jet_size == 8) {
-      obs_map["mlb_plus"]  = {97.54f, 45.52f};
-      obs_map["mlb_minus"] = {96.41f, 44.01f};
+      obs_map["mlb_plus"]  = {97.31f, 34.02f};
+      obs_map["mlb_minus"] = {96.08f, 33.71f};
   }
   else if (jet_size == 9) {
-      obs_map["mlb_plus"]  = {98.06f, 52.27f};
-      obs_map["mlb_minus"] = {98.17f, 53.45f};
+      obs_map["mlb_plus"]  = {97.56f, 31.75f};
+      obs_map["mlb_minus"] = {98.02f, 34.61f};
   }
   else if (jet_size == 10) {
-      obs_map["mlb_plus"]  = {100.18f, 73.14f};
-      obs_map["mlb_minus"] = {97.84f, 150.02f};
-  } else {
-    return out; // no map beyond 10
+      obs_map["mlb_plus"]  = {103.79f, 27.13f};
+      obs_map["mlb_minus"] = {98.15f, 36.67f};
   }
 
   struct Chi2Terms {

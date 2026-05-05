@@ -101,7 +101,7 @@ namespace ttZ{
   // A1 — Electron transverse momentum requirement
   // Requirement: pT(e) ≥ 28 GeV
   // -----------------------------------------------------------------------------
-  bool cutA1_el_pt(const RVec<float>& el_pt);
+  bool cutA1_el_et(const RVec<float>& el_pt);
   // -----------------------------------------------------------------------------
   // A2 — Electron pseudorapidity acceptance
   // Requirement: |η(e)| < 2.47
@@ -254,7 +254,7 @@ namespace ttZ{
 
   
   bool section_6_1(
-    const RVec<float>& el_pt,
+    const RVec<float>& el_e,
     const RVec<float>& el_eta,
     const RVec<char>&  el_tight,
     const RVec<float>& mu_pt,
@@ -316,7 +316,7 @@ namespace ttZ{
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   bool electron_selections_paper(
-    const RVec<float>& el_pt,
+    const RVec<float>& el_e,
     const RVec<float>& el_eta,
     const RVec<char>&  el_tight,
     const int& el_keep_flag
