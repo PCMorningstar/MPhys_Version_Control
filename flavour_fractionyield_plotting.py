@@ -3,6 +3,8 @@
 # Colour-blind safe (Okabe-Ito palette)
 # =================================================
 
+# Data is updated for the updated selection
+
 b_yield_leading = np.array([
     [15, 1263964.875000, 10530.921875],
     [45, 18349602.000000, 40242.097656],

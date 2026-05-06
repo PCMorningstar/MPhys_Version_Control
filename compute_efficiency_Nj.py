@@ -5,6 +5,22 @@ import numpy as np
 # Open ROOT ntuple
 # --------------------------------------------------
 ntuple_path = "output_ntuples/ttll_601230_mc23a_fullsim.root"
+
+# --------------------------------------------------
+# MC normalisation
+# --------------------------------------------------
+luminosity = 29300.0
+xsec = 85.482
+filter_eff = 1.0
+kfactor = 1.138433852
+sum_of_weights = 4268786417.0
+
+xsection_total = xsec * filter_eff * kfactor
+norm = luminosity * xsection_total / sum_of_weights
+
+print(f"xsection_total = {xsection_total:.12f}")
+print(f"normalisation factor = {norm:.12e}")
+
 with uproot.open(ntuple_path) as f:
     tree = f["reco"]
 
@@ -14,15 +30,22 @@ with uproot.open(ntuple_path) as f:
     selection_cuts = tree["selection_cuts_NOSYS"].array(library="np")
     jet_size = tree["jet_size_NOSYS"].array(library="np")
 
-    # Weighted event
-    weights_all = (
+    # --------------------------------------------------
+    # FastFrames-equivalent total event weight
+    # --------------------------------------------------
+    event_weights = (
         tree["weight_mc_NOSYS"].array(library="np")
         * tree["weight_pileup_NOSYS"].array(library="np")
         * tree["weight_leptonSF_tight_NOSYS"].array(library="np")
         * tree["weight_jvt_effSF_NOSYS"].array(library="np")
     )
 
+    weights_all = event_weights * norm
+    weights_all_squared = weights_all**2
+
+    # --------------------------------------------------
     # Indexed branches
+    # --------------------------------------------------
     chi_vals_all = tree["new_chi_indexed_jets_NOSYS"].array(library="np")
     mdrs_vals_all = tree["new_mdrs_indexed_jets_NOSYS"].array(library="np")
     misms_vals_all = tree["new_misms_indexed_jets_NOSYS"].array(library="np")
@@ -40,6 +63,7 @@ def weighted_efficiency(values, weights):
     weights = np.asarray(weights)
 
     valid_mask = (values == 0) | (values == 1)
+
     if not np.any(valid_mask):
         return 0.0, 0.0, 0.0, 0.0, 0.0
 
@@ -67,13 +91,12 @@ def weighted_efficiency(values, weights):
     ) / (w_tot ** 2)
 
     sigma_eff = np.sqrt(max(var_eff, 0.0))
+
     return eff, sigma_eff, w_pass, w_fail, w_tot
 
 
 # --------------------------------------------------
 # Regions as a function of jet multiplicity
-# Matches the YAML:
-# selection_cuts_NOSYS == 1 && jet_size_NOSYS == N
 # --------------------------------------------------
 regions = {
     "2jets_region": (selection_cuts == 1) & (jet_size == 2),
@@ -107,13 +130,20 @@ for region_name, mask in regions.items():
         continue
 
     region_weights = weights_all[mask]
+
     chi_vals = chi_vals_all[mask]
     mdrs_vals = mdrs_vals_all[mask]
     misms_vals = misms_vals_all[mask]
 
-    eff_chi, sigma_chi, wpass_chi, wfail_chi, wtot_chi = weighted_efficiency(chi_vals, region_weights)
-    eff_mdrs, sigma_mdrs, _, _, _ = weighted_efficiency(mdrs_vals, region_weights)
-    eff_misms, sigma_misms, _, _, _ = weighted_efficiency(misms_vals, region_weights)
+    eff_chi, sigma_chi, wpass_chi, wfail_chi, wtot_chi = weighted_efficiency(
+        chi_vals, region_weights
+    )
+    eff_mdrs, sigma_mdrs, _, _, _ = weighted_efficiency(
+        mdrs_vals, region_weights
+    )
+    eff_misms, sigma_misms, _, _, _ = weighted_efficiency(
+        misms_vals, region_weights
+    )
 
     eff_results[region_name] = {
         "chi2": (eff_chi, sigma_chi),

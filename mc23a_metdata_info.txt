@@ -1,0 +1,340 @@
+[pzeman@lxplus954 fastframes]$ cat ../metadata/sum_of_weights.txt
+cat ../metadata/filelist.txt
+601230  mc23a   fullsim GEN_AUX_bare_not_for_analyses -1.0
+601230  mc23a   fullsim GEN_MUR05_MUF05_PDF260000 4817626706.0
+601230  mc23a   fullsim GEN_MUR05_MUF1_PDF260000 4737560848.5
+601230  mc23a   fullsim GEN_MUR05_MUF2_PDF260000 4688182186.5
+601230  mc23a   fullsim GEN_MUR1_MUF05_PDF260000 4368202587.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF14000 4053754204.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF14100 3947906635.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF14200 4010669840.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF14300 4016560125.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF14400 4095123763.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260001 4144095961.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260002 4311482108.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260003 4316724799.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260004 4191723054.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260005 4047248106.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260006 4309985187.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260007 4259129954.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260008 4312337109.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260009 4308184640.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260010 4201282315.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260011 4147475933.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260012 4299863208.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260013 4330571520.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260014 4309917417.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260015 4345963359.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260016 4311345719.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260017 4411011547.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260018 4336213541.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260019 4266793839.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260020 4351001130.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260021 4247085710.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260022 4150280197.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260023 4386368494.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260024 4179992219.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260025 4261832001.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260026 4219271921.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260027 4423569560.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260028 4295387226.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260029 4334861614.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260030 4296640002.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260031 4199246716.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260032 4187162464.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260033 4223295463.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260034 4160605754.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260035 4432618443.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260036 4282303229.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260037 4354123014.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260038 4253469257.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260039 4184925826.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260040 4223852014.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260041 4233572781.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260042 4242841342.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260043 4181518998.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260044 4225246273.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260045 4226483956.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260046 4215487334.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260047 4280276289.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260048 4282678421.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260049 4305669978.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260050 4251111991.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260051 4229772149.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260052 4228878074.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260053 4235029942.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260054 4296322953.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260055 4235752755.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260056 4299563984.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260057 4315368041.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260058 4230523133.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260059 4329270669.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260060 4238476678.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260061 4263421828.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260062 4265525293.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260063 4266276624.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260064 4309939905.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260065 4312429858.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260066 4230629586.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260067 4447406479.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260068 4260141933.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260069 4231675359.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260070 4254891341.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260071 4195734695.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260072 4251003387.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260073 4188399390.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260074 4311570164.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260075 4268446214.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260076 4101294129.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260077 4186279406.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260078 4345585608.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260079 4244668334.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260080 4242739127.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260081 4236391084.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260082 4208324412.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260083 4362300392.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260084 4264030361.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260085 4268543875.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260086 4280014531.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260087 4320272567.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260088 4315292815.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260089 4376096103.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260090 4229396750.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260091 4245357895.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260092 4240530001.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260093 4317317302.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260094 4303447131.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260095 4343559788.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260096 4298503208.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260097 4284136011.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260098 4254056458.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260099 4363267121.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF260100 4379263135.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF265000 4207574580.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF266000 4312864206.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF27100 4136400595.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF27400 4027254003.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF303200 4054203004.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF304200 4209215499.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF304400 4018703032.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF331100 3932709489.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF331500 3930431800.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93300 4032121904.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93301 4034057571.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93302 4017418436.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93303 4022870028.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93304 4036679184.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93305 4011908601.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93306 4044612474.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93307 4013960611.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93308 4026018938.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93309 4042714936.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93310 4006781667.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93311 4032498571.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93312 4048092060.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93313 4016716066.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93314 4022512070.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93315 4005762979.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93316 4042281666.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93317 4028247703.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93318 4017619324.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93319 4036592984.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93320 4041562776.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93321 4030028325.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93322 4044683230.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93323 4033206873.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93324 4036455452.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93325 4047149972.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93326 4031547178.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93327 4033149466.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93328 4020507876.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93329 4027547116.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93330 4035625057.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93331 4018429305.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93332 4033145017.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93333 4027196822.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93334 4050758672.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93335 4034787390.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93336 4050589111.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93337 4032626727.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93338 4032125868.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93339 4041993156.0
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93340 4031612131.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93341 3964723137.5
+601230  mc23a   fullsim GEN_MUR1_MUF1_PDF93342 4082539686.5
+601230  mc23a   fullsim GEN_MUR1_MUF2_PDF260000 4193494143.0
+601230  mc23a   fullsim GEN_MUR2_MUF05_PDF260000 3942558979.0
+601230  mc23a   fullsim GEN_MUR2_MUF1_PDF260000 3835773186.5
+601230  mc23a   fullsim GEN_MUR2_MUF2_PDF260000 3748453005.5
+601230  mc23a   fullsim GEN_Var3cDown 4268695532.0
+601230  mc23a   fullsim GEN_Var3cUp 4268917121.0
+601230  mc23a   fullsim GEN_hardHi 4269126686.0
+601230  mc23a   fullsim GEN_hardLo 4268536502.0
+601230  mc23a   fullsim GEN_isrPDFminus 4268579260.5
+601230  mc23a   fullsim GEN_isrPDFplus 4263743769.0
+601230  mc23a   fullsim GEN_isrmuRfac05_fsrmuRfac05 4271899966.5
+601230  mc23a   fullsim GEN_isrmuRfac05_fsrmuRfac10 4268945743.5
+601230  mc23a   fullsim GEN_isrmuRfac05_fsrmuRfac20 4268405442.0
+601230  mc23a   fullsim GEN_isrmuRfac0625_fsrmuRfac10 4268882989.0
+601230  mc23a   fullsim GEN_isrmuRfac075_fsrmuRfac10 4268841270.0
+601230  mc23a   fullsim GEN_isrmuRfac0875_fsrmuRfac10 4268809679.0
+601230  mc23a   fullsim GEN_isrmuRfac10_fsrmuRfac05 4271353787.0
+601230  mc23a   fullsim GEN_isrmuRfac10_fsrmuRfac0625 4269574326.5
+601230  mc23a   fullsim GEN_isrmuRfac10_fsrmuRfac075 4269104023.5
+601230  mc23a   fullsim GEN_isrmuRfac10_fsrmuRfac0875 4268910571.0
+601230  mc23a   fullsim GEN_isrmuRfac10_fsrmuRfac125 4268593609.5
+601230  mc23a   fullsim GEN_isrmuRfac10_fsrmuRfac15 4268413405.5
+601230  mc23a   fullsim GEN_isrmuRfac10_fsrmuRfac175 4268244092.5
+601230  mc23a   fullsim GEN_isrmuRfac10_fsrmuRfac20 4268082973.0
+601230  mc23a   fullsim GEN_isrmuRfac125_fsrmuRfac10 4268752182.0
+601230  mc23a   fullsim GEN_isrmuRfac15_fsrmuRfac10 4268727812.5
+601230  mc23a   fullsim GEN_isrmuRfac175_fsrmuRfac10 4268708795.5
+601230  mc23a   fullsim GEN_isrmuRfac20_fsrmuRfac05 4271096074.5
+601230  mc23a   fullsim GEN_isrmuRfac20_fsrmuRfac10 4268693246.5
+601230  mc23a   fullsim GEN_isrmuRfac20_fsrmuRfac20 4267920071.5
+601230  mc23a   fullsim NOSYS 4268786417.0
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000001.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000002.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000003.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000004.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000005.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000006.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000007.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000008.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000009.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000010.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000011.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000012.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000013.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000014.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000015.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000016.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000017.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000018.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000019.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000020.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000021.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000022.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000023.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000024.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000025.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000026.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000027.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000028.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000029.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000030.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000031.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000032.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000033.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000034.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000035.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000036.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000037.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000038.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000039.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000040.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000041.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000042.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000043.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000044.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000045.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000046.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000047.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000048.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000049.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000050.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000051.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000052.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000053.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000054.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000055.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000056.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000057.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000058.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000059.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000060.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000061.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000062.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000063.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000064.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000065.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000066.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000067.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000068.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000069.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000070.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000071.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000072.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000073.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000074.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000075.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000076.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000077.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000078.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000079.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000080.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000081.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000082.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000083.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000084.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000085.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000086.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000087.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000088.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000089.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000090.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000091.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000092.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000093.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000094.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000095.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000096.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000097.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000098.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000099.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000100.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000101.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000102.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000103.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000104.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000105.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000106.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000107.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000108.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000109.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000110.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000111.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000112.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000113.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000114.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000115.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000116.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000117.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000118.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000119.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000120.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000121.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000122.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000123.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000124.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000125.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000126.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000127.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000128.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000129.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000130.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000131.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000132.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000133.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000134.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000135.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000136.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000137.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000138.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000139.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000140.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000141.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000142.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000143.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000144.output.root
+601230  mc23a   fullsim /eos/user/d/dbaronmo/MPhys2025/NewNtuples/user.dbaronmo.601230.PhPy8EG.DAOD_PHYS.e8514_s4162_r15540_p6697.CNF_2LMET_B_9c9a990_output/user.dbaronmo.48614823._000145.output.root
