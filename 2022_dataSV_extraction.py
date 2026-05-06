@@ -51,12 +51,14 @@ valid = (
     & (ak.num(wp77, axis=1) >= 2)
 )
 
+valid_np = ak.to_numpy(valid)
+
 jet_pt = jet_pt[valid]
 wp65 = wp65[valid]
 wp77 = wp77[valid]
 
 for region_name in sv_region_flags:
-    sv_region_flags[region_name] = sv_region_flags[region_name][valid]
+    sv_region_flags[region_name] = sv_region_flags[region_name][valid_np]
 
 idx = np.arange(len(jet_pt))
 
