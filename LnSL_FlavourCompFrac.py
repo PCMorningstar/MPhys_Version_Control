@@ -244,11 +244,6 @@ for label, _ in pt_regions:
 # -------------------------------------------------
 # Print results
 # -------------------------------------------------
-print("\n" + "=" * 110)
-print("NORMALISATION")
-print("=" * 110)
-print(f"norm = {norm:.12e}")
-print("=" * 110)
 
 print("\n" + "=" * 110)
 print("Leading jet: weighted event FRACTIONS")

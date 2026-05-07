@@ -239,7 +239,7 @@ plot_with_errorbars(
     "nonb-subleading", "Sub-leading [non-b]"
 )
 
-ax.set_ylabel("Events")
+ax.set_ylabel("Weighted Events")
 ax.set_title(r"b-Flavour Purity Comparison - $\chi^2$")
 
 ax.set_xlim(bin_edges[0], bin_edges[-1])

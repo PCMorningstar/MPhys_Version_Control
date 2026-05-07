@@ -240,14 +240,7 @@ for label, _ in pt_regions:
         top2_fraction_list.append((label, f, frac, err_frac))
         top2_yield_list.append((label, f, yield_val, err_yield))
 
-# -------------------------------------------------
-# Print results
-# -------------------------------------------------
-print("\n" + "=" * 110)
-print("NORMALISATION")
-print("=" * 110)
-print(f"norm = {norm:.12e}")
-print("=" * 110)
+
 
 print("\n" + "=" * 110)
 print("Top1 (chi2 index 0): weighted event FRACTIONS")
