@@ -874,7 +874,7 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
         "section_6_1_NOSYS",
         ttZ::section_6_1,
       {
-          "el_pt_new_NOSYS",
+          "el_e_new_NOSYS",
           "el_eta_new_NOSYS",
           "el_tight_new_NOSYS",
           "mu_pt_new_NOSYS",

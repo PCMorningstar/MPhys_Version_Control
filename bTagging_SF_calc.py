@@ -2,6 +2,7 @@ import numpy as np
 from scipy.optimize import minimize_scalar
 
 # Columns: SV centre, yield, error
+# Real data
 data_yield = np.array([
     [-0.25,   32.000000,   5.656854],
     [ 0.25,   26.000000,   5.099020],
@@ -17,6 +18,7 @@ data_yield = np.array([
     [ 5.25,  236.000000,  15.362291],
 ], dtype=float)
 
+# MC data
 b_yield = np.array([
     [-0.25,   40.829327,   1.556309],
     [ 0.25,   26.749590,   1.253481],

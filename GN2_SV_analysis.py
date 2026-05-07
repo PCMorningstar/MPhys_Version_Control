@@ -1,4 +1,4 @@
-# Must change MyCustomFrame.cc for the real data SV regions
+
 import uproot
 import awkward as ak
 import numpy as np

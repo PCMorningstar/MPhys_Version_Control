@@ -69,3 +69,29 @@ for label, mask in zip(labels, masks):
     err_val = float(np.sqrt(ak.sum(w[mask] ** 2)))
 
     print(f"{label:10s} : {yield_val:14.6f} ± {err_val:10.6f}")
+
+
+import matplotlib.pyplot as plt
+
+# ------------------------------------------------
+# Event-weight distribution after dilepton selection
+# ------------------------------------------------
+w_np = ak.to_numpy(w[mask_dilepton])
+
+plt.figure(figsize=(8, 6))
+
+plt.hist(
+    w_np,
+    bins=200,
+    histtype="step",
+)
+
+plt.xlabel("Total Event Weight")
+plt.ylabel("Number of Events")
+plt.title("Event-Weight Distribution After Dilepton Cuts - Peter")
+plt.yscale("log")
+plt.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig("event_weight_distribution_after_dilepton_debug.png")
+plt.close()
