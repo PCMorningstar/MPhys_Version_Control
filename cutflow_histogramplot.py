@@ -6,11 +6,19 @@ import matplotlib.pyplot as plt
 # Format: [step_index, yield, error]
 # =================================================
 cutflow_data = np.array([
-    [0, 341360.687500, 141.095291],  # Raw
-    [1, 234636.984375, 118.574173],  # Electron
-    [2, 156940.703125, 96.629234],   # Muon
-    [3, 156629.250000, 96.533752],   # Jet
-    [4, 141930.312500, 91.901764],   # Dilepton
+    [0, 341359.781250, 141.087799],  # Raw
+    [1, 234633.218750, 118.573502],  # Electron
+    [2, 156931.593750, 96.629913],   # Muon
+    [3, 62245.519531, 60.859730],    # Jet
+    [4, 56412.792969, 57.957935],    # Dilepton
+], dtype=float)
+
+cutflow_nj_geq2 = np.array([
+    [0, 341359.781250, 141.087799],  # Raw
+    [1, 234633.218750, 118.573502],  # Electron
+    [2, 156931.593750, 96.629913],   # Muon
+    [3, 156620.046875, 96.534782],    # Jet
+    [4, 141923.625000, 91.901085],    # Dilepton
 ], dtype=float)
 
 labels = ["Raw", "Electron", "Muon", "Jet", "Dilepton"]
@@ -41,6 +49,9 @@ plt.rcParams.update({
 
 COLOR = "#0072B2"  # Okabe–Ito blue
 MARKER = "o"
+
+COLOR2 = "#56B4E9"
+MARKER2 = "s"
 
 BIN_WIDTH = 1.0
 
@@ -84,10 +95,42 @@ def plot_with_errorbars(ax, x, y, yerr, label, bin_width=1.0):
         zorder=3
     )
 
+def plot_with_errorbars2(ax, x, y, yerr, label, bin_width=1.0):
+    edges = centres_to_edges(x, width=bin_width)
+
+    # Step histogram
+    ax.step(
+        edges,
+        np.r_[y, y[-1]],
+        where="post",
+        color=COLOR2,
+        linewidth=2.0,
+        zorder=2
+    )
+
+    # Marker + uncertainty
+    ax.errorbar(
+        x, y, yerr=yerr,
+        fmt=MARKER2,
+        color=COLOR2,
+        markerfacecolor="white",
+        markeredgecolor=COLOR2,
+        markersize=6,
+        markeredgewidth=1.2,
+        ecolor=COLOR2,
+        elinewidth=1.2,
+        capsize=3,
+        linewidth=0,
+        label=label,
+        zorder=3
+    )
+
 # =================================================
 # Unpack
 # =================================================
 x, y, yerr = unpack(cutflow_data)
+geq2_x, geq2_y, geq2_yerr = unpack(cutflow_nj_geq2)
+
 edges = centres_to_edges(x, width=BIN_WIDTH)
 
 # =================================================
@@ -95,7 +138,8 @@ edges = centres_to_edges(x, width=BIN_WIDTH)
 # =================================================
 fig, ax = plt.subplots()
 
-plot_with_errorbars(ax, x, y, yerr, "Cutflow Yield", bin_width=BIN_WIDTH)
+plot_with_errorbars(ax, x, y, yerr, r"$N_{Jets}=2$", bin_width=BIN_WIDTH)
+plot_with_errorbars2(ax, geq2_x, geq2_y, geq2_yerr, r"$N_{Jets}\geq2$", bin_width=BIN_WIDTH)
 
 ax.set_xlabel("Selection Step")
 ax.set_ylabel("Weighted Events")

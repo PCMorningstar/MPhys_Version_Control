@@ -19,6 +19,7 @@ norm = luminosity * xsec * filter_eff * kfactor / sum_of_weights
 branches = [
     "selection_cuts_NOSYS",
 
+    "jet_size_NOSYS",
     "electron_selections_paper_NOSYS",
     "muon_selections_paper_NOSYS",
     "jet_selections_paper_NOSYS",
@@ -52,7 +53,7 @@ mask_raw = (arr["selection_cuts_NOSYS"] == 1) | (arr["selection_cuts_NOSYS"] == 
 
 mask_electron = mask_raw & (arr["electron_selections_paper_NOSYS"] == 1)
 mask_muon     = mask_electron & (arr["muon_selections_paper_NOSYS"] == 1)
-mask_jet      = mask_muon & (arr["jet_selections_paper_NOSYS"] == 1)
+mask_jet      = mask_muon & (arr["jet_selections_paper_NOSYS"] == 1) #& (arr["jet_size_NOSYS"] == 2)
 mask_dilepton = mask_jet & (arr["dilepton_selections_paper_NOSYS"] == 1)
 
 labels = ["Raw", "Electron", "Muon", "Jet", "Dilepton"]

@@ -4,6 +4,7 @@ file = uproot.open("output_ntuples/ttll_601230_mc23a_fullsim.root")
 tree = file["reco"]
 
 n_events = tree.num_entries
+print("\nTotal event count:\n")
 print(n_events)
 
 import uproot
@@ -24,4 +25,5 @@ mask = arr["selection_cuts_NOSYS"] == 1
 # count events
 n_selected = ak.sum(mask)
 
+print("\nPost selection event count:\n")
 print(int(n_selected))

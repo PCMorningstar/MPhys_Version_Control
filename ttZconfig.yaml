@@ -241,6 +241,11 @@ ntuples:
     - event_jet_truth_idx
     - event_jet_truth_candidates
 
+    - jet_pt_new_NOSYS
+    - jet_eta_new_NOSYS
+    - jet_phi_new_NOSYS
+
+
 samples:
   - name: "data"
     dsids: [0]
