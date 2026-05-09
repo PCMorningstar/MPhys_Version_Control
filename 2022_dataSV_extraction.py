@@ -24,8 +24,8 @@ branches = [
     "selection_cuts_NOSYS",
     "jet_size_NOSYS",
     "jet_pt_new_NOSYS",
-    "jet_select_GN2v01_FixedCutBEff_65_NOSYS",
-    "jet_select_GN2v01_FixedCutBEff_77_NOSYS",
+    "jet_select_GN2v01_FixedCutBEff_65_pt_ordered_NOSYS",
+    "jet_select_GN2v01_FixedCutBEff_77_pt_ordered_NOSYS",
 ] + [branch for _, branch in sv_regions]
 
 with uproot.open(fname) as f:
@@ -37,8 +37,8 @@ base_mask = (
 )
 
 jet_pt = arr["jet_pt_new_NOSYS"][base_mask]
-wp65 = arr["jet_select_GN2v01_FixedCutBEff_65_NOSYS"][base_mask]
-wp77 = arr["jet_select_GN2v01_FixedCutBEff_77_NOSYS"][base_mask]
+wp65 = arr["jet_select_GN2v01_FixedCutBEff_65_pt_ordered_NOSYS"][base_mask]
+wp77 = arr["jet_select_GN2v01_FixedCutBEff_77_pt_ordered_NOSYS"][base_mask]
 
 sv_region_flags = {
     region_name: ak.to_numpy(arr[branch_name][base_mask])

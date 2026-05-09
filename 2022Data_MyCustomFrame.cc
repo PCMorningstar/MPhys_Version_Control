@@ -1258,6 +1258,25 @@ ROOT::RDF::RNode MyCustomFrame::defineVariablesNtuple(ROOT::RDF::RNode mainNode,
       ttZ::sv_invariant_mass_region_5point5to6_GeV,
       {"sv1_ordered_jets_NOSYS", "raw_chi2_minval_notruth_NOSYS"}
   );
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// GN2 WP pt ordering /////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Sorting "tight_ID" columns
+  LOG(INFO) << "Adding variable: jet_select_GN2v01_FixedCutBEff_65_pTordered_NOSYS" << std::endl; // Electrons
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "jet_select_GN2v01_FixedCutBEff_65_pt_ordered_NOSYS",
+      ttZ::pt_order_nonfloat,
+      {"jet_select_GN2v01_FixedCutBEff_65_NOSYS", "jet_pt_NOSYS"} // {to-be-sorted, sorted idx reference}
+  );
+
+  LOG(INFO) << "Adding variable: jet_select_GN2v01_FixedCutBEff_77_pTordered_NOSYS" << std::endl; // Electrons
+  mainNode = MainFrame::systematicDefine(mainNode,
+      "jet_select_GN2v01_FixedCutBEff_77_pt_ordered_NOSYS",
+      ttZ::pt_order_nonfloat,
+      {"jet_select_GN2v01_FixedCutBEff_77_NOSYS", "jet_pt_NOSYS"} // {to-be-sorted, sorted idx reference}
+  );
   return mainNode;
 }
 

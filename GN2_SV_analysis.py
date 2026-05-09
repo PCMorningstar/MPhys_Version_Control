@@ -64,8 +64,8 @@ branches = [
     "jet_pt_new_NOSYS",
 
     # GN2 tag/probe selections
-    "jet_select_GN2v01_FixedCutBEff_65_NOSYS",
-    "jet_select_GN2v01_FixedCutBEff_77_NOSYS",
+    "jet_select_GN2v01_FixedCutBEff_65_pt_ordered_NOSYS",
+    "jet_select_GN2v01_FixedCutBEff_77_pt_ordered_NOSYS",
 
     # weights
     "weight_mc_NOSYS",
@@ -88,8 +88,8 @@ base_mask = (
 truth = arr["ordered_jet_truth_flavour_NOSYS"][base_mask]
 jet_pt = arr["jet_pt_new_NOSYS"][base_mask]
 
-wp65 = arr["jet_select_GN2v01_FixedCutBEff_65_NOSYS"][base_mask]
-wp77 = arr["jet_select_GN2v01_FixedCutBEff_77_NOSYS"][base_mask]
+wp65 = arr["jet_select_GN2v01_FixedCutBEff_65_pt_ordered_NOSYS"][base_mask]
+wp77 = arr["jet_select_GN2v01_FixedCutBEff_77_pt_ordered_NOSYS"][base_mask]
 
 # -------------------------------------------------
 # Total FastFrames-like event weight
