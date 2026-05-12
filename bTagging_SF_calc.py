@@ -83,8 +83,7 @@ print(f"chi2/ndof = {chi2_min / ndof:.6f}")
 
 # =================================================
 # Error analysis - statistical since SF not obtained from direct algebraic analysis
-# We want a high confidence 68.3 "standard"
-# https://scikit-hep.org/iminuit/reference.html?utm_source=chatgpt.com
+# 68.3% CL / 1 sigma statistical uncertainty# https://scikit-hep.org/iminuit/reference.html?utm_source=chatgpt.com
 # =================================================
 
 from scipy.optimize import brentq

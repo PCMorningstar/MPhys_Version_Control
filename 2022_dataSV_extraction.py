@@ -33,7 +33,7 @@ with uproot.open(fname) as f:
 
 base_mask = (
     (arr["selection_cuts_NOSYS"] == 1)
-    & (arr["jet_size_NOSYS"] == 2)
+    & (arr["jet_size_NOSYS"] >= 2)
 )
 
 jet_pt = arr["jet_pt_new_NOSYS"][base_mask]
