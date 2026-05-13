@@ -5,13 +5,7 @@ import matplotlib.pyplot as plt
 # Cutflow yields (hard-coded)
 # Format: [step_index, yield, error]
 # =================================================
-cutflow_data = np.array([
-    [0, 341359.781250, 141.087799],  # Raw
-    [1, 234633.218750, 118.573502],  # Electron
-    [2, 156931.593750, 96.629913],   # Muon
-    [3, 62245.519531, 60.859730],    # Jet
-    [4, 56412.792969, 57.957935],    # Dilepton
-], dtype=float)
+
 
 cutflow_nj_geq2 = np.array([
     [0, 341359.781250, 141.087799],  # Raw
@@ -128,17 +122,15 @@ def plot_with_errorbars2(ax, x, y, yerr, label, bin_width=1.0):
 # =================================================
 # Unpack
 # =================================================
-x, y, yerr = unpack(cutflow_data)
 geq2_x, geq2_y, geq2_yerr = unpack(cutflow_nj_geq2)
 
-edges = centres_to_edges(x, width=BIN_WIDTH)
+edges = centres_to_edges(geq2_x, width=BIN_WIDTH)
 
 # =================================================
 # Plot
 # =================================================
 fig, ax = plt.subplots()
 
-plot_with_errorbars(ax, x, y, yerr, r"$N_{Jets}=2$", bin_width=BIN_WIDTH)
 plot_with_errorbars2(ax, geq2_x, geq2_y, geq2_yerr, r"$N_{Jets}\geq2$", bin_width=BIN_WIDTH)
 
 ax.set_xlabel("Selection Step")
@@ -146,7 +138,7 @@ ax.set_ylabel("Weighted Events")
 ax.set_title("Selection Cutflow - Specific Steps")
 
 ax.set_xlim(edges[0], edges[-1])
-ax.set_xticks(x)
+ax.set_xticks(geq2_x)
 ax.set_xticklabels(labels)
 
 ax.minorticks_on()
