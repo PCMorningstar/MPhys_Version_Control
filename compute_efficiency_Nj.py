@@ -108,7 +108,6 @@ regions = {
     "8jets_region": (selection_cuts == 1) & (jet_size == 8),
     "9jets_region": (selection_cuts == 1) & (jet_size == 9),
     "10jets_region": (selection_cuts == 1) & (jet_size == 10),
-    "geq2jets_region": (selection_cuts == 1) & (jet_size >= 2),
 }
 
 

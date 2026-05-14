@@ -1,7 +1,7 @@
 general:
   debug_level: INFO
-  input_filelist_path: "../fastframes/metadata/filelist.txt" # needs /fastframes/.. for the real data
-  input_sumweights_path: "../fastframes/metadata/sum_of_weights.txt"
+  input_filelist_path: "../metadata/filelist.txt" # needs /fastframes/.. for the real data
+  input_sumweights_path: "../metadata/sum_of_weights.txt"
   output_path_histograms: "../output_histograms/"
   output_path_ntuples: "../output_ntuples/"
   default_sumweights: "NOSYS"

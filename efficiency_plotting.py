@@ -10,27 +10,28 @@ import matplotlib.pyplot as plt
 # Hard-coded data: Jet Multiplicity, efficiency, error
 # -----------------------------
 
-chi_crystal_ball = np.array([ # varying sigma and mu
-    [2, 0.8201, 0.0005],
-    [3, 0.4083, 0.0007],
-    [4, 0.2533, 0.0008],
-    [5, 0.1732, 0.0010],
-    [6, 0.1304, 0.0015],
-    [7, 0.0988, 0.0023],
-    [8, 0.0760, 0.0036],
-    [9, 0.0628, 0.0059],
-    [10, 0.0464, 0.0100],
-], dtype=float)
-chi_const_sigma_mu = np.array([
-    [2, 0.8201, 0.0005],
+chi2_constant_sigma_mu = np.array([
+    [2, 0.8209, 0.0005],
     [3, 0.4087, 0.0007],
-    [4, 0.2538, 0.0008],
-    [5, 0.1743, 0.0010],
-    [6, 0.1306, 0.0015],
-    [7, 0.1003, 0.0023],
-    [8, 0.0782, 0.0036],
+    [4, 0.2537, 0.0008],
+    [5, 0.1740, 0.0010],
+    [6, 0.1307, 0.0015],
+    [7, 0.0995, 0.0023],
+    [8, 0.0771, 0.0036],
     [9, 0.0628, 0.0059],
-    [10, 0.0430, 0.0097],
+    [10, 0.0458, 0.0100],
+], dtype=float)
+
+chi2_non_constant_sigma_mu = np.array([
+    [2, 0.8209, 0.0005],
+    [3, 0.4083, 0.0007],
+    [4, 0.2531, 0.0008],
+    [5, 0.1734, 0.0010],
+    [6, 0.1299, 0.0015],
+    [7, 0.0990, 0.0023],
+    [8, 0.0762, 0.0036],
+    [9, 0.0624, 0.0059],
+    [10, 0.0561, 0.0109],
 ], dtype=float)
 
 
@@ -60,12 +61,12 @@ plt.rcParams.update({
 
 COLORS = {
     r"Constant": "#0072B2",
-    r"Non-Constant": "#56B4E9"
+    r"Non-Constant": "#56B4E9",
 }
 
 MARKERS = {
     r"Constant": "o",
-    r"Non-Constant": "s"
+    r"Non-Constant": "s",
 }
 
 BIN_WIDTH = 1.0  # jet multiplicity spacing is 1
@@ -112,28 +113,28 @@ def plot_with_errorbars(ax, x, y, yerr, key, label):
 # Unpack
 # -----------------------------
 
-jet_chi_crystal_ball, eff_chi_crystal_ball, err_chi_crystal_ball = unpack(chi_crystal_ball)
-jet_chi_const_sigma_mu, eff_chi_const_sigma_mu, err_chi_const_sigma_mu = unpack(chi_const_sigma_mu)
+jet_constant_sigma_mu, eff_constant_sigma_mu, err_constant_sigma_mu = unpack(chi2_constant_sigma_mu)
+jet_non_constant_sigma_mu, eff_non_constant_sigma_mu, err_non_constant_sigma_mu = unpack(chi2_non_constant_sigma_mu)
 
-edges = centres_to_edges(jet_chi_const_sigma_mu, BIN_WIDTH)
+edges = centres_to_edges(jet_constant_sigma_mu, BIN_WIDTH)
 
 # -----------------------------
 # Main plot
 # -----------------------------
 fig, ax = plt.subplots()
 
-plot_with_errorbars(ax, jet_chi_crystal_ball, eff_chi_crystal_ball, err_chi_crystal_ball, r"Non-Constant", r"Non-Constant")
-plot_with_errorbars(ax, jet_chi_const_sigma_mu, eff_chi_const_sigma_mu, err_chi_const_sigma_mu, r"Constant", r"Constant")
+plot_with_errorbars(ax, jet_constant_sigma_mu, eff_constant_sigma_mu, err_constant_sigma_mu, r"Constant", r"Constant")
+plot_with_errorbars(ax, jet_non_constant_sigma_mu, eff_non_constant_sigma_mu, err_non_constant_sigma_mu, r"Non-Constant", r"Non-Constant")
 
 
 ax.set_xlabel("Jet Multiplicity")
 ax.set_ylabel("Full Reconstruction Efficiency")
-ax.set_title(r"$\chi^2$ Reconstruction Efficiency vs. Fit Parameter Type")
+ax.set_title(r"$\chi^2$ Full Reconstruction Efficiency vs. Fit Parameter Type")
 
 ax.set_xlim(edges[0], edges[-1])
 ax.set_ylim(0.0, 1.05)
 
-ax.set_xticks(jet_chi_const_sigma_mu)
+ax.set_xticks(jet_constant_sigma_mu)
 ax.minorticks_on()
 
 ax.grid(True, which="major", linestyle=":", linewidth=0.8, alpha=0.7)
@@ -148,6 +149,6 @@ ax.legend(
 )
 
 plt.tight_layout()
-plt.savefig("chi2_reconstruction_efficiency_vs_fit_parameter_type.png")
+plt.savefig("corrected_full_reconstruction_efficiency_vs_fit_parameter_type.png")
 plt.show()
 plt.close()

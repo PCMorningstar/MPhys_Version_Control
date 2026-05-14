@@ -1489,41 +1489,41 @@ int new_chi_indexed(
   // -----------------------------
   std::map<std::string, ObsStats> obs_map;
 
-  if (jet_size == 2) {
+  if (jet_size == 2) { // Double Gaussian fitting
     obs_map["mlb_plus"]  = {97.73f, 30.63f};
-    obs_map["mlb_minus"] = {97.85f, 30.70f};
+    obs_map["mlb_minus"] = {97.85f, 30.76f};
   }
   else if (jet_size == 3) {
       obs_map["mlb_plus"]  = {96.78f, 31.45f};
-      obs_map["mlb_minus"] = {96.90f, 31.51f};
+      obs_map["mlb_minus"] = {96.90f, 31.50f};
   }
   else if (jet_size == 4) {
-      obs_map["mlb_plus"]  = {96.10f, 32.20f};
-      obs_map["mlb_minus"] = {96.46f, 32.05f};
+      obs_map["mlb_plus"]  = {96.10f, 32.22f};
+      obs_map["mlb_minus"] = {96.45f, 32.07f};
   }
   else if (jet_size == 5) {
-      obs_map["mlb_plus"]  = {96.23f, 32.55f};
-      obs_map["mlb_minus"] = {96.30f, 32.37f};
+      obs_map["mlb_plus"]  = {96.23f, 32.57f};
+      obs_map["mlb_minus"] = {96.30f, 32.39f};
   }
   else if (jet_size == 6) {
       obs_map["mlb_plus"]  = {96.10f, 32.92f};
-      obs_map["mlb_minus"] = {96.11f, 32.76f};
+      obs_map["mlb_minus"] = {96.11f, 32.77f};
   }
   else if (jet_size == 7) {
-      obs_map["mlb_plus"]  = {96.42f, 33.12f};
+      obs_map["mlb_plus"]  = {96.43f, 42.23f};
       obs_map["mlb_minus"] = {96.11f, 33.04f};
   }
   else if (jet_size == 8) {
-      obs_map["mlb_plus"]  = {97.31f, 34.02f};
-      obs_map["mlb_minus"] = {96.08f, 33.71f};
+      obs_map["mlb_plus"]  = {97.31f, 45.32f};
+      obs_map["mlb_minus"] = {96.07f, 44.27f};
   }
   else if (jet_size == 9) {
-      obs_map["mlb_plus"]  = {97.56f, 31.75f};
-      obs_map["mlb_minus"] = {98.02f, 34.61f};
+      obs_map["mlb_plus"]  = {97.64f, 52.85f};
+      obs_map["mlb_minus"] = {98.03f, 54.51f};
   }
   else if (jet_size == 10) {
-      obs_map["mlb_plus"]  = {103.79f, 27.13f};
-      obs_map["mlb_minus"] = {98.15f, 36.67f};
+      obs_map["mlb_plus"]  = {100.24f, 79.98f};
+      obs_map["mlb_minus"] = {98.13f, 159.42f};
   }
   // -----------------------------
   // Lambda to compute chi2

@@ -314,7 +314,7 @@ rax.errorbar(
 
 rax.set_ylabel("b-Fraction")
 rax.set_xlabel(r"Jet $p_T$ [GeV]")
-rax.set_ylim(0.0, 1.0)
+rax.set_ylim(0.0, 1.1)
 
 rax.set_xticks(major_ticks)
 rax.set_xticklabels([f"{int(x)}" for x in major_ticks])
